@@ -1,8 +1,7 @@
 <?php
 namespace Ice\Frame\Web\Router;
 class RStatic {
-    public static function route($request, $response) {
-
+    public function route($request, $response) {
         preg_match(';^/(\w+)?(?:/(\w+)?)?;', $request->uri, $match);
 
         $request->controller = ucfirst(strtolower(isset($match[1]) ? $match[1] : \F_Ice::$ins->mainAppConf['default_controller']));
@@ -10,5 +9,7 @@ class RStatic {
 
         $response->controller = $request->controller;
         $response->action     = $request->action;
+
+        return TRUE;
     }
 }

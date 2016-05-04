@@ -67,3 +67,21 @@ $temp_engine = array(
         '*' => 'json',
     ),
 );
+
+/*
+1. "==": 精确匹配
+2. "i=": 不区分大小写精确匹配
+3. "^=": 精确前缀匹配
+4. "i^": 不区分大小写前缀匹配
+5. "$=": 精确后缀匹配
+6. "i$": 不区分大小写后缀匹配
+7. "~=": 正则匹配. 支持子组设置参数
+8. 自定义路由: 逗号分隔, 直到一个路由器返回TRUE
+*/
+$routes = array(
+    'default' => '\\Ice\\Frame\\Web\\Router\\RStatic',
+    'i= /say/helloworld' => array(
+        'controller' => 'Say',
+        'action'     => 'Helloworld',
+    ),
+);

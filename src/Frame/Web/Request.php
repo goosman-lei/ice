@@ -19,7 +19,7 @@ class Request {
     public $originalUri;
 
     public function __construct() {
-        $this->_params  = array_merge($_GET, $_POST);
+        $this->_params  = array();
         $this->_gets    = $_GET;
         $this->_posts   = $_POST;
         $this->_cookies = $_COOKIE;
@@ -73,6 +73,10 @@ class Request {
 
     public function getBody() {
         return $this->_body;
+    }
+
+    public function setParam($k, $v) {
+        $this->_params[$k] = $v;
     }
 
     protected function initBaseUri() {
