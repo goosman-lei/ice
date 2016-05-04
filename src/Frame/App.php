@@ -34,7 +34,7 @@ class App {
             }
         }
         if (!isset($this->logger_common)) {
-            $this->logger_common = new \Ice\Frame\Silvern();
+            $this->logger_common = new \U_Stub();
         }
     }
 

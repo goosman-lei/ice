@@ -9,5 +9,6 @@
     "\\Ice\\Util\\Time": "U_Time",
     "\\Ice\\Util\\DString": "U_String",
     "\\Ice\\Util\\DMap": "U_Map",
+    "\\Ice\\Util\\DStub": "U_Stub",
     "\\Ice\\Util\\DArray": "U_Array"
 }
