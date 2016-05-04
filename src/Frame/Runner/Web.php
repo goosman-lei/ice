@@ -75,7 +75,6 @@ class Web {
     protected function dispatch() {
         try {
             $className = "\\{$this->mainAppConf['namespace']}\\Action\\{$this->request->controller}\\{$this->request->action}";
-            throw new \Exception();
 
             if (!class_exists($className) || !method_exists($className, 'execute')) {
                 \F_Ice::$ins->logger->fatal(array(

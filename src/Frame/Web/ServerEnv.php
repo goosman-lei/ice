@@ -1,6 +1,6 @@
 <?php
 namespace Ice\Frame\Web;
-class ServerEnv {
+class ServerEnv extends \U_Env {
     protected $_servers;
 
     public function __construct() {

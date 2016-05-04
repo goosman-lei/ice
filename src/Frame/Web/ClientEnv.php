@@ -1,6 +1,6 @@
 <?php
 namespace Ice\Frame\Web;
-class ClientEnv {
+class ClientEnv extends \U_Env {
 
     public $ip;
 
@@ -24,4 +24,5 @@ class ClientEnv {
 
         $this->clientIp = $clientIp;
     }
+
 }

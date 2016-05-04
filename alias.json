@@ -1,14 +1,15 @@
 {
-    "\\Ice\\Frame\\Config": "F_Config",
-    "\\Ice\\Frame\\Ice": "F_Ice",
-    "\\Ice\\Frame\\App": "F_App",
-    "\\Ice\\Frame\\Error\\Code": "F_ECode",
+    "\\Ice\\Frame\\Config"      : "F_Config",
+    "\\Ice\\Frame\\Ice"         : "F_Ice",
+    "\\Ice\\Frame\\App"         : "F_App",
+    "\\Ice\\Frame\\Error\\Code" : "F_ECode",
 
-    "\\Ice\\Frame\\Web\\Action": "FW_Action",
+    "\\Ice\\Frame\\Web\\Action" : "FW_Action",
 
-    "\\Ice\\Util\\Time": "U_Time",
-    "\\Ice\\Util\\DString": "U_String",
-    "\\Ice\\Util\\DMap": "U_Map",
-    "\\Ice\\Util\\DStub": "U_Stub",
-    "\\Ice\\Util\\DArray": "U_Array"
+    "\\Ice\\Util\\Time"     : "U_Time",
+    "\\Ice\\Util\\Env"      : "U_Env",
+    "\\Ice\\Util\\DString"  : "U_String",
+    "\\Ice\\Util\\DMap"     : "U_Map",
+    "\\Ice\\Util\\DStub"    : "U_Stub",
+    "\\Ice\\Util\\DArray"   : "U_Array"
 }
