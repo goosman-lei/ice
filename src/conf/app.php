@@ -8,7 +8,7 @@ $default_action = 'index';
 $debug = TRUE;
 
 $root_path = __DIR__ . '/..';
-$var_path  = $root_path . '/var';
+$var_path  = $root_path . '/../var';
 $run_path  = $var_path . '/run';
 $log_path  = $var_path . '/logs';
 
@@ -29,5 +29,41 @@ $log = array(
             'type' => 'file',
             'fmt'  => 'Ymd',
         ),
+    ),
+);
+
+$temp_engine = array(
+    'engines' => array(
+        'json' => array(
+            'adapter' => '\\Ice\\Frame\\Web\\TempEngine\\Json',
+            'adapter_config' => array(
+                'headers' => array('Content-Type: text/json;CHARSET=UTF-8'),
+                'json_encode_options' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+                'error_tpl' => '',
+            ),
+        ),
+        'smarty-default' => array(
+            'adapter' => '\\Ice\\Frame\\Web\\TempEngine\\Smarty',
+            'adapter_config'  => array(
+                'headers'   => array('Content-Type: text/html;CHARSET=UTF-8'),
+                'error_tpl' => '_common/error',
+                'ext_name'  => '.tpl',
+            ),
+            'temp_engine_config' => array(
+                'cache_lifetime'        => 30 * 24 * 3600,
+                'caching'               => false,
+                'cache_dir'             => '',
+                'use_sub_dirs'          => TRUE,
+                'template_dir'          => $root_path . '/smarty-tpl',
+                'plugins_dir'           => array(),
+                'compile_dir'           => $run_path . '/smarty-compiled/' ,
+                'default_modifiers'     => array('escape:"html"'),
+                'left_delimiter'        => '{%',
+                'right_delimiter'       => '%}',
+            ),
+        ),
+    ),
+    'routes' => array(
+        '*' => 'json',
     ),
 );

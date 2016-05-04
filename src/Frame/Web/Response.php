@@ -14,21 +14,57 @@ class Response {
     public $action;
 
 
-    public function __contruct() {
-        ob_start(1048576, PHP_OUTPUT_HANDLER_CLEANABLE);
-        // init TempEngine
+    public function __construct() {
+        ob_start(NULL, 1048576, PHP_OUTPUT_HANDLER_CLEANABLE);
+    }
+
+    protected function initTempEngine() {
+        if (isset($this->tempEngine)) {
+            return ;
+        }
+        // read template engine config
+        $config = \F_Ice::$ins->runner->mainAppConf['temp_engine'];
+        
+        // find current template engine
+        $usedTempEngine = $this->findTempEngine($config['routes']);
+
+        // init template engine object
+        $enginesConfig    = $config['engines'][$usedTempEngine];
+        $adapterClass     = $enginesConfig['adapter'];
+        $adapterConfig    = $enginesConfig['adapter_config'];
+        $tempEngineConfig = $enginesConfig['temp_engine_config'];
+        $this->tempEngine = new $adapterClass($this, $adapterConfig, $tempEngineConfig);
+    }
+
+    protected function findTempEngine($config) {
+        if (!\U_Array::icaseKeySearch($this->controller, $config)) {
+            return $config['*'];
+        }
+
+        $config = $config[$this->controller];
+        if (!is_array($config)) {
+            return $config;
+        }
+
+        if (!\U_Array::icaseKeySearch($this->action, $config)) {
+            return $config['*'];
+        }
+
+        return $config[$this->action];
     }
 
     public function output() {
+        $this->initTempEngine();
+
         // process output of user code
         if (!\F_Ice::$ins->runner->mainAppConf['debug']) {
-            ob_end_clean();
+            ob_get_clean();
         } else {
             ob_flush();
         }
 
         // process template engine render
-        #$this->bodyBuffer .= $this->tempEngine->render($this->controller, $this->action, $this->tplData);
+        $this->bodyBuffer .= $this->tempEngine->render();
 
         // process headers
         foreach ($this->cookies as $cookie) {
@@ -43,6 +79,8 @@ class Response {
     }
 
     public function error($errno, $data = array()) {
+        $this->initTempEngine();
+
         // process output of user code
         if (!\F_Ice::$ins->runner->mainAppConf['debug']) {
             ob_get_clean();
@@ -51,7 +89,7 @@ class Response {
         }
 
         // process template engine render
-        #$this->bodyBuffer .= $this->tempEngine->renderError($this->controller, $this->action, $errno, $data);
+        $this->bodyBuffer .= $this->tempEngine->renderError($errno, $data);
 
         // process headers
         foreach ($this->cookies as $cookie) {
@@ -67,12 +105,12 @@ class Response {
         exit(1);
     }
 
-    public function setTplData($key, $value) {
-        $this->tplData[$key] = $value;
+    public function getTplData() {
+        return $this->tplData;
     }
 
-    public function setTplDatas($datas) {
-        $this->tplData = array_merge($this->tplData, $datas);
+    public function setTplData($datas) {
+        $this->tplData = $datas;
     }
 
     public function cleanBody() {

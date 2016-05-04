@@ -9,6 +9,6 @@ class RStatic {
         $request->action     = ucfirst(strtolower(isset($match[2]) ? $match[2] : \F_Ice::$ins->mainAppConf['default_action']));
 
         $response->controller = $request->controller;
-        $response->action     = $response->action;
+        $response->action     = $request->action;
     }
 }

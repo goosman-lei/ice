@@ -6,5 +6,8 @@
 
     "\\Ice\\Frame\\Web\\Action": "FW_Action",
 
-    "\\Ice\\Util\\Time": "U_Time"
+    "\\Ice\\Util\\Time": "U_Time",
+    "\\Ice\\Util\\DString": "U_String",
+    "\\Ice\\Util\\DMap": "U_Map",
+    "\\Ice\\Util\\DArray": "U_Array"
 }

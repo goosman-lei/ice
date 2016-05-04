@@ -25,7 +25,6 @@ class Web {
         $this->setupEnv();
         $this->setupRequest();
         $this->setupResponse();
-        $this->clearInput();
 
         $this->setupIce($this);
 
@@ -68,41 +67,46 @@ class Web {
         $this->ice->setup();
     }
 
-    protected function clearInput() {
-        $_SERVER = array();
-        $_GET    = array();
-        $_POST   = array();
-        $_FILES  = array();
-        $_COOKIE = array();
-    }
-
     protected function route() {
         // 路由暂不扩充
         \Ice\Frame\Web\Router\RStatic::route($this->request, $this->response);
     }
 
     protected function dispatch() {
-        $className = "\\{$this->mainAppConf['namespace']}\\Action\\{$this->request->controller}\\{$this->request->action}";
+        try {
+            $className = "\\{$this->mainAppConf['namespace']}\\Action\\{$this->request->controller}\\{$this->request->action}";
+            throw new \Exception();
 
-        if (!class_exists($className) || !method_exists($className, 'execute')) {
+            if (!class_exists($className) || !method_exists($className, 'execute')) {
+                \F_Ice::$ins->logger->fatal(array(
+                    'controller' => $this->controller,
+                    'action' => $this->action,
+                    'msg' => 'dispatch error: no class or method',
+                ));
+                return $this->response->error(\F_ECode::UNKNOWN_URI);
+            }
+
+            $actionObj = new $className();
+            $actionObj->setRequest($this->request);
+            $actionObj->setResponse($this->response);
+            $actionObj->setServerEnv($this->serverEnv);
+            $actionObj->setClientEnv($this->clientEnv);
+
+            $actionObj->preExecute();
+            $tplData = $actionObj->execute(); 
+            $actionObj->postExecute();
+
+            $this->response->setTplData($tplData);
+            $this->response->output();
+        } catch (\Exception $e) {
             \F_Ice::$ins->logger->fatal(array(
-                'controller' => $this->controller,
-                'action' => $this->action,
-                'msg' => 'dispatch error: no class or method',
+                'exception' => get_class($e),
+                'message'   => $e->getMessage(),
+                'code'      => $e->getCode(),
+                'file'      => $e->getFile(),
+                'line'      => $e->getLine(),
             ));
-            return $this->response->error(\F_ECode::UNKNOWN_URI);
+            $this->response->error(\F_ECode::PHP_ERROR);
         }
-
-        $actionObj = new $className();
-        $actionObj->setRequest($this->request);
-        $actionObj->setResponse($this->response);
-        $actionObj->setServerEnv($this->serverEnv);
-        $actionObj->setClientEnv($this->clientEnv);
-
-        $actionObj->preExecute();
-        $actionRet = $actionObj->execute(); 
-        $actionObj->postExecute();
-
-        $this->response->output();
     }
 }
