@@ -1,5 +1,5 @@
 <?php
-namespace Ice\Util\Error;
+namespace Ice\Frame\Error;
 class Code {
     // 框架层面问题
     const UNKNOWN = 100100;

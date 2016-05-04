@@ -4,5 +4,7 @@
     "\\Ice\\Frame\\App": "F_App",
     "\\Ice\\Frame\\Error\\Code": "F_ECode",
 
+    "\\Ice\\Frame\\Web\\Action": "FW_Action",
+
     "\\Ice\\Util\\Time": "U_Time"
 }

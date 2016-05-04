@@ -23,7 +23,7 @@ class Handler {
             case E_COMPILE_WARNING:
             case E_WARNING:
             case E_USER_WARNING:
-                \F_Ice::$objPool->logger->warn(array(
+                \F_Ice::$ins->logger->warn(array(
                     'errno'      => $errno,
                     'errstr'     => $errstr,
                     'errfile'    => $errfile,

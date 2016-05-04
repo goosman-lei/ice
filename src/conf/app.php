@@ -5,6 +5,8 @@ $base_uri = '';
 $default_controller = 'index';
 $default_action = 'index';
 
+$debug = TRUE;
+
 $root_path = __DIR__ . '/..';
 $var_path  = $root_path . '/var';
 $run_path  = $var_path . '/run';

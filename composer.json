@@ -10,7 +10,9 @@
     "autoload": {
         "psr-4": {
             "Ice\\Composer\\": "src/Composer",
-            "Ice\\Frame\\": "src/Frame"
+            "Ice\\Frame\\": "src/Frame",
+            "Ice\\Util\\": "src/Util",
+            "demo\\ui\\Action\\": "src/action"
         }
     },
     "scripts": {

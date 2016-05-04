@@ -9,7 +9,7 @@ class Web {
     public $request;
 
     // static info
-    protected $mainAppConf;
+    public $mainAppConf;
 
     // output data
     public $response;
@@ -19,7 +19,9 @@ class Web {
         $this->mainAppConf = \F_Config::getConfig($this->rootPath . '/conf/app.php');
     }
 
-    public static function run() {
+    public function run() {
+        $this->initIce();
+
         $this->setupEnv();
         $this->setupRequest();
         $this->setupResponse();
@@ -58,8 +60,11 @@ class Web {
         $this->response = new $responseClass();
     }
 
+    protected function initIce() {
+        $this->ice = \F_Ice::init($this, $this->rootPath);
+    }
+
     protected function setupIce() {
-        $this->ice = new \F_Ice($this->rootPath);
         $this->ice->setup();
     }
 
@@ -73,16 +78,14 @@ class Web {
 
     protected function route() {
         // 路由暂不扩充
-        \Ice\Frame\Router\RStatic::route($this->request);
+        \Ice\Frame\Web\Router\RStatic::route($this->request, $this->response);
     }
 
     protected function dispatch() {
-        $ice = \F_Ice::$ins;
-
-        $className = "\\{$ice->mainAppConf['namespace']}\\Action\\{$this->controller}\\{$this->action}";
+        $className = "\\{$this->mainAppConf['namespace']}\\Action\\{$this->request->controller}\\{$this->request->action}";
 
         if (!class_exists($className) || !method_exists($className, 'execute')) {
-            $ice->logger->fatal(array(
+            \F_Ice::$ins->logger->fatal(array(
                 'controller' => $this->controller,
                 'action' => $this->action,
                 'msg' => 'dispatch error: no class or method',
@@ -91,9 +94,15 @@ class Web {
         }
 
         $actionObj = new $className();
+        $actionObj->setRequest($this->request);
+        $actionObj->setResponse($this->response);
+        $actionObj->setServerEnv($this->serverEnv);
+        $actionObj->setClientEnv($this->clientEnv);
 
-        $actionResp = $actionObj->execute(); 
+        $actionObj->preExecute();
+        $actionRet = $actionObj->execute(); 
+        $actionObj->postExecute();
 
-        $this->response->render($actionResp);
+        $this->response->output();
     }
 }

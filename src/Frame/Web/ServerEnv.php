@@ -1,5 +1,5 @@
 <?php
-namespace \Ice\Frame\Web;
+namespace Ice\Frame\Web;
 class ServerEnv {
     protected $_servers;
 
