@@ -1,0 +1,8 @@
+{
+    "\\Ice\\Frame\\Config": "F_Config",
+    "\\Ice\\Frame\\Ice": "F_Ice",
+    "\\Ice\\Frame\\App": "F_App",
+    "\\Ice\\Frame\\Error\\Code": "F_ECode",
+
+    "\\Ice\\Util\\Time": "U_Time"
+}

@@ -1,0 +1,28 @@
+{
+    "name": "Ice/Framework",
+    "description": "PHP web application develop framework.",
+    "version": "0.0.1-dev",
+    "type": "library",
+    "require": {
+        "smarty/smarty": "3.1.28",
+        "ext-yac": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ice\\Composer\\": "src/Composer",
+            "Ice\\Frame\\": "src/Frame"
+        }
+    },
+    "scripts": {
+        "post-update-cmd": "\\Ice\\Composer\\Plugin\\ClassAlias::postUpdate"
+    },
+    "repositories": [
+        {
+            "packagist": false
+        },
+        {
+            "type": "composer",
+            "url": "http://packagist.phpcomposer.com"
+        }
+    ]
+}
