@@ -40,8 +40,9 @@ class App {
 
     public function __get($name) {
         // logger对象, 无配置则自主注册为桩对象
-        if (strpos($name, 'logger_')) {
+        if (strpos($name, 'logger_') === 0) {
             $this->$name = new \U_Stub();
+            return $this->$name;
         }
     }
 }
