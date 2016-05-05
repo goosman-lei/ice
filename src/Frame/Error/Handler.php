@@ -10,7 +10,7 @@ class Handler {
             case E_ERROR:
             case E_USER_ERROR:
             case E_RECOVERABLE_ERROR:
-                \F_Ice::$ins->logger->fatal(array(
+                \F_Ice::$ins->mainApp->logger_common->fatal(array(
                     'errno'      => $errno,
                     'errstr'     => $errstr,
                     'errfile'    => $errfile,
@@ -23,7 +23,7 @@ class Handler {
             case E_COMPILE_WARNING:
             case E_WARNING:
             case E_USER_WARNING:
-                \F_Ice::$ins->logger->warn(array(
+                \F_Ice::$ins->mainApp->logger_common->warn(array(
                     'errno'      => $errno,
                     'errstr'     => $errstr,
                     'errfile'    => $errfile,

@@ -10,7 +10,6 @@ class Ice {
     public $runner;
 
     // handler
-    public $logger;
     public $errorHandler;
 
     public static $ins;
@@ -33,9 +32,6 @@ class Ice {
         $this->mainApp    = new $mainAppClass($this->rootPath);
         $this->workApp    = $this->mainApp;
         \F_App::registerApp($mainAppNamespace, $this->mainApp);
-
-        // setup logger
-        $this->logger = $this->mainApp->logger_common;
 
         // setup errorhandler
         $this->errorHandler = new \Ice\Frame\Error\Handler();

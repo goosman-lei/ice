@@ -7,9 +7,6 @@ class App {
     // resource
     public $config;
 
-    // handler
-    public $logger;
-
     protected static $apps = array();
 
     public static function getApp($appName) {
@@ -33,14 +30,18 @@ class App {
                 $this->$logName = new \Ice\Frame\Logger($logConfig);
             }
         }
-        if (!isset($this->logger_common)) {
-            $this->logger_common = new \U_Stub();
-        }
     }
 
     protected function preSwitch() {
     }
 
     protected function postSwitch() {
+    }
+
+    public function __get($name) {
+        // logger对象, 无配置则自主注册为桩对象
+        if (strpos($name, 'logger_')) {
+            $this->$name = new \U_Stub();
+        }
     }
 }
