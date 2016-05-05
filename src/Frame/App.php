@@ -25,9 +25,11 @@ class App {
     }
 
     protected function init() {
+        $logConfigs = $this->config->get('app.log');
         if (isset($logConfigs) && is_array($logConfigs)) {
-            foreach ($logConfigs as $logName => $logConfig) {
-                $this->$logName = new \Ice\Frame\Logger($logConfig);
+            foreach ($logConfigs as $loggerName => $logConfig) {
+                $loggerName = "logger_$loggerName";
+                $this->$loggerName = new \F_Logger($logConfig);
             }
         }
     }

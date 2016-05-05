@@ -19,7 +19,7 @@ class Logger {
 
     protected $config;
 
-    protected function __construct($config) {
+    public function __construct($config) {
         $this->config = $config;
     }
     
@@ -105,37 +105,38 @@ class Logger {
         $logFmt = $level == self::LEVEL_INFO ? $this->config['log_fmt'] : $this->config['log_fmt_wf'];
         foreach ($logFmt as $field => $arg) {
             // 请求环境 及 请求相关信息
-            if (strpos($field, 'client_env.')) {
+            if (strpos($field, 'client_env.') === 0) {
                 $envName = substr($field, strlen('client_env.'));
-                $logData[$field] = isset($runner->clientEnv->$envName) ? $runner->clientEnv->$envName : '-';
-            } else if (strpos($field, 'server_env.')) {
+                $logValue = $runner->clientEnv->$envName;
+            } else if (strpos($field, 'server_env.') === 0) {
                 $envName = substr($field, strlen('server_env.'));
-                $logData[$field] = isset($runner->serverEnv->$envName) ? $runner->serverEnv->$envName : '-';
-            } else if (strpos($field, 'request.')) {
+                $logValue = $runner->serverEnv->$envName;
+            } else if (strpos($field, 'request.') === 0) {
                 $fieldName = substr($field, strlen('request.'));
-                $logData[$field] = isset($runner->request->$fieldName) ? $runner->request->$fieldName : '-';
+                $logValue = $runner->request->$fieldName;
             } else {
                 // 需要特殊处理的信息
                 switch ($field) {
                     case 'fmt_time':
                         $fmt = empty($arg) ? 'Y-m-d H:i:s' : $arg;
-                        $logData[$field] = date($fmt, \F_Ice::$ins->runner->request->requestTime);
+                        $logValue = date($fmt, \F_Ice::$ins->runner->request->requestTime);
                         break;
                     case 'level':
-                        $logData[$field] = self::$logLevelLiteral[$level];
+                        $logValue = self::$logLevelLiteral[$level];
                         break;
                     case 'trace':
-                        $logData[$field] = self::getTraceInfo($depth + 1);
+                        $logValue = self::getTraceInfo($depth + 1);
                         break;
                     case 'mem_used':
-                        $logData[$field] = round(memory_get_peak_usage() / 1048476) . 'M';
+                        $logValue = round(memory_get_peak_usage() / 1048476) . 'M';
                         break;
                     default:
                         $logValue = $this->get($field);
-                        $logData[$field] = isset($logValue) ? $logValue : '-';
                         break;
                 }
             }
+
+            $logData[$field] = empty($logValue) ? '-' : $logValue;
         }
         $logData['user_log'] = $userLog;
 
@@ -216,7 +217,11 @@ class Logger {
                     $args[] = $argStr;
                 }
             }
-            $traceInfo[] = sprintf('%s:%d[%s%s(%s)]', $file, $line, $class, $func, implode(',', $args));
+            if ($index == 0) {
+                $traceInfo[] = sprintf('%s:%d[Logger::%s()]', $file, $line, $func);
+            } else {
+                $traceInfo[] = sprintf('%s:%d[%s%s(%s)]', $file, $line, $class, $func, implode(',', $args));
+            }
         }
         return $traceInfo;
     }

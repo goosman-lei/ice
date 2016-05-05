@@ -19,10 +19,33 @@ $frame = array(
     'response_class'   => '\\Ice\\Frame\\Web\\Response',
 );
 
+/*
+ 每个日志项, 会被自动注册到自己App的成员变量. 比如common注册为$app->logger_common
+*/
 $log = array(
-    'common' => array( // common日志是固定的, 框架层会直接继承使用此logger
-        'log_fmt' => array(),
-        'log_fmt_wf' => array(),
+    'common' => array(
+        'log_fmt' => array(
+            'fmt_time'            => '', # 默认Y-m-d H:i:s
+            'client_env.ip'       => '',
+            'server_env.hostname' => '',
+            'request.uri'         => '',
+            'request.originalUri' => '',
+            'request.controller'  => '',
+            'request.action'      => '',
+            'request.id'          => '',
+        ),
+        'log_fmt_wf' => array(
+            'fmt_time'            => '', # 默认Y-m-d H:i:s
+            'client_env.ip'       => '',
+            'server_env.hostname' => '',
+            'request.uri'         => '',
+            'request.originalUri' => '',
+            'request.controller'  => '',
+            'request.action'      => '',
+            'request.id'          => '',
+            'level'               => '',
+            'trace'               => '',
+        ),
         'log_file' => 'common.log',
         'log_path' => $var_path . '/logs',
         'split'    => array(

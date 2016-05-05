@@ -12,6 +12,10 @@ class ServerEnv extends \U_Env {
     }
 
     public function __get($name) {
+        if ($name == 'hostname') {
+            $this->hostname = gethostname();
+            return $this->hostname;
+        }
         return $this->_servers[$name];
     }
 }

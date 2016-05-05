@@ -31,6 +31,13 @@ class Request {
         $this->initBaseUri();
     }
 
+    public function __get($name) {
+        if ($name == 'id') {
+            $this->id = md5(sprintf("%s|%s|%s", gethostname(), posix_getpid(), microtime(TRUE), rand(0, 999999)));
+            return $this->id;
+        }
+    }
+
     public function getParams() {
         return $this->_params;
     }

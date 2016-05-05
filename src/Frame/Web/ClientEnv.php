@@ -2,13 +2,17 @@
 namespace Ice\Frame\Web;
 class ClientEnv extends \U_Env {
 
-    public $ip;
-
     public function __construct() {
-        $this->initIp();
     }
 
-    protected function initIp() {
+    public function __get($name) {
+        if ($name == 'ip') {
+            $this->ip = $this->getClientIp();
+            return $this->ip;
+        }
+    }
+
+    protected function getClientIp() {
         $clientIp = '';
         if (getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
             $clientIp = getenv('HTTP_X_FORWARDED_FOR');
@@ -22,7 +26,7 @@ class ClientEnv extends \U_Env {
         }
         $clientIp = preg_match(';\d{1,3}(\.\d{1,3}){3};', $clientIp) ? $clientIp : '0.0.0.0';
 
-        $this->clientIp = $clientIp;
+        return $clientIp;
     }
 
 }
