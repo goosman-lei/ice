@@ -13,10 +13,8 @@
             "Ice\\Frame\\": "src/Frame",
             "Ice\\Util\\": "src/Util",
             "demo\\ui\\Action\\": "src/action"
-        }
-    },
-    "scripts": {
-        "post-update-cmd": "\\Ice\\Composer\\Plugin\\ClassAlias::postUpdate"
+        },
+        "files": ["class_alias.php"]
     },
     "repositories": [
         {
