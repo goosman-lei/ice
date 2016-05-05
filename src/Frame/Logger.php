@@ -80,11 +80,13 @@ class Logger {
         return isset($refData[$lastKey]) ? $refData[$lastKey] : null;
     }
 
-    public function fatal($userLog, $depth = 0) {
+    public function fatal($userLog, $errno = null, $depth = 0) {
+        $this->set('errno', $errno);
         $this->log($userLog, self::LEVEL_FATAL, $depth + 1);
     }
 
-    public function warn($userLog, $depth = 0) {
+    public function warn($userLog, $errno = null, $depth = 0) {
+        $this->set('errno', $errno);
         $this->log($userLog, self::LEVEL_WARN, $depth + 1);
     }
 

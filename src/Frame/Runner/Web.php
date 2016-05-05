@@ -171,7 +171,7 @@ class Web {
                     'controller' => $this->request->controller,
                     'action' => $this->request->action,
                     'msg' => 'dispatch error: no class or method',
-                ));
+                ), \F_ECode::UNKNOWN_URI);
                 return $this->response->error(\F_ECode::UNKNOWN_URI, array(
                     'controller' => $this->request->controller,
                     'action' => $this->request->action,
@@ -198,7 +198,7 @@ class Web {
                 'code'      => $e->getCode(),
                 'file'      => $e->getFile(),
                 'line'      => $e->getLine(),
-            ));
+            ), \F_ECode::PHP_ERROR);
             $this->response->error(\F_ECode::PHP_ERROR);
         }
     }

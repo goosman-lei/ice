@@ -44,6 +44,7 @@ $log = array(
             'request.action'      => '',
             'request.id'          => '',
             'level'               => '',
+            'errno'               => '',
             'trace'               => '',
         ),
         'log_file' => 'common.log',

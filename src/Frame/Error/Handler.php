@@ -16,7 +16,7 @@ class Handler {
                     'errfile'    => $errfile,
                     'errline'    => $errline,
                     'errcontext' => $errcontext,
-                ));
+                ), \F_ECode::PHP_ERROR);
                 \F_Ice::$ins->runner->response->error(\F_ECode::PHP_ERROR);
                 break;
             case E_CORE_WARNING:
@@ -29,7 +29,7 @@ class Handler {
                     'errfile'    => $errfile,
                     'errline'    => $errline,
                     'errcontext' => $errcontext,
-                ));
+                ), \F_ECode::PHP_WARN);
                 break;
             case E_NOTICE:
             case E_USER_NOTICE:
