@@ -1,6 +1,6 @@
 <?php
 namespace Ice\Frame\Web;
-class Request {
+class Request extends \Ice\Frame\Request {
 
     protected $_params;
     protected $_gets;
