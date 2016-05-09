@@ -2,10 +2,11 @@
 namespace Ice\Frame\Service;
 class Client {
     protected $handler;
+    protected $class;
 
     public $respHeader = array();
 
-    public function __construct($url) {
+    public function __construct($url, $class) {
         $this->handler = curl_init($url);
         curl_setopt($this->handler, CURLOPT_RETURNTRANSFER, TRUE); // 返回结果
         curl_setopt($this->handler, CURLOPT_FOLLOWLOCATION, TRUE); // 支持302跳转
@@ -17,14 +18,23 @@ class Client {
         curl_setopt($this->handler, CURLOPT_POST, TRUE);
     }
 
+    public function __call($method, $params) {
+        return $this->callArray($this->class, $method, $params);
+    }
+
+
     public function call($class, $method) {
+        $params = func_get_args();
+        array_splice($params, 0, 2);
+
+        return $this->callArray($class, $method, $params);
+    }
+
+    public function callArray($class, $method, $params) {
         $logData = array(
             'class'  => $class,
             'method' => $method,
         );
-
-        $params = func_get_args();
-        array_splice($params, 0, 2);
 
         $requestBody = ProtocolJsonV1::encodeRequest($class, $method, $params, \F_Ice::$ins->runner->request->getNextRelayId());
         curl_setopt($this->handler, CURLOPT_POSTFIELDS, $requestBody);
@@ -61,5 +71,6 @@ class Client {
             'code' => $response->code,
             'data' => $response->data,
         );
+
     }
 }
