@@ -85,7 +85,7 @@ class Service {
 
             $serviceObj = new $className();
 
-            $result = call_user_func_array(array($serviceObj, $this->request->serviceMethod), $this->request->params);
+            $result = call_user_func_array(array($serviceObj, $this->request->method), $this->request->params);
             $code = isset($result['code']) ? $result['code'] : \F_ECode::WS_ERROR_RESPONSE;
             $data = isset($result['data']) ? $result['data'] : null;
 
