@@ -6,7 +6,9 @@ class Client {
 
     public $respHeader = array();
 
-    public function __construct($url, $class) {
+    public function __construct($url, $class = null) {
+        $this->class = $class;
+
         $this->handler = curl_init($url);
         curl_setopt($this->handler, CURLOPT_RETURNTRANSFER, TRUE); // 返回结果
         curl_setopt($this->handler, CURLOPT_FOLLOWLOCATION, TRUE); // 支持302跳转
