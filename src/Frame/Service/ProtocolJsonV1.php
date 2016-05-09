@@ -57,7 +57,7 @@ class ProtocolJsonV1 {
         if (!isset($datas['version']) || $datas['version'] != self::VERSION) {
             return \F_ECode::WS_RESP_VERSION_ERROR;
         }
-        if (!isset($datas['code']) || !isset($datas['data'])) {
+        if (!isset($datas['code'])) {
             return \F_ECode::WS_RESP_PROTOCOL_ERROR;
         }
 

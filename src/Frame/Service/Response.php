@@ -42,6 +42,6 @@ class Response {
     }
 
     public function serialize() {
-        return ProtocolJsonV1::encodeRequest($this->code, $this->data, $this->id);
+        return ProtocolJsonV1::encodeResponse($this->code, $this->data, $this->id);
     }
 }
