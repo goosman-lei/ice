@@ -51,10 +51,10 @@ class Client {
             );
         }
 
-        $logData['total_time']  = $responseHeader[CURLINFO_TOTAL_TIME];
-        $logData['dns_time']    = $responseHeader[CURLINFO_NAMELOOKUP_TIME];
-        $logData['conn_time']   = $responseHeader[CURLINFO_CONNECT_TIME];
-        $logData['remote']      = $responseHeader[CURLINFO_PRIMARY_IP] . ':' . $responseHeader[CURLINFO_PRIMARY_PORT];
+        $logData['total_time']  = $responseHeader['total_time'];
+        $logData['dns_time']    = $responseHeader['namelookup_time'];
+        $logData['conn_time']   = $responseHeader['connect_time'];
+        $logData['remote']      = $responseHeader['primary_ip'] . ':' . $responseHeader['primary_port'];
         $logData['code']        = $response->code;
         \F_Ice::$ins->mainApp->logger_ws->info($logData, $response);
         return array(

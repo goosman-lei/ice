@@ -32,10 +32,10 @@ class ProtocolJsonV1 {
         }
 
         $request = new Request();
-        $request->class  = $datas['class'];
-        $request->method = $datas['method'];
-        $request->params = $datas['params'];
-        $request->id     = $datas['id'];
+        $request->class  = @$datas['class'];
+        $request->method = @$datas['method'];
+        $request->params = @$datas['params'];
+        $request->id     = @$datas['id'];
 
         return $request;
     }
@@ -62,9 +62,9 @@ class ProtocolJsonV1 {
         }
 
         $response = new Response();
-        $response->code  = $datas['code'];
-        $response->data  = $datas['data'];
-        $response->reqId = $datas['reqId'];
+        $response->code  = @$datas['code'];
+        $response->data  = @$datas['data'];
+        $response->reqId = @$datas['reqId'];
 
         return $response;
     }
