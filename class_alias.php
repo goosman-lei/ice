@@ -8,6 +8,8 @@ class_alias('\\Ice\\Frame\\Error\\Code',        'F_ECode');
 
 class_alias('\\Ice\\Frame\\Web\\Action',        'FW_Action');
 
+class_alias('\\Ice\\Frame\\Service\\Service',   'FS_Service');
+
 class_alias('\\Ice\\Util\\Time',                'U_Time');
 class_alias('\\Ice\\Util\\Env',                 'U_Env');
 class_alias('\\Ice\\Util\\DString',             'U_String');
