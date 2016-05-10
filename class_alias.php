@@ -10,7 +10,7 @@ class_alias('\\Ice\\Frame\\Web\\Action',        'FW_Action');
 
 class_alias('\\Ice\\Frame\\Service\\Service',   'FS_Service');
 
-class_alias('\\Ice\\Frame\\Daemon\\Action',     'FD_Action');
+class_alias('\\Ice\\Frame\\Daemon\\Daemon',     'FD_Daemon');
 
 class_alias('\\Ice\\Util\\Time',                'U_Time');
 class_alias('\\Ice\\Util\\Env',                 'U_Env');

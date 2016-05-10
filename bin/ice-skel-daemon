@@ -18,8 +18,7 @@ EOL
 function ui_make_dir_tree() {
     mkdir -p "$PROJECT_ROOT_DIR/var"
     chmod 777 "$PROJECT_ROOT_DIR/var"
-    mkdir -p "$PROJECT_SRC_DIR/daemon"
-    mkdir -p "$PROJECT_SRC_DIR/action/Say"
+    mkdir -p "$PROJECT_SRC_DIR/daemon/Say"
     mkdir -p "$PROJECT_SRC_DIR/conf"
     mkdir -p "$PROJECT_SRC_DIR/lib"
 }
