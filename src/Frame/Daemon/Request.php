@@ -1,26 +1,18 @@
 <?php
 namespace Ice\Frame\Daemon;
-class Request {#extends \Ice\Frame\Request {
+class Request extends \Ice\Frame\Abs\Request {
 
     public $options;
     public $argv;
-
-    public $requestTime;
-
-    // router info
-    public $class;
-    public $method;
-
     public $originalArgv;
 
     public $stdin;
 
     public function __construct() {
+        parent::__construct();
+
         $this->originalArgv = $_SERVER['argv'];
-
         $this->stdin = fopen('php://stdin', 'r');
-
-        #$this->requestTime = isset($_SERVER['REQUEST_TIME']) ? $_SERVER['REQUEST_TIME'] : \U_Time::now();
 
         $this->initArguments();
     }

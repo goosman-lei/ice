@@ -123,6 +123,10 @@ class Logger {
                         $fmt = empty($arg) ? 'Y-m-d H:i:s' : $arg;
                         $logValue = date($fmt, \F_Ice::$ins->runner->request->requestTime);
                         break;
+                    case 'fmt_now':
+                        $fmt = empty($arg) ? 'Y-m-d H:i:s' : $arg;
+                        $logValue = date($fmt, time());
+                        break;
                     case 'level':
                         $logValue = self::$logLevelLiteral[$level];
                         break;
