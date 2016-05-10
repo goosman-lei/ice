@@ -1,6 +1,6 @@
 <?php
 namespace Ice\Frame\Daemon;
-class Response {
+class Response extends \Ice\Frame\Abs\Response {
 
     public $stderr;
     public $stdout;

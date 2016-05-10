@@ -1,4 +1,4 @@
 <?php
 namespace Ice\Frame\Daemon;
-class ServerEnv extends \U_Env {
+class ServerEnv extends \Ice\Frame\Abs\ServerEnv {
 }
