@@ -1,8 +1,8 @@
 <?php
 $namespace = '${PROJECT_NAMESPACE}';
 $app_class = '\\Ice\\Frame\\App';
-$base_uri = '';
-$default_controller = 'index';
+$base_uri  = '';
+$default_class  = 'index';
 $default_action = 'index';
 
 $debug = TRUE;
@@ -30,7 +30,7 @@ $log = array(
             'server_env.hostname' => '',
             'request.uri'         => '',
             'request.originalUri' => '',
-            'request.controller'  => '',
+            'request.class'       => '',
             'request.action'      => '',
             'request.id'          => '',
         ),
@@ -40,7 +40,7 @@ $log = array(
             'server_env.hostname' => '',
             'request.uri'         => '',
             'request.originalUri' => '',
-            'request.controller'  => '',
+            'request.class'       => '',
             'request.action'      => '',
             'request.id'          => '',
             'level'               => '',
@@ -104,8 +104,8 @@ $temp_engine = array(
 demo: array(
     'default' => '\\Ice\\Frame\\Web\\Router\\RStatic',
     'i= /say/helloworld' => array(
-        'controller' => 'Say',
-        'action'     => 'Helloworld',
+        'class'  => 'Say',
+        'action' => 'Helloworld',
     )
 )
 */
