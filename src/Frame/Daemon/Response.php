@@ -12,10 +12,16 @@ class Response extends \Ice\Frame\Abs\Response {
     }
 
     public function output($content) {
+        if (!is_string($content)) {
+            $content = json_encode($content, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
         fwrite($this->stdout, "$content\n");
     }
 
     public function error($code, $content) {
+        if (!is_string($content)) {
+            $content = json_encode($content, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
         fwrite($this->stderr, "[$code] $content\n");
         exit($code);
     }
