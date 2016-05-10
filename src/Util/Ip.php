@@ -1,5 +1,5 @@
 <?php
-namespace \Ice\Util;
+namespace Ice\Util;
 class Ip {
 
     public static function getClientIp() {
