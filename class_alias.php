@@ -12,6 +12,8 @@ class_alias('\\Ice\\Frame\\Service\\Service',   'FS_Service');
 
 class_alias('\\Ice\\Util\\Time',                'U_Time');
 class_alias('\\Ice\\Util\\Env',                 'U_Env');
+class_alias('\\Ice\\Util\\Ip',                  'U_Ip');
+
 class_alias('\\Ice\\Util\\DString',             'U_String');
 class_alias('\\Ice\\Util\\DMap',                'U_Map');
 class_alias('\\Ice\\Util\\DStub',               'U_Stub');
