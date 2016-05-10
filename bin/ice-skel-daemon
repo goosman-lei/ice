@@ -10,7 +10,7 @@ PROJECT_SRC_DIR="$PROJECT_ROOT_DIR/src"
 read -r -d '' FILE_MAPPING <<EOL
 $TPL_DIR/tpl_cli.php:$PROJECT_SRC_DIR/daemon/cli.php
 $TPL_DIR/tpl_conf_app.php:$PROJECT_SRC_DIR/conf/app.php
-$TPL_DIR/tpl_action_Say_Hello.php:$PROJECT_SRC_DIR/action/Say/Hello.php
+$TPL_DIR/tpl_action_Say_Hello.php:$PROJECT_SRC_DIR/daemon/Say/Hello.php
 $TPL_DIR/tpl_composer.json:$PROJECT_ROOT_DIR/composer.json
 EOL
 
