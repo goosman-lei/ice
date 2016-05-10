@@ -6,6 +6,7 @@ class App {
 
     // resource
     public $config;
+    public $resourcePool;
 
     protected static $apps = array();
 
@@ -32,6 +33,8 @@ class App {
                 $this->$loggerName = new \F_Logger($logConfig);
             }
         }
+
+        $this->resourcePool = \Ice\Resource\Facade::buildForApp($this);
     }
 
     protected function preSwitch() {

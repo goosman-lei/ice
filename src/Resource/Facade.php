@@ -66,11 +66,11 @@ class Facade {
         }
     }
 
-    public static function buildForWorkApp() {
+    public static function buildForApp($app) {
         $facade = new self();
 
-        $facade->_mapping = \F_Ice::$ins->workApp->config->get('resource.mapping') ?: array();
-        $facade->_pool    = \F_Ice::$ins->workApp->config->get('resource.pool') ?: array();
+        $facade->_mapping = $app->config->get('resource.mapping') ?: array();
+        $facade->_pool    = $app->config->get('resource.pool') ?: array();
 
         $facade->initConf();
 
