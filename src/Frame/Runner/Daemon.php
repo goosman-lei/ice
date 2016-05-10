@@ -94,7 +94,7 @@ class Daemon {
 
     protected function dispatch() {
         try {
-            $className = "\\{$this->mainAppConf['namespace']}\\Daemon\\{$this->request->class}\\{$this->request->action}";
+            $className = "\\{$this->mainAppConf['namespace']}\\Action\\{$this->request->class}\\{$this->request->action}";
 
             if (!class_exists($className) || !method_exists($className, 'execute')) {
                 \F_Ice::$ins->mainApp->logger_common->fatal(array(
