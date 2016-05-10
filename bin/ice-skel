@@ -1,4 +1,75 @@
 #!/bin/bash
-source $( cd $( dirname ${BASH_SOURCE[0]} ) && pwd )/ice-skel-web
-source $( cd $( dirname ${BASH_SOURCE[0]} ) && pwd )/ice-skel-service
-source $( cd $( dirname ${BASH_SOURCE[0]} ) && pwd )/ice-skel-daemon
+SCRIPT_DIR=$( cd $( dirname ${BASH_SOURCE[0]} ) && pwd )
+TPL_DIR="$SCRIPT_DIR/../tpl"
+
+source $TPL_DIR/build.conf
+
+PROJECT_ROOT_DIR="$OUTPUT_DIR"
+PROJECT_SRC_DIR="$PROJECT_ROOT_DIR/src"
+
+read -r -d '' FILE_MAPPING <<EOL
+#公用
+$TPL_DIR/composer.json:$PROJECT_ROOT_DIR/composer.json
+#web
+$TPL_DIR/src/webroot/web.php:$PROJECT_SRC_DIR/webroot/web.php
+$TPL_DIR/src/conf/web_app.php:$PROJECT_SRC_DIR/conf/web_app.php
+$TPL_DIR/src/smarty-tpl/_common/error.tpl:$PROJECT_SRC_DIR/smarty-tpl/_common/error.tpl
+$TPL_DIR/src/smarty-tpl/say/helloworld.tpl:$PROJECT_SRC_DIR/smarty-tpl/say/helloworld.tpl
+$TPL_DIR/src/action/Say/Helloworld.php:$PROJECT_SRC_DIR/action/Say/Helloworld.php
+#service
+$TPL_DIR/src/webroot/service.php:$PROJECT_SRC_DIR/webroot/service.php
+$TPL_DIR/src/conf/service_app.php:$PROJECT_SRC_DIR/conf/service_app.php
+$TPL_DIR/src/service/Say.php:$PROJECT_SRC_DIR/service/Say.php
+#daemon
+$TPL_DIR/src/conf/daemon_app.php:$PROJECT_SRC_DIR/conf/daemon_app.php
+$TPL_DIR/src/daemon/cli.php:$PROJECT_SRC_DIR/daemon/cli.php
+$TPL_DIR/src/daemon/Say/Hello.php:$PROJECT_SRC_DIR/daemon/Say/Hello.php
+EOL
+
+
+function ui_make_dir_tree() {
+    mkdir -p "$PROJECT_ROOT_DIR/var"
+    chmod 777 "$PROJECT_ROOT_DIR/var"
+
+    mkdir -p "$PROJECT_SRC_DIR/webroot"
+    mkdir -p "$PROJECT_SRC_DIR/action"
+    mkdir -p "$PROJECT_SRC_DIR/service"
+    mkdir -p "$PROJECT_SRC_DIR/daemon"
+    mkdir -p "$PROJECT_SRC_DIR/conf"
+    mkdir -p "$PROJECT_SRC_DIR/lib"
+    mkdir -p "$PROJECT_SRC_DIR/smarty-tpl"
+
+    mkdir -p "$PROJECT_SRC_DIR/smarty-tpl/_common"
+    mkdir -p "$PROJECT_SRC_DIR/smarty-tpl/say"
+    mkdir -p "$PROJECT_SRC_DIR/action/Say"
+    mkdir -p "$PROJECT_SRC_DIR/daemon/Say"
+}
+
+function ui_cp_files() {
+    echo "$FILE_MAPPING" | awk -F':' 'NF==2&&substr($0,0,1)!="#"{print "cp -rf "$1" "$2;}' | bash
+}
+
+function ui_replace_info() {
+    PENDING_REPLACED_FILES=$(echo "$FILE_MAPPING" | awk -F':' 'NF==2&&substr($0,1,1)!="#"{printf "%s ", $2;}')
+    sed -i "s;\${PROJECT_GROUP};${PROJECT_GROUP};g" $PENDING_REPLACED_FILES
+    sed -i "s;\${PROJECT_NAME};${PROJECT_NAME};g" $PENDING_REPLACED_FILES
+    sed -i "s;\${PROJECT_NAMESPACE};${PROJECT_NAMESPACE};g" $PENDING_REPLACED_FILES
+    sed -i "s;\${PROJECT_NAMESPACE_ESCAPE};${PROJECT_NAMESPACE_ESCAPE};g" $PENDING_REPLACED_FILES
+    sed -i "s;\${PROJECT_ROOT_DIR};${PROJECT_ROOT_DIR};g" $PENDING_REPLACED_FILES
+}
+
+function ui_composer_init() {
+    cd $PROJECT_ROOT_DIR
+    composer update -vvv
+    cd -
+}
+
+rm -rf $OUTPUT_DIR
+
+ui_make_dir_tree
+
+ui_cp_files
+
+ui_replace_info
+
+ui_composer_init
