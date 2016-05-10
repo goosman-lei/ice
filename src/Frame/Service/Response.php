@@ -1,11 +1,13 @@
 <?php
 namespace Ice\Frame\Service;
-class Response {
+class Response extends \Ice\Frame\Abs\Response {
+
     public $code;
     public $data;
     public $id;
 
     public function __construct() {
+        parent::__construct();
     }
 
     public function startOb() {

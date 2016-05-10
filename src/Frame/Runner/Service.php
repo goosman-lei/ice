@@ -71,22 +71,22 @@ class Service {
             $ucfirstClass  = ucfirst(strtolower($this->request->class));
             $className = "\\{$this->mainAppConf['namespace']}\\Service\\{$ucfirstClass}";
 
-            if (!class_exists($className) || !method_exists($className, $this->request->method)) {
+            if (!class_exists($className) || !method_exists($className, $this->request->action)) {
                 \F_Ice::$ins->mainApp->logger_common->warn(array(
-                    'class' => $this->request->class,
-                    'method' => $this->request->method,
-                    'msg' => 'dispatch error: no class or method',
+                    'class'  => $this->request->class,
+                    'action' => $this->request->action,
+                    'msg'    => 'dispatch error: no class or action',
                 ), \F_ECode::UNKNOWN_URI);
                 return $this->response->error(\F_ECode::UNKNOWN_URI, array(
-                    'class' => $this->request->class,
-                    'method' => $this->request->method,
-                    'msg' => 'dispatch error: no class or method',
+                    'class'  => $this->request->class,
+                    'action' => $this->request->action,
+                    'msg'    => 'dispatch error: no class or action',
                 ));
             }
 
             $serviceObj = new $className();
 
-            $result = call_user_func_array(array($serviceObj, $this->request->method), $this->request->params);
+            $result = call_user_func_array(array($serviceObj, $this->request->action), $this->request->params);
             $code = isset($result['code']) ? $result['code'] : \F_ECode::WS_ERROR_RESPONSE;
             $data = isset($result['data']) ? $result['data'] : null;
 

@@ -10,11 +10,6 @@ class Response extends \Ice\Frame\Abs\Response {
 
     protected $tempEngine;
 
-    // router info
-    public $class;
-    public $action;
-
-
     public function __construct() {
         parent::__construct();
         ob_start(NULL, 1048576, PHP_OUTPUT_HANDLER_CLEANABLE);
