@@ -11,6 +11,7 @@ read -r -d '' FILE_MAPPING <<EOL
 #公用
 $TPL_DIR/composer.json:$PROJECT_ROOT_DIR/composer.json
 $TPL_DIR/src/conf/app.php:$PROJECT_SRC_DIR/conf/app.php
+$TPL_DIR/src/conf/resource.php:$PROJECT_SRC_DIR/conf/resource.php
 #web
 $TPL_DIR/src/webroot/web.php:$PROJECT_SRC_DIR/webroot/web.php
 $TPL_DIR/src/conf/web.inc:$PROJECT_SRC_DIR/conf/web.inc
