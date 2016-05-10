@@ -9,11 +9,6 @@ $var_path  = $root_path . '/../var';
 $run_path  = $var_path . '/run';
 $log_path  = $var_path . '/logs';
 
-$frame = array(
-    'server_env_class' => '\\Ice\\Frame\\Service\\ServerEnv',
-    'client_env_class' => '\\Ice\\Frame\\Service\\ClientEnv',
-);
-
 /*
  每个日志项, 会被自动注册到自己App的成员变量. 比如common注册为$app->logger_common
 */
