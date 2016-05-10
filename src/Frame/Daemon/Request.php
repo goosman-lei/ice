@@ -2,9 +2,9 @@
 namespace Ice\Frame\Daemon;
 class Request extends \Ice\Frame\Abs\Request {
 
-    public $options;
-    public $argv;
-    public $originalArgv;
+    public $options = array();
+    public $argv = array();
+    public $originalArgv = array();
 
     public $stdin;
 
