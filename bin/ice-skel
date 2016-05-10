@@ -10,18 +10,19 @@ PROJECT_SRC_DIR="$PROJECT_ROOT_DIR/src"
 read -r -d '' FILE_MAPPING <<EOL
 #公用
 $TPL_DIR/composer.json:$PROJECT_ROOT_DIR/composer.json
+$TPL_DIR/src/conf/app.php:$PROJECT_SRC_DIR/conf/app.php
 #web
 $TPL_DIR/src/webroot/web.php:$PROJECT_SRC_DIR/webroot/web.php
-$TPL_DIR/src/conf/web_app.php:$PROJECT_SRC_DIR/conf/web_app.php
+$TPL_DIR/src/conf/web.inc:$PROJECT_SRC_DIR/conf/web.inc
 $TPL_DIR/src/smarty-tpl/_common/error.tpl:$PROJECT_SRC_DIR/smarty-tpl/_common/error.tpl
 $TPL_DIR/src/smarty-tpl/say/helloworld.tpl:$PROJECT_SRC_DIR/smarty-tpl/say/helloworld.tpl
 $TPL_DIR/src/action/Say/Helloworld.php:$PROJECT_SRC_DIR/action/Say/Helloworld.php
 #service
 $TPL_DIR/src/webroot/service.php:$PROJECT_SRC_DIR/webroot/service.php
-$TPL_DIR/src/conf/service_app.php:$PROJECT_SRC_DIR/conf/service_app.php
+$TPL_DIR/src/conf/service.inc:$PROJECT_SRC_DIR/conf/service.inc
 $TPL_DIR/src/service/Say.php:$PROJECT_SRC_DIR/service/Say.php
 #daemon
-$TPL_DIR/src/conf/daemon_app.php:$PROJECT_SRC_DIR/conf/daemon_app.php
+$TPL_DIR/src/conf/daemon.inc:$PROJECT_SRC_DIR/conf/daemon.inc
 $TPL_DIR/src/daemon/cli.php:$PROJECT_SRC_DIR/daemon/cli.php
 $TPL_DIR/src/daemon/Say/Hello.php:$PROJECT_SRC_DIR/daemon/Say/Hello.php
 EOL

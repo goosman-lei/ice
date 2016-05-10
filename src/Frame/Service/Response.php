@@ -10,20 +10,9 @@ class Response extends \Ice\Frame\Abs\Response {
         parent::__construct();
     }
 
-    public function startOb() {
-        ob_start(NULL, 1048576, PHP_OUTPUT_HANDLER_CLEANABLE);
-    }
-
     public function output($code, $data = null) {
         $this->code = $code;
         $this->data = $data;
-
-        // process output of user code
-        if (!\F_Ice::$ins->runner->mainAppConf['debug']) {
-            ob_get_clean();
-        } else {
-            ob_flush();
-        }
 
         echo $this->serialize();
     }
@@ -31,13 +20,6 @@ class Response extends \Ice\Frame\Abs\Response {
     public function error($code, $data = null) {
         $this->code = $code;
         $this->data = $data;
-
-        // process output of user code
-        if (!\F_Ice::$ins->runner->mainAppConf['debug']) {
-            ob_get_clean();
-        } else {
-            ob_flush();
-        }
 
         echo $this->serialize();
         exit(1);

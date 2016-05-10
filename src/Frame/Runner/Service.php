@@ -45,7 +45,6 @@ class Service {
 
     protected function setupResponse() {
         $this->response = new \Ice\Frame\Service\Response();
-        $this->response->startOb();
         if (is_object($this->request)) {
             $this->response->id = $this->request->id;
         }

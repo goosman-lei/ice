@@ -99,8 +99,8 @@ class Request extends \Ice\Frame\Abs\Request {
 
         // omit $baseUri
         $mainAppConf = \F_Ice::$ins->runner->mainAppConf;
-        if (isset($mainAppConf['baseUri'])) {
-            $baseUri = $mainAppConf['baseUri'];
+        if (isset($mainAppConf['runner']['frame']['baseUri'])) {
+            $baseUri = $mainAppConf['runner']['frame']['baseUri'];
             $baseUri = preg_replace(';/{2,};', '/', $baseUri);
             $baseUri = rtrim($baseUri, '/');
 

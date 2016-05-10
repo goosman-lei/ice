@@ -12,7 +12,6 @@ class Response extends \Ice\Frame\Abs\Response {
 
     public function __construct() {
         parent::__construct();
-        ob_start(NULL, 1048576, PHP_OUTPUT_HANDLER_CLEANABLE);
     }
 
     protected function initTempEngine() {
@@ -20,7 +19,7 @@ class Response extends \Ice\Frame\Abs\Response {
             return ;
         }
         // read template engine config
-        $config = \F_Ice::$ins->runner->mainAppConf['temp_engine'];
+        $config = \F_Ice::$ins->runner->mainAppConf['runner']['temp_engine'];
         
         // find current template engine
         $usedTempEngine = $this->findTempEngine($config['routes']);
@@ -53,13 +52,6 @@ class Response extends \Ice\Frame\Abs\Response {
     public function output() {
         $this->initTempEngine();
 
-        // process output of user code
-        if (!\F_Ice::$ins->runner->mainAppConf['debug']) {
-            ob_get_clean();
-        } else {
-            ob_flush();
-        }
-
         // process template engine render
         $this->bodyBuffer .= $this->tempEngine->render();
 
@@ -77,13 +69,6 @@ class Response extends \Ice\Frame\Abs\Response {
 
     public function error($errno, $data = array()) {
         $this->initTempEngine();
-
-        // process output of user code
-        if (!\F_Ice::$ins->runner->mainAppConf['debug']) {
-            ob_get_clean();
-        } else {
-            ob_flush();
-        }
 
         // process template engine render
         $this->bodyBuffer .= $this->tempEngine->renderError($errno, $data);
