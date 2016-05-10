@@ -1,6 +1,6 @@
 <?php
 namespace Ice\Frame\Web;
-class Request extends \Ice\Frame\Request {
+class Request extends \Ice\Frame\Abs\Request {
 
     protected $_params;
     protected $_gets;
@@ -9,16 +9,12 @@ class Request extends \Ice\Frame\Request {
     protected $_files;
     protected $_body;
 
-    public $requestTime;
-
-    // router info
-    public $controller;
-    public $action;
-
     public $uri;
     public $originalUri;
 
     public function __construct() {
+        parent::__construct();
+
         $this->_params  = array();
         $this->_gets    = $_GET;
         $this->_posts   = $_POST;

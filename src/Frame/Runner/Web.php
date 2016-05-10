@@ -140,10 +140,10 @@ class Web {
             }
 
             if ($isMatch) {
-                $this->request->controller  = $rule['controller'];
-                $this->request->action      = $rule['action'];
-                $this->response->controller = $rule['controller'];
-                $this->response->action     = $rule['action'];
+                $this->request->class   = $rule['class'];
+                $this->request->action  = $rule['action'];
+                $this->response->class  = $rule['class'];
+                $this->response->action = $rule['action'];
                 if (isset($rule['params']) && !empty($params)) {
                     foreach ($rule['params'] as $matchKey => $paramName) {
                         $this->request->setParam($paramName, $params[$matchKey]);
@@ -164,18 +164,18 @@ class Web {
 
     protected function dispatch() {
         try {
-            $className = "\\{$this->mainAppConf['namespace']}\\Action\\{$this->request->controller}\\{$this->request->action}";
+            $className = "\\{$this->mainAppConf['namespace']}\\Action\\{$this->request->class}\\{$this->request->action}";
 
             if (!class_exists($className) || !method_exists($className, 'execute')) {
                 \F_Ice::$ins->mainApp->logger_common->fatal(array(
-                    'controller' => $this->request->controller,
+                    'class'  => $this->request->class,
                     'action' => $this->request->action,
-                    'msg' => 'dispatch error: no class or method',
+                    'msg'    => 'dispatch error: no class or method',
                 ), \F_ECode::UNKNOWN_URI);
                 return $this->response->error(\F_ECode::UNKNOWN_URI, array(
-                    'controller' => $this->request->controller,
+                    'class'  => $this->request->class,
                     'action' => $this->request->action,
-                    'msg' => 'dispatch error: no class or method',
+                    'msg'    => 'dispatch error: no class or method',
                 ));
             }
 

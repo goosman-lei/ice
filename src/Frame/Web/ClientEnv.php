@@ -1,15 +1,11 @@
 <?php
 namespace Ice\Frame\Web;
-class ClientEnv extends \U_Env {
+class ClientEnv extends \Ice\Frame\Abs\ClientEnv {
 
     public function __construct() {
-    }
+        parent::__construct();
 
-    public function __get($name) {
-        if ($name == 'ip') {
-            $this->ip = $this->getClientIp();
-            return $this->ip;
-        }
+        $this->ip = $this->getClientIp();
     }
 
     protected function getClientIp() {

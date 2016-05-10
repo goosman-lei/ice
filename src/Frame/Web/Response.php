@@ -1,6 +1,7 @@
 <?php
 namespace Ice\Frame\Web;
-class Response {
+class Response extends \Ice\Frame\Abs\Response {
+
     protected $bodyBuffer = '';
     protected $headers    = array();
     protected $cookies    = array();
@@ -10,11 +11,12 @@ class Response {
     protected $tempEngine;
 
     // router info
-    public $controller;
+    public $class;
     public $action;
 
 
     public function __construct() {
+        parent::__construct();
         ob_start(NULL, 1048576, PHP_OUTPUT_HANDLER_CLEANABLE);
     }
 
@@ -37,11 +39,11 @@ class Response {
     }
 
     protected function findTempEngine($config) {
-        if (!\U_Array::icaseKeySearch($this->controller, $config)) {
+        if (!\U_Array::icaseKeySearch($this->class, $config)) {
             return $config['*'];
         }
 
-        $config = $config[$this->controller];
+        $config = $config[$this->class];
         if (!is_array($config)) {
             return $config;
         }
