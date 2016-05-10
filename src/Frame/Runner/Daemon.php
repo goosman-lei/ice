@@ -14,9 +14,9 @@ class Daemon {
     // output data
     public $response;
 
-    public function __construct($rootPath) {
-        $this->rootPath = $rootPath;
-        $this->mainAppConf = \F_Config::getConfig($this->rootPath . '/conf/app.php');
+    public function __construct($confPath) {
+        $this->rootPath = realpath($confPath . '/..');
+        $this->mainAppConf = \F_Config::getConfig($confPath);
     }
 
     public function run() {
