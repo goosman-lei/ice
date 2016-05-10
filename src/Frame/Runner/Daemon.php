@@ -17,6 +17,7 @@ class Daemon {
     public function __construct($confPath) {
         $this->rootPath = realpath($confPath . '/..');
         $this->mainAppConf = \F_Config::getConfig($confPath);
+        $this->mainAppConf['runner'] = $this->mainAppConf['runner']['daemon'];
     }
 
     public function run() {
@@ -34,11 +35,11 @@ class Daemon {
     }
 
     protected function setupEnv() {
-        $serverEnvClass = isset($this->mainAppConf['frame']['server_env_class'])
-                        ? $this->mainAppConf['frame']['server_env_class']
+        $serverEnvClass = isset($this->mainAppConf['runner']['frame']['server_env_class'])
+                        ? $this->mainAppConf['runner']['frame']['server_env_class']
                         : '\\Ice\\Frame\\Daemon\\ServerEnv';
-        $clientEnvClass = isset($this->mainAppConf['frame']['client_env_class'])
-                        ? $this->mainAppConf['frame']['client_env_class']
+        $clientEnvClass = isset($this->mainAppConf['runner']['frame']['client_env_class'])
+                        ? $this->mainAppConf['runner']['frame']['client_env_class']
                         : '\\Ice\\Frame\\Daemon\\ClientEnv';
 
         $this->serverEnv  = new $serverEnvClass();
@@ -46,15 +47,15 @@ class Daemon {
     }
 
     protected function setupRequest() {
-        $requestClass = isset($this->mainAppConf['frame']['request_class'])
-                        ? $this->mainAppConf['frame']['request_class']
+        $requestClass = isset($this->mainAppConf['runner']['frame']['request_class'])
+                        ? $this->mainAppConf['runner']['frame']['request_class']
                         : '\\Ice\\Frame\\Daemon\\Request';
         $this->request    = new $requestClass();
     }
 
     protected function setupResponse() {
-        $responseClass = isset($this->mainAppConf['frame']['response_class'])
-                        ? $this->mainAppConf['frame']['response_class']
+        $responseClass = isset($this->mainAppConf['runner']['frame']['response_class'])
+                        ? $this->mainAppConf['runner']['frame']['response_class']
                         : '\\Ice\\Frame\\Daemon\\Response';
         $this->response = new $responseClass();
     }

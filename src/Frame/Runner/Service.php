@@ -18,6 +18,7 @@ class Service {
     public function __construct($confPath) {
         $this->rootPath = realpath($confPath . '/..');
         $this->mainAppConf = \F_Config::getConfig($confPath);
+        $this->mainAppConf['runner'] = $this->mainAppConf['runner']['service'];
     }
 
     public function run() {

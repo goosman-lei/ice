@@ -1,26 +1,8 @@
 <?php
-$namespace = '${PROJECT_NAMESPACE}';
-$app_class = '\\Ice\\Frame\\App';
-$base_uri  = '';
-$default_class  = 'index';
-$default_action = 'index';
-
-$root_path = __DIR__ . '/..';
-$var_path  = $root_path . '/../var';
-$run_path  = $var_path . '/run';
-$log_path  = $var_path . '/logs';
-
-$frame = array(
-    'server_env_class' => '\\Ice\\Frame\\Web\\ServerEnv',
-    'client_env_class' => '\\Ice\\Frame\\Web\\ClientEnv',
-    'request_class'    => '\\Ice\\Frame\\Web\\Request',
-    'response_class'   => '\\Ice\\Frame\\Web\\Response',
-);
-
 /*
  每个日志项, 会被自动注册到自己App的成员变量. 比如common注册为$app->logger_common
 */
-$log = array(
+$web_logger = array(
     'common' => array(
         'log_fmt' => array(
             'fmt_time'            => '', # 默认Y-m-d H:i:s
@@ -54,7 +36,28 @@ $log = array(
     ),
 );
 
-$temp_engine = array(
+/*
+1. "==": 精确匹配
+2. "i=": 不区分大小写精确匹配
+3. "^=": 精确前缀匹配
+4. "i^": 不区分大小写前缀匹配
+5. "$=": 精确后缀匹配
+6. "i$": 不区分大小写后缀匹配
+7. "~=": 正则匹配. 支持子组设置参数
+8. 自定义路由: 逗号分隔, 直到一个路由器返回TRUE
+demo: array(
+    'default' => '\\Ice\\Frame\\Web\\Router\\RStatic',
+    'i= /say/helloworld' => array(
+        'class'  => 'Say',
+        'action' => 'Helloworld',
+    )
+)
+*/
+$web_routes = array(
+    'default' => '\\Ice\\Frame\\Web\\Router\\RStatic',
+);
+
+$web_temp_engine = array(
     'engines' => array(
         'json' => array(
             'adapter' => '\\Ice\\Frame\\Web\\TempEngine\\Json',
@@ -90,23 +93,12 @@ $temp_engine = array(
     ),
 );
 
-/*
-1. "==": 精确匹配
-2. "i=": 不区分大小写精确匹配
-3. "^=": 精确前缀匹配
-4. "i^": 不区分大小写前缀匹配
-5. "$=": 精确后缀匹配
-6. "i$": 不区分大小写后缀匹配
-7. "~=": 正则匹配. 支持子组设置参数
-8. 自定义路由: 逗号分隔, 直到一个路由器返回TRUE
-demo: array(
-    'default' => '\\Ice\\Frame\\Web\\Router\\RStatic',
-    'i= /say/helloworld' => array(
-        'class'  => 'Say',
-        'action' => 'Helloworld',
-    )
-)
-*/
-$routes = array(
-    'default' => '\\Ice\\Frame\\Web\\Router\\RStatic',
+$web_frame = array(
+    'server_env_class' => '\\Ice\\Frame\\Web\\ServerEnv',
+    'client_env_class' => '\\Ice\\Frame\\Web\\ClientEnv',
+    'request_class'    => '\\Ice\\Frame\\Web\\Request',
+    'response_class'   => '\\Ice\\Frame\\Web\\Response',
+    'base_uri'         => '',
+    'default_class'    => 'index',
+    'default_action'   => 'index',
 );
