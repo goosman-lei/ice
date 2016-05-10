@@ -20,25 +20,25 @@ class Client {
         curl_setopt($this->handler, CURLOPT_POST, TRUE);
     }
 
-    public function __call($method, $params) {
-        return $this->callArray($this->class, $method, $params);
+    public function __call($action, $params) {
+        return $this->callArray($this->class, $action, $params);
     }
 
 
-    public function call($class, $method) {
+    public function call($class, $action) {
         $params = func_get_args();
         array_splice($params, 0, 2);
 
-        return $this->callArray($class, $method, $params);
+        return $this->callArray($class, $action, $params);
     }
 
-    public function callArray($class, $method, $params) {
+    public function callArray($class, $action, $params) {
         $logData = array(
             'class'  => $class,
-            'method' => $method,
+            'action' => $action,
         );
 
-        $requestBody = ProtocolJsonV1::encodeRequest($class, $method, $params, \F_Ice::$ins->runner->request->getServiceCallId());
+        $requestBody = ProtocolJsonV1::encodeRequest($class, $action, $params, \F_Ice::$ins->runner->request->getServiceCallId());
         curl_setopt($this->handler, CURLOPT_POSTFIELDS, $requestBody);
 
         $responseBody   = curl_exec($this->handler);

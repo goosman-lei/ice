@@ -3,11 +3,11 @@ namespace Ice\Frame\Service;
 class ProtocolJsonV1 {
     const VERSION = 1;
 
-    public static function encodeRequest($class, $method, $params, $reqId) {
+    public static function encodeRequest($class, $action, $params, $reqId) {
         return json_encode(array(
             'version' => self::VERSION,
             'class'   => $class,
-            'method'  => $method,
+            'action'  => $action,
             'params'  => $params,
             'id'      => $reqId,
         ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -21,10 +21,10 @@ class ProtocolJsonV1 {
         if (!isset($datas['version']) || $datas['version'] != self::VERSION) {
             return \F_ECode::WS_REQ_VERSION_ERROR;
         }
-        if (!isset($datas['class']) || !isset($datas['method']) || !isset($datas['id'])) {
+        if (!isset($datas['class']) || !isset($datas['action']) || !isset($datas['id'])) {
             return \F_ECode::WS_REQ_PROTOCOL_ERROR;
         }
-        if (!$datas['class'] || !$datas['method'] || !$datas['id']) {
+        if (!$datas['class'] || !$datas['action'] || !$datas['id']) {
             return \F_ECode::WS_REQ_PROTOCOL_ERROR;
         }
         if (!isset($datas['params']) || !is_array($datas['params'])) {
@@ -33,7 +33,7 @@ class ProtocolJsonV1 {
 
         $request = new Request();
         $request->class  = @$datas['class'];
-        $request->method = @$datas['method'];
+        $request->action = @$datas['action'];
         $request->params = @$datas['params'];
         $request->id     = @$datas['id'];
 
