@@ -1,5 +1,5 @@
 <?php
-namespace Ice\Frame\Web;
+namespace Ice\Frame\Daemon;
 class Response {
 
     public $stderr;
