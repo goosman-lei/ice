@@ -1,6 +1,6 @@
 <?php
 namespace Ice\Frame\Service;
-class Request extends \Ice\Frame\Request {
+class Request extends \Ice\Frame\Abs\Request {
     public $class;
     public $method;
     public $params;

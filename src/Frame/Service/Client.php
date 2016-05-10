@@ -38,7 +38,7 @@ class Client {
             'method' => $method,
         );
 
-        $requestBody = ProtocolJsonV1::encodeRequest($class, $method, $params, \F_Ice::$ins->runner->request->getNextRelayId());
+        $requestBody = ProtocolJsonV1::encodeRequest($class, $method, $params, \F_Ice::$ins->runner->request->getServiceCallId());
         curl_setopt($this->handler, CURLOPT_POSTFIELDS, $requestBody);
 
         $responseBody   = curl_exec($this->handler);
