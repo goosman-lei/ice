@@ -2,7 +2,7 @@
     "name": "${PROJECT_GROUP}/${PROJECT_NAME}",
     "description": "",
     "version": "0.0.1-dev",
-    "type": "project",
+    "type": "library",
     "require": {
         "Ice/Framework": ">=0.0.1-dev"
     },

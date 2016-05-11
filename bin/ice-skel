@@ -1,6 +1,6 @@
 #!/bin/bash
 SCRIPT_DIR=$( cd $( dirname ${BASH_SOURCE[0]} ) && pwd )
-TPL_DIR="$SCRIPT_DIR/../tpl"
+TPL_DIR="$SCRIPT_DIR/../tpl.web"
 
 source $TPL_DIR/build.conf
 

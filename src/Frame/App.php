@@ -20,7 +20,7 @@ class App {
             return self::$apps[$cachedSn];
         }
 
-        $rootPath = \F_Ice::$ins->ice->mainApp->rootPath . '/../vendor/' . $projectGroup . '/' . $projectName . '/src';
+        $rootPath = \F_Ice::$ins->mainApp->rootPath . '/../vendor/' . $projectGroup . '/' . $projectName . '/src';
         $runType  = 'service';
         self::$apps[$cachedSn] = new self($rootPath, $runType);
 
