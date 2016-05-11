@@ -15,7 +15,7 @@ class Web {
     public $response;
 
     public function __construct($confPath) {
-        $this->rootPath = realpath($confPath . '/..');
+        $this->rootPath = realpath(dirname($confPath) . '/..');
         $this->mainAppConf = \F_Config::getConfig($confPath);
         $this->mainAppConf['runner'] = $this->mainAppConf['runner']['web'];
     }
