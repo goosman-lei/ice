@@ -7,7 +7,7 @@ class Remote {
 
     public function __construct($config, $class = null) {
         $this->resource = $config['resource'];
-        $this->handler  = \F_Ice::$ins->mainApp->proxy_resource->get($resource);
+        $this->handler  = \F_Ice::$ins->workApp->proxy_resource->get($this->resource);
         if (isset($class)) {
             $this->class = $class;
         }

@@ -2,7 +2,7 @@
 namespace ${PROJECT_NAMESPACE}\Action\Say;
 class Helloworld extends \FW_Action {
     public function execute() {
-        $client = new \Ice\Frame\Service\Client('http://ice-service.leiguoguo.lab.niceprivate.com', 'Say');
+        $client = $this->ice->mainApp->proxy_resource->get('demo-remote', 'Say');
         return array(
             'code' => 0,
             'data' => array(
