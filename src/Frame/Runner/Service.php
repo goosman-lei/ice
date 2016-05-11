@@ -1,6 +1,8 @@
 <?php
 namespace Ice\Frame\Runner;
 class Service {
+    protected $name = 'service';
+
     protected $rootPath;
 
     // input data

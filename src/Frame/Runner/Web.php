@@ -1,6 +1,8 @@
 <?php
 namespace Ice\Frame\Runner;
 class Web {
+    protected $name = 'web';
+
     protected $rootPath;
 
     // input data

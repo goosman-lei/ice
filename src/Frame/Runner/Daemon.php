@@ -1,6 +1,8 @@
 <?php
 namespace Ice\Frame\Runner;
 class Daemon {
+    protected $name = 'daemon';
+
     protected $rootPath;
 
     // input data

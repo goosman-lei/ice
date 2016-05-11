@@ -8,6 +8,8 @@ class App {
     public $config;
     public $resourcePool;
 
+    public $runType;
+
     protected static $apps = array();
 
     public static function getApp($appName) {
@@ -18,9 +20,11 @@ class App {
         self::$apps[$appName] = $app;
     }
 
-    public function __construct($rootPath) {
+    public function __construct($rootPath, $runType) {
         $this->rootPath = $rootPath;
-        $this->config = new \F_Config($this->rootPath . '/conf');
+        $this->runType = $runType;
+
+        $this->config = \F_Config::buildForApp($this);
 
         $this->init();
     }

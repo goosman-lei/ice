@@ -8,6 +8,12 @@ class Config {
         $this->confArr = self::loadConfig($rootPath);
     }
 
+    public function buildForApp($app) {
+        $config = new self($app->rootPath . '/conf');
+        $config->confArr['app']['runner'] = $config->confArr['app']['runner'][$app->runType];
+        return $config;
+    }
+
     /**
      * get 
      * 获取配置项
@@ -56,27 +62,12 @@ class Config {
     }
 
     protected static function loadConfig($rootPath) {
-        $yac = new \Yac();
-        $ns  = md5($rootPath);
-
-        $confKey   = "{$ns}-config";
-        $mtimeKey  = "{$ns}-mtime";
-        $cacheData = $yac->get(array($confKey, $mtimeKey));
-
-        $confArr = !empty($cacheData[$confKey]) ? $cacheData[$confKey] : array();
-        $mtimes  = !empty($cacheData[$mtimeKey]) ? $cacheData[$mtimeKey] : array();
-
-        self::refreshConfigRecursive($rootPath, $confArr, $mtimes);
-
-        $yac->set(array(
-            $confKey  => $confArr,
-            $mtimeKey => $mtimes,
-        ));
-
+        $confArr = array();
+        self::refreshConfigRecursive($rootPath, $confArr);
         return $confArr;
     }
 
-    protected static function refreshConfigRecursive($rootPath, &$confArr, &$mtimes = array()) {
+    protected static function refreshConfigRecursive($rootPath, &$confArr) {
         if (!is_dir($rootPath)) {
             return ;
         }
@@ -88,18 +79,15 @@ class Config {
                 continue;
             } else if (is_dir($fpath)) {
                 $confArr[$fpath] = array();
-                self::refreshConfigRecursive($fpath, $confArr[$fpath], $mtimes);
+                self::refreshConfigRecursive($fpath, $confArr[$fpath]);
             } else if (is_file($fpath) && substr($fpath, - 4) === '.php') {
-                $mtime   = filemtime($fpath);
                 $confKey = preg_replace(';\.php$;i', '', $fname);
-                if (!isset($mtimes[$fpath]) || $mtimes[$fpath] < $mtime) { // 第一次加载, 或者已经过期
-                    $__preInclude = get_defined_vars();
-                    include $fpath;
-                    $__postInclude = get_defined_vars();
-                    unset($__postInclude['__preInclude']);
-                    $confArr[$confKey] = array_diff_key($__postInclude, $__preInclude);
-                    $mtimes[$fpath] = $mtime;
-                }
+
+                $__preInclude = get_defined_vars();
+                include $fpath;
+                $__postInclude = get_defined_vars();
+                unset($__postInclude['__preInclude']);
+                $confArr[$confKey] = array_diff_key($__postInclude, $__preInclude);
             }
         }
     }

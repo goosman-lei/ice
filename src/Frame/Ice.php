@@ -29,7 +29,7 @@ class Ice {
         // no class exists check. you must guarantee that by yourself pre online
         $mainAppNamespace = $this->runner->mainAppConf['app_class'];
         $mainAppClass     = $this->runner->mainAppConf['app_class'];
-        $this->mainApp    = new $mainAppClass($this->rootPath);
+        $this->mainApp    = new $mainAppClass($this->rootPath, $this->runner->name);
         $this->workApp    = $this->mainApp;
         \F_App::registerApp($mainAppNamespace, $this->mainApp);
 
