@@ -84,7 +84,7 @@ class Facade {
             (?P<scheme>[\w-]++)
             ://
             (?P<unitname>[\w\.-]++)
-            (?:/(?P<cluster>[\w-]++))
+            (?:/(?P<cluster>[\w-]++))?
             (?:\?(?P<params>.*+))?
         ;x', $uri, $match);
 
@@ -149,6 +149,7 @@ class Facade {
                     'uri'    => $uri,
                     'nodeSn' => $nodeSn,
                 ), \F_ECode::R_ERROR_GET_CONN);
+                unset($nodeInfos[$nodeSn]);
             }
         } while (!empty($nodeInfos) && $conn === FALSE);
 
