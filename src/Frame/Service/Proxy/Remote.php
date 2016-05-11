@@ -37,10 +37,8 @@ class Remote {
         );
 
         $requestBody = \Ice\Frame\Service\ProtocolJsonV1::encodeRequest($class, $action, $params, \F_Ice::$ins->runner->request->getServiceCallId());
-        curl_setopt($this->handler, \CURLOPT_POSTFIELDS, $requestBody);
 
-        $responseBody   = curl_exec($this->handler);
-        $responseHeader = curl_getinfo($this->handler);
+        $responseBody = $this->handler->post('/', $requestBody, array(), $responseHeader);
 
         if (empty($responseBody)) {
             $logData['resp_header'] = $responseHeader;

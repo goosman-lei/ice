@@ -83,11 +83,7 @@ class Config {
             } else if (is_file($fpath) && substr($fpath, - 4) === '.php') {
                 $confKey = preg_replace(';\.php$;i', '', $fname);
 
-                $__preInclude = get_defined_vars();
-                include $fpath;
-                $__postInclude = get_defined_vars();
-                unset($__postInclude['__preInclude']);
-                $confArr[$confKey] = array_diff_key($__postInclude, $__preInclude);
+                $confArr[$confKey] = self::getConfig($fpath);
             }
         }
     }

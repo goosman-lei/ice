@@ -69,4 +69,8 @@ class Curl extends Abs {
 
         return strval($respBody);
     }
+
+    public function setOpt($k, $v) {
+        curl_setopt($this->conn, $k, $v);
+    }
 }
