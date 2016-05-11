@@ -70,7 +70,7 @@ class Local {
 
         \F_Ice::$ins->switchWorkApp($oldWorkApp);
 
-        return $retArr;
+        return $returnArr;
     }
 
 }
