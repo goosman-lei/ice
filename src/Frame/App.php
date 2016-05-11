@@ -6,7 +6,7 @@ class App {
 
     // resource
     public $config;
-    public $resourcePool;
+    public $pool_resource;
 
     public $runType;
 
@@ -38,7 +38,7 @@ class App {
             }
         }
 
-        $this->resourcePool = \Ice\Resource\Facade::buildForApp($this);
+        $this->pool_resource = \Ice\Resource\Facade::buildForApp($this);
     }
 
     protected function preSwitch() {
