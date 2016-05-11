@@ -1,6 +1,17 @@
 <?php
 namespace Ice\Resource\Connector;
 class Curl extends Abs {
+
+    public static function mergeDefault($nodeConfig, $nodeOptions) {
+        if (!isset($nodeOptions['scheme'])) {
+            $nodeOptions['scheme'] = 'http';
+        }
+        if (!isset($nodeConfig['port'])) {
+            $nodeConfig['port'] = getservbyname($nodeOptions['scheme'], 'tcp');
+        }
+        return array($nodeConfig, $nodeOptions);
+    }
+
     public static function getSn($nodeConfig, $nodeOptions) {
         return sprintf('%s:%s:%s', $nodeOptions['scheme'], $nodeConfig['host'], $nodeConfig['port']);
     }

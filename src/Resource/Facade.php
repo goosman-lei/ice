@@ -48,6 +48,7 @@ class Facade {
                             $nodeOptions = isset($nodeConfig['options']) ? (array)$nodeConfig['options'] : array();
                             unset($nodeConfig['options']);
                             $nodeOptions = array_merge($schemeOptions, $unitOptions, $clusterOptions, $nodeOptions);
+                            list($nodeConfig, $nodeOptions) = call_user_func(array($connectorClass, 'mergeDefault'), $nodeConfig, $nodeOptions);
 
                             $nodeSn = call_user_func(array($connectorClass, 'getSn'), $nodeConfig, $nodeOptions);
 

@@ -1,6 +1,14 @@
 <?php
 namespace Ice\Resource\Connector;
 class Mysqli extends Abs {
+    
+    public static function mergeDefault($nodeConfig, $nodeOptions) {
+        if (!isset($nodeOptions['dbname'])) {
+            $nodeOptions['dbname'] = '';
+        }
+        return array($nodeConfig, $nodeOptions);
+    }
+
     public static function getSn($nodeConfig, $nodeOptions) {
         return sprintf('%s:%s:%s:%s', $nodeConfig['host'], $nodeConfig['port'], $nodeOptions['dbname'], $nodeOptions['user']);
     }

@@ -4,11 +4,10 @@ class Curl {
     protected function getFullUrl($path) {
         $host   = $this->nodeConfig['host'];
         $path   = '/' . ltrim($path, '/');
-        $scheme = $this->nodeOptions['scheme'] ?: 'http';
+        $scheme = $this->nodeOptions['scheme'];
         $port   = '';
         if (isset($this->nodeConfig['port'])) {
-            if ($scheme == 'http' && $this->nodeConfig['port'] != 80
-                    || $scheme == 'https' && $this->nodeConfig['port'] != 443) {
+            if (getservbyname($this->nodeOptions['scheme'], 'tcp') != $this->nodeConfig['port']) {
                 $port = ':' . $this->nodeConfig['port'];
             }
         }
