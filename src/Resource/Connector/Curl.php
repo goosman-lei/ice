@@ -17,7 +17,7 @@ class Curl extends Abs {
     }
 
     public static function getConn($nodeInfo) {
-        $mysqli  = curl_init();
+        $curl  = curl_init();
 
         $options = $nodeInfo['options'];
         $config  = $nodeInfo['config'];

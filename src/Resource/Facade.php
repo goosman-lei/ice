@@ -144,7 +144,7 @@ class Facade {
             $nodeInfo['uri'] = $uri;
 
             $conn = $this->getRealConn($nodeSn, $nodeInfo);
-            if ($conn === FALSE) {
+            if (!isset($conn) || $conn === FALSE) {
                 \F_Ice::$ins->mainApp->logger_comm->warn(array(
                     'uri'    => $uri,
                     'nodeSn' => $nodeSn,
@@ -193,7 +193,7 @@ class Facade {
         }
 
         $conn = @call_user_func(array($connectorClass, 'getConn'), $nodeInfo);
-        if ($conn === FALSE) {
+        if (!isset($conn) || $conn === FALSE) {
             return FALSE;
         }
 
