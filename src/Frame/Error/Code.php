@@ -9,22 +9,28 @@ class Code {
     const UNKNOWN_URI = 100103;
     const ROUTE_ERROR = 100104;
     // WebService相关错误
-    const WS_REQ_PARSE_ERROR     = 100200;
-    const WS_REQ_PROTOCOL_ERROR  = 100201;
-    const WS_REQ_VERSION_ERROR   = 100202;
-    const WS_RESP_READ_ERROR     = 100220;
-    const WS_RESP_PARSE_ERROR    = 100221;
-    const WS_RESP_PROTOCOL_ERROR = 100223;
-    const WS_RESP_VERSION_ERROR  = 100224;
-    const WS_ERROR_RESPONSE      = 100240;
+    const WS_REQ_PARSE_ERROR       = 100200;
+    const WS_REQ_PROTOCOL_ERROR    = 100201;
+    const WS_REQ_VERSION_ERROR     = 100202;
+
+    const WS_RESP_PARSE_ERROR      = 100210;
+    const WS_RESP_PROTOCOL_ERROR   = 100211;
+    const WS_RESP_VERSION_ERROR    = 100212;
+
+    const WS_PROXY_UNKONW_PROXY    = 100220;
+    const WS_PROXY_UNKONW_SERVICE  = 100221;
+    const WS_PROXY_READ_ERROR      = 100222;
+
+    const WS_ERROR_RESPONSE        = 100230;
     // 资源管理器相关错误
     const R_ERROR_URI          = 100300;
     const R_ERROR_GET_NODE     = 100301;
     const R_ERROR_GET_CONN     = 100302;
     const R_ERROR_GET_ALL_CONN = 100303;
-    const R_NO_CONNECTOR       = 100304;
-    const R_NO_STRATEGY        = 100305;
-    const R_NO_HANDLER         = 100306;
+
+    const R_NO_CONNECTOR       = 100310;
+    const R_NO_STRATEGY        = 100311;
+    const R_NO_HANDLER         = 100312;
     // MYSQL 相关错误
     const MYSQL_CONN_ERROR           = 100400;
     const MYSQL_SET_CHARSET_FAILED   = 100401;

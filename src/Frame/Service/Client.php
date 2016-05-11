@@ -68,7 +68,7 @@ class Client {
         $logData['conn_time']   = $responseHeader['connect_time'];
         $logData['remote']      = $responseHeader['primary_ip'] . ':' . $responseHeader['primary_port'];
         $logData['code']        = $response->code;
-        \F_Ice::$ins->mainApp->logger_ws->info($logData, $response);
+        \F_Ice::$ins->mainApp->logger_ws->info($logData);
         return array(
             'code' => $response->code,
             'data' => $response->data,

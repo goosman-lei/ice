@@ -6,18 +6,25 @@ class App {
 
     // resource
     public $config;
-    public $pool_resource;
+    public $proxy_resource;
+    public $proxy_service;
 
     public $runType;
 
     protected static $apps = array();
 
-    public static function getApp($appName) {
-        return self::$apps[$appName];
-    }
+    public static function getServiceApp($projectGroup, $projectName) {
+        $cachedSn = "/$projectGroup/$projectName";
 
-    public static function registerApp($appName, $app) {
-        self::$apps[$appName] = $app;
+        if (isset(self::$apps[$cachedSn])) {
+            return self::$apps[$cachedSn];
+        }
+
+        $rootPath = \F_Ice::$ins->ice->mainApp->rootPath . '/../vendor/' . $projectGroup . '/' . $projectName . '/src';
+        $runType  = 'service';
+        self::$apps[$cachedSn] = new self($rootPath, $runType);
+
+        return self::$apps[$cachedSn];
     }
 
     public function __construct($rootPath, $runType) {
@@ -38,7 +45,8 @@ class App {
             }
         }
 
-        $this->pool_resource = \Ice\Resource\Facade::buildForApp($this);
+        $this->proxy_resource = \Ice\Resource\Proxy::buildForApp($this);
+        $this->proxy_service  = \Ice\Frame\Service\Proxy::buildForApp($this);
     }
 
     protected function preSwitch() {

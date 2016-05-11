@@ -31,9 +31,16 @@ class Ice {
         $mainAppClass     = $this->runner->mainAppConf['app_class'];
         $this->mainApp    = new $mainAppClass($this->rootPath, $this->runner->name);
         $this->workApp    = $this->mainApp;
-        \F_App::registerApp($mainAppNamespace, $this->mainApp);
 
         // setup errorhandler
         $this->errorHandler = new \Ice\Frame\Error\Handler();
+    }
+
+    public function switchWorkApp($newWorkApp) {
+        $oldWorkApp = $this->workApp;
+
+        $this->workApp = $newWorkApp;
+
+        return $oldWorkApp;
     }
 }

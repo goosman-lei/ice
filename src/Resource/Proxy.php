@@ -1,6 +1,6 @@
 <?php
 namespace Ice\Resource;
-class Facade {
+class Proxy {
 
     protected static $_staticConnArr = array();
 
@@ -68,14 +68,14 @@ class Facade {
     }
 
     public static function buildForApp($app) {
-        $facade = new self();
+        $proxy = new self();
 
-        $facade->_mapping = $app->config->get('resource.mapping') ?: array();
-        $facade->_pool    = $app->config->get('resource.pool') ?: array();
+        $proxy->_mapping = $app->config->get('resource.mapping') ?: array();
+        $proxy->_pool    = $app->config->get('resource.pool') ?: array();
 
-        $facade->initConf();
+        $proxy->initConf();
 
-        return $facade;
+        return $proxy;
     }
 
     public function get($uri) {
