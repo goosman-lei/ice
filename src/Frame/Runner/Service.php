@@ -65,7 +65,7 @@ class Service {
 
     protected function dispatch() {
         if (!is_object($this->request)) {
-            \F_Ice::$ins->mainApp->logger_common->warn(array(
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'input'  => $this->input,
                 'msg'    => 'parse request failed',
             ), $this->request);
@@ -77,7 +77,7 @@ class Service {
             $className = "\\{$this->mainAppConf['namespace']}\\Service\\{$ucfirstClass}";
 
             if (!class_exists($className) || !method_exists($className, $this->request->action)) {
-                \F_Ice::$ins->mainApp->logger_common->warn(array(
+                \F_Ice::$ins->mainApp->logger_comm->warn(array(
                     'class'  => $this->request->class,
                     'action' => $this->request->action,
                     'msg'    => 'dispatch error: no class or action',
@@ -102,7 +102,7 @@ class Service {
 
             $this->response->output($code, $data);
         } catch (\Exception $e) {
-            \F_Ice::$ins->mainApp->logger_common->fatal(array(
+            \F_Ice::$ins->mainApp->logger_comm->fatal(array(
                 'exception' => get_class($e),
                 'message'   => $e->getMessage(),
                 'code'      => $e->getCode(),

@@ -21,7 +21,7 @@ class Facade {
                     ? $this->_mapping['connector'][$scheme]
                     : '\\Ice\\Resource\\Connector\\' . ucfirst(strtolower($scheme));
                 if (!class_exists($connectorClass)) {
-                    \F_Ice::$ins->mainApp->logger_common->warn(array(
+                    \F_Ice::$ins->mainApp->logger_comm->warn(array(
                         'scheme' => $scheme,
                         'class'  => $connectorClass,
                     ), \F_ECode::R_NO_CONNECTOR);
@@ -89,7 +89,7 @@ class Facade {
         ;x', $uri, $match);
 
         if (!$isMatch) {
-            \F_Ice::$ins->mainApp->logger_common->warn(array(
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'uri'  => $uri,
             ), \F_ECode::R_ERROR_URI);
             return new \U_Stub();
@@ -113,7 +113,7 @@ class Facade {
         }
 
         if (!isset($this->_confArr[$scheme][$unitname][$cluster]) || empty($this->_confArr[$scheme][$unitname][$cluster])) {
-            \F_Ice::$ins->mainApp->logger_common->warn(array(
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'uri'  => $uri,
             ), \F_ECode::R_ERROR_URI);
             return new \U_Stub();
@@ -125,7 +125,7 @@ class Facade {
             ? $this->_mapping['strategy'][$strategy]
             : '\\Ice\\Resource\\Strategy\\' . ucfirst(strtolower($strategy));
         if (!class_exists($strategyClass)) {
-            \F_Ice::$ins->mainApp->logger_common->warn(array(
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'strategy' => $strategy,
                 'class'    => $strategyClass,
             ), \F_ECode::R_NO_STRATEGY);
@@ -135,7 +135,7 @@ class Facade {
         do {
             $nodeSn = call_user_func(array($strategyClass, 'getNode'), $nodeInfos);
             if ($nodeSn === FALSE) {
-                \F_Ice::$ins->mainApp->logger_common->warn(array(
+                \F_Ice::$ins->mainApp->logger_comm->warn(array(
                     'uri'  => $uri,
                 ), \F_ECode::R_ERROR_GET_NODE);
                 return new \U_Stub();
@@ -145,7 +145,7 @@ class Facade {
 
             $conn = $this->getRealConn($nodeSn, $nodeInfo);
             if (!is_object($conn)) {
-                \F_Ice::$ins->mainApp->logger_common->warn(array(
+                \F_Ice::$ins->mainApp->logger_comm->warn(array(
                     'uri'    => $uri,
                     'nodeSn' => $nodeSn,
                 ), \F_ECode::R_ERROR_GET_CONN);
@@ -153,7 +153,7 @@ class Facade {
         } while (!empty($nodeInfos) && $conn === FALSE);
 
         if ($conn === FALSE) {
-            \F_Ice::$ins->mainApp->logger_common->warn(array(
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'uri'    => $uri,
             ), \F_ECode::R_ERROR_GET_ALL_CONN);
             return new \U_Stub();
@@ -163,7 +163,7 @@ class Facade {
             ? $this->_mapping['handler'][$scheme]
             : '\\Ice\\Resource\\Handler\\' . ucfirst(strtolower($scheme));
         if (!class_exists($handlerClass)) {
-            \F_Ice::$ins->mainApp->logger_common->warn(array(
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'scheme' => $scheme,
                 'class'  => $handlerClass,
             ), \F_ECode::R_NO_HANDLER);

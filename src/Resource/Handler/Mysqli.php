@@ -40,7 +40,7 @@ class Mysqli extends Abs {
     protected function isUnexpectSql($sql) {
         // 超过2M的Sql拒绝执行
         if (strlen($sql) >= 2097152) {
-            \F_Ice::$ins->mainApp->logger_common->warn(array(
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'sql'   => substr($sql, 0, 5000),
                 'limit' => '2M',
             ), \F_ECode::MYSQL_QUERY_SQL_TOO_LONG);
@@ -49,7 +49,7 @@ class Mysqli extends Abs {
 
         // 超过50K的Sql报警
         if (strlen($sql) >= 51200) {
-            \F_Ice::$ins->mainApp->logger_common->warn(array(
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'sql'   => substr($sql, 0, 5000),
                 'limit' => '50K',
             ), \F_ECode::MYSQL_QUERY_SQL_TOO_LONG);
@@ -57,7 +57,7 @@ class Mysqli extends Abs {
 
         // update/delete无where条件不允许执行
         if (preg_match(';^\s*(update|delete)\b(?!.*\bwhere\b);ims', $sql)) {
-            \F_Ice::$ins->mainApp->logger_common->warn(array(
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'sql'   => $sql,
             ), \F_ECode::MYSQL_QUERY_WRITE_NO_WHERE);
             return TRUE;

@@ -1,9 +1,9 @@
 <?php
 /*
- 每个日志项, 会被自动注册到自己App的成员变量. 比如common注册为$app->logger_common
+ 每个日志项, 会被自动注册到自己App的成员变量. 比如comm注册为$app->logger_comm
 */
 $service_logger = array(
-    'common' => array(
+    'comm' => array(
         'log_fmt' => array(
             'fmt_time'            => '', # 默认Y-m-d H:i:s
             'client_env.ip'       => '',
@@ -27,7 +27,7 @@ $service_logger = array(
             'errno'               => '',
             'trace'               => '',
         ),
-        'log_file' => 'common.log',
+        'log_file' => 'service.log',
         'log_path' => $var_path . '/logs',
         'split'    => array(
             'type' => 'file',

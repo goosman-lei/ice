@@ -30,7 +30,7 @@ class App {
     }
 
     protected function init() {
-        $logConfigs = $this->config->get('app.log');
+        $logConfigs = $this->config->get('app.runner.log');
         if (isset($logConfigs) && is_array($logConfigs)) {
             foreach ($logConfigs as $loggerName => $logConfig) {
                 $loggerName = "logger_$loggerName";

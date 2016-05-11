@@ -77,7 +77,7 @@ class Daemon {
         $class  = @$this->request->options['class'];
         $action = @$this->request->options['action'];
         if (empty($class) || empty($action)) {
-            \F_Ice::$ins->mainApp->logger_common->fatal(array(
+            \F_Ice::$ins->mainApp->logger_comm->fatal(array(
                 'class'  => $this->request->controller,
                 'action' => $this->request->action,
                 'msg'    => 'dispatch error: no class or action',
@@ -103,7 +103,7 @@ class Daemon {
             $className = "\\{$this->mainAppConf['namespace']}\\Daemon\\{$this->request->class}\\{$this->request->action}";
 
             if (!class_exists($className) || !method_exists($className, 'execute')) {
-                \F_Ice::$ins->mainApp->logger_common->fatal(array(
+                \F_Ice::$ins->mainApp->logger_comm->fatal(array(
                     'class'  => $this->request->class,
                     'action' => $this->request->action,
                     'msg'    => 'dispatch error: no class or action',
@@ -124,7 +124,7 @@ class Daemon {
 
             $actionObj->execute(); 
         } catch (\Exception $e) {
-            \F_Ice::$ins->mainApp->logger_common->fatal(array(
+            \F_Ice::$ins->mainApp->logger_comm->fatal(array(
                 'exception' => get_class($e),
                 'message'   => $e->getMessage(),
                 'code'      => $e->getCode(),

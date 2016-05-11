@@ -173,7 +173,7 @@ class Web {
             $className = "\\{$this->mainAppConf['namespace']}\\Action\\{$this->request->class}\\{$this->request->action}";
 
             if (!class_exists($className) || !method_exists($className, 'execute')) {
-                \F_Ice::$ins->mainApp->logger_common->fatal(array(
+                \F_Ice::$ins->mainApp->logger_comm->fatal(array(
                     'class'  => $this->request->class,
                     'action' => $this->request->action,
                     'msg'    => 'dispatch error: no class or method',
@@ -199,7 +199,7 @@ class Web {
             $this->response->setTplData($tplData);
             $this->response->output();
         } catch (\Exception $e) {
-            \F_Ice::$ins->mainApp->logger_common->fatal(array(
+            \F_Ice::$ins->mainApp->logger_comm->fatal(array(
                 'exception' => get_class($e),
                 'message'   => $e->getMessage(),
                 'code'      => $e->getCode(),

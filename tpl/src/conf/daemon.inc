@@ -1,9 +1,9 @@
 <?php
 /*
- 每个日志项, 会被自动注册到自己App的成员变量. 比如common注册为$app->logger_common
+ 每个日志项, 会被自动注册到自己App的成员变量. 比如comm注册为$app->logger_comm
 */
 $daemon_logger = array(
-    'common' => array(
+    'comm' => array(
         'log_fmt' => array(
             'fmt_now'             => '', # 默认Y-m-d H:i:s
             'client_env.ip'       => '',
