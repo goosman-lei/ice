@@ -45,7 +45,7 @@ class Proxy {
                 'proxy_class' => '\\Ice\\Frame\\Service\\Proxy\\Internal',
                 'service_config' => array(),
             );
-        } if (!isset($this->_confArr[$serviceName])) {
+        } else if (!isset($this->_confArr[$serviceName])) {
             \F_Ice::$ins->mainApp->logger_ws->warn(array(
                 'service_name' => $serviceName,
             ), \F_ECode::WS_PROXY_UNKONW_SERVICE);
