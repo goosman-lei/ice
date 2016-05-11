@@ -1,6 +1,6 @@
 <?php
 namespace Ice\Resource\Handler;
-class Curl {
+class Curl extends Abs {
     protected function getFullUrl($path) {
         $host   = $this->nodeConfig['host'];
         $path   = '/' . ltrim($path, '/');
