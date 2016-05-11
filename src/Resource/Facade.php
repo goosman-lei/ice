@@ -84,7 +84,7 @@ class Facade {
             (?P<scheme>[\w-]++)
             ://
             (?P<unitname>[\w\.-]++)
-            (?:/(?P<cluster>[\w-]++)
+            (?:/(?P<cluster>[\w-]++))
             (?:\?(?P<params>.*+))?
         ;x', $uri, $match);
 
