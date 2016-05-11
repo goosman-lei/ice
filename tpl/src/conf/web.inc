@@ -34,6 +34,37 @@ $web_logger = array(
             'fmt'  => 'Ymd',
         ),
     ),
+    'ws' => array(
+        'log_fmt' => array(
+            'fmt_time'            => '', # 默认Y-m-d H:i:s
+            'client_env.ip'       => '',
+            'server_env.hostname' => '',
+            'request.uri'         => '',
+            'request.originalUri' => '',
+            'request.class'       => '',
+            'request.action'      => '',
+            'request.id'          => '',
+        ),
+        'log_fmt_wf' => array(
+            'fmt_time'            => '', # 默认Y-m-d H:i:s
+            'client_env.ip'       => '',
+            'server_env.hostname' => '',
+            'request.uri'         => '',
+            'request.originalUri' => '',
+            'request.class'       => '',
+            'request.action'      => '',
+            'request.id'          => '',
+            'level'               => '',
+            'errno'               => '',
+            'trace'               => '',
+        ),
+        'log_file' => 'web.ws.log',
+        'log_path' => $var_path . '/logs',
+        'split'    => array(
+            'type' => 'file',
+            'fmt'  => 'Ymd',
+        ),
+    ),
 );
 
 /*
