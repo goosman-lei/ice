@@ -1,7 +1,7 @@
 <?php
 namespace Ice\Frame\Runner;
 class Web {
-    protected $name = 'web';
+    public $name = 'web';
 
     protected $rootPath;
 
@@ -15,6 +15,9 @@ class Web {
 
     // output data
     public $response;
+
+    // context
+    public $ice;
 
     public function __construct($confPath) {
         $this->rootPath = realpath(dirname($confPath) . '/..');
@@ -183,6 +186,7 @@ class Web {
             }
 
             $actionObj = new $className();
+            $actionObj->setIce($this->ice);
             $actionObj->setRequest($this->request);
             $actionObj->setResponse($this->response);
             $actionObj->setServerEnv($this->serverEnv);

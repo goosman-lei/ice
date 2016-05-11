@@ -1,6 +1,9 @@
 <?php
 namespace Ice\Frame\Daemon;
 abstract class Daemon {
+    // context
+    protected $ice;
+
     protected $request;
     protected $response;
     protected $serverEnv;
@@ -31,4 +34,7 @@ abstract class Daemon {
         return $this->response->error($errno, $content);
     }
 
+    public function setIce($ice) {
+        $this->ice = $ice;
+    }
 }

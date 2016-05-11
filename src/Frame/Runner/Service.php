@@ -1,7 +1,7 @@
 <?php
 namespace Ice\Frame\Runner;
 class Service {
-    protected $name = 'service';
+    public $name = 'service';
 
     protected $rootPath;
 
@@ -16,6 +16,9 @@ class Service {
 
     // output data
     public $response;
+
+    // context
+    public $ice;
 
     public function __construct($confPath) {
         $this->rootPath = realpath(dirname($confPath) . '/..');
@@ -87,6 +90,11 @@ class Service {
             }
 
             $serviceObj = new $className();
+            $actionObj->setIce($this->ice);
+            $actionObj->setRequest($this->request);
+            $actionObj->setResponse($this->response);
+            $actionObj->setServerEnv($this->serverEnv);
+            $actionObj->setClientEnv($this->clientEnv);
 
             $result = call_user_func_array(array($serviceObj, $this->request->action), $this->request->params);
             $code = isset($result['code']) ? $result['code'] : \F_ECode::WS_ERROR_RESPONSE;

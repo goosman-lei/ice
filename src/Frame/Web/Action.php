@@ -1,6 +1,8 @@
 <?php
 namespace Ice\Frame\Web;
 abstract class Action {
+    // context
+    protected $ice;
 
     protected $request;
     protected $response;
@@ -28,5 +30,9 @@ abstract class Action {
     }
     public function setClientEnv($clientEnv) {
         $this->clientEnv = $clientEnv;
+    }
+
+    public function setIce($ice) {
+        $this->ice = $ice;
     }
 }

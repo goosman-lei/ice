@@ -1,7 +1,7 @@
 <?php
 namespace Ice\Frame\Runner;
 class Daemon {
-    protected $name = 'daemon';
+    public $name = 'daemon';
 
     protected $rootPath;
 
@@ -15,6 +15,9 @@ class Daemon {
 
     // output data
     public $response;
+
+    // context
+    public $ice;
 
     public function __construct($confPath) {
         $this->rootPath = realpath(dirname($confPath) . '/..');
@@ -113,6 +116,7 @@ class Daemon {
             }
 
             $actionObj = new $className();
+            $actionObj->setIce($this->ice);
             $actionObj->setRequest($this->request);
             $actionObj->setResponse($this->response);
             $actionObj->setServerEnv($this->serverEnv);
