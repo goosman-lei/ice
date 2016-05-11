@@ -40,14 +40,20 @@ class Proxy {
     }
 
     public function get($serviceName, $class = null) {
-        if (!isset($this->_confArr[$serviceName])) {
+        if ($serviceName == 'internal') {
+            $serviceInfo = array(
+                'proxy_class' => '\\Ice\\Frame\\Service\\Proxy\\Internal',
+                'service_config' => array(),
+            );
+        } if (!isset($this->_confArr[$serviceName])) {
             \F_Ice::$ins->mainApp->logger_ws->warn(array(
                 'service_name' => $serviceName,
             ), \F_ECode::WS_PROXY_UNKONW_SERVICE);
             return new \U_Stub();
+        } else {
+            $serviceInfo = $this->_confArr[$serviceName];
         }
 
-        $serviceInfo   = $this->_confArr[$serviceName];
         $proxyClass    = $serviceInfo['proxy_class'];
         $serviceConfig = $serviceInfo['service_config'];
 
