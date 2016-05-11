@@ -23,7 +23,7 @@ $pool = array(
     'curl' => array(
         'service' => array(
             'default' => array(
-                array('host' => 'ice-web.leiguoguo.lab.niceprivate.com')
+                array('host' => 'ice-service.leiguoguo.lab.niceprivate.com')
             ),
         ),
     ),
