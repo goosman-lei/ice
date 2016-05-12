@@ -21,7 +21,7 @@ class Compiler {
         $token = null;
         while ($this->position < $this->srcCodeLen) {
             $literal = $this->srcCode[$this->position];
-            $position ++;
+            $this->position ++;
             switch ($literal) {
                 // 空白字符. 直接跳过
                 case ' ':
