@@ -65,7 +65,7 @@ ROOT_STATEMENT := STATEMENT_FIELD_FILTER
         try {
             $this->resetCode($srcCode);
 
-            $this->recursiveCompile('$data', '$expectData', 2);
+            $this->recursiveCompile('$data', '$expectData', 3);
             $dstCode = '<' . "?php
 namespace $proxyNamespace;
 class {$proxyClassName} extends {$baseFilterClassName} {
@@ -136,7 +136,7 @@ class {$proxyClassName} extends {$baseFilterClassName} {
 			} else if ($token->isValid(Token::BLOCK_START)) {
                 // 数组检测
                 if ($mustArray) {
-                    $this->appendCode("if (is_array({$dataLiteral})) {\n", $indent);
+                    $this->appendCode("if (is_array({$dataLiteral}) || {$dataLiteral} instanceof \\ArrayAccess) {\n", $indent);
                     $indent ++;
                 }
 
