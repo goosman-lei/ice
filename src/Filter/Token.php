@@ -84,6 +84,7 @@ class Token {
         }
 
         $typeStr[strlen($typeStr) - 1] = ']';
+        return $typeStr;
     }
 
     public function __toString() {
