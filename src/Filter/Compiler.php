@@ -75,7 +75,7 @@ class {$proxyClassName} extends {$baseFilterClassName} {
         } catch (\Ice\Filter\RunException \$e) {
             return FALSE;
         }
-        return \$this->expectData(\$expectData, \$data);
+        return \$expectData;
     }
 }";
         } catch (CompileException $e) {
@@ -91,7 +91,6 @@ class {$proxyClassName} extends {$baseFilterClassName} {
         $tokenType = $this->readToken(Token::LITERAL_ID);
         $lcTypeName = strtolower($tokenType->literal);
         $ucTypeName = ucfirst($lcTypeName);
-        $this->appendCode("{$expectDataLiteral} = \$this->default{$ucTypeName};\n", $indent);
 
         // 类型默认值处理
         $token = $this->readToken(Token::COLON | Token::BRACKET_END);
@@ -99,9 +98,9 @@ class {$proxyClassName} extends {$baseFilterClassName} {
             $tokenDefault = $this->readToken(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
             $token = $this->readToken(Token::BRACKET_END);
             $typeArg = $tokenDefault->isValid(Token::LITERAL_ID) && !$tokenDefault->isValid(Token::KEYWORD) ? "'{$tokenDefault->literal}'" : $tokenDefault->literal;
-            $this->appendCode("\$this->type_{$lcTypeName}({$dataLiteral}, {$typeArg});\n", $indent);
+            $this->appendCode("\$this->type_{$lcTypeName}({$expectDataLiteral}, {$dataLiteral}, {$typeArg});\n", $indent);
         } else {
-            $this->appendCode("\$this->type_{$lcTypeName}({$dataLiteral});\n", $indent);
+            $this->appendCode("\$this->type_{$lcTypeName}({$expectDataLiteral}, {$dataLiteral});\n", $indent);
         }
         $mustArray = in_array($lcTypeName, array('map', 'arr'));
 
@@ -115,7 +114,7 @@ class {$proxyClassName} extends {$baseFilterClassName} {
 			if ($token->isValid(Token::LITERAL_ID)) {
 				$tokenOpName = $token;
 				$token = $this->readToken(Token::COLON, FALSE);
-				$tmpCode = "\$this->op_{$tokenOpName->literal}({$dataLiteral}";
+				$tmpCode = "\$this->op_{$tokenOpName->literal}({$expectDataLiteral}, {$dataLiteral}";
 				if ($token) {
 					// 处理参数列表
 					do {

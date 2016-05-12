@@ -16,71 +16,60 @@ class Filter {
         $this->strictMode = $strictMode;
     }
 
-    public function extend_filter(&$data, $filter) {
+    public function extend_filter(&$target, $data, $filter) {
         
     }
 
-    public function expectData(&$expectData, $srcData) {
-        foreach ($expectData as $k => &$v) {
-            if (!is_array($v) && !($v instanceof \ArrayAccess)) {
-                $expectData[$k] = $srcData[$k];
-            } else {
-                $this->expectData($expectData[$k], $srcData[$k]);
-            }
+    public function type_str(&$target, $data, $req = '__opt') {
+        if (!isset($data)) {
+            if ($req === '__req') return $this->reportMessage();
+            else if ($req === '__opt') return TRUE;
+            else return ($data = $req) || TRUE;
         }
-        return $expectData;
+        $target = (string)$data;
+    }
+    public function type_int(&$target, $data, $req = '__opt') {
+        if (!isset($data)) {
+            if ($req === '__req') return $this->reportMessage();
+            else if ($req === '__opt') return TRUE;
+            else return ($data = $req) || TRUE;
+        }
+        $target = (int)$data;
+    }
+    public function type_float(&$target, $data, $req = '__opt') {
+        if (!isset($data)) {
+            if ($req === '__req') return $this->reportMessage();
+            else if ($req === '__opt') return TRUE;
+            else return ($data = $req) || TRUE;
+        }
+        $target = (float)$data;
+    }
+    public function type_map(&$target, $data, $req = '__opt') {
+        if (!isset($data)) {
+            if ($req === '__req') return $this->reportMessage();
+            else if ($req === '__opt') return TRUE;
+            else return ($data = $req) || TRUE;
+        }
+        $target = new \U_Map();
+    }
+    public function type_arr(&$target, $data, $req = '__opt') {
+        if (!isset($data)) {
+            if ($req === '__req') return $this->reportMessage();
+            else if ($req === '__opt') return TRUE;
+            else return ($data = $req) || TRUE;
+        }
+        $target = array();
+    }
+    public function type_bool(&$target, $data, $req = '__opt') {
+        if (!isset($data)) {
+            if ($req === '__req') return $this->reportMessage();
+            else if ($req === '__opt') return TRUE;
+            else return ($data = $req) || TRUE;
+        }
+        $target = (bool)$data;
     }
 
-    public function type_str(&$data, $req = '__opt') {
-        if (!isset($data)) {
-            if ($req === '__req') return $this->reportMessage();
-            else if ($req === '__opt') return TRUE;
-            else return ($data = $req) || TRUE;
-        }
-        $data = (string)$data;
-    }
-    public function type_int(&$data, $req = '__opt') {
-        if (!isset($data)) {
-            if ($req === '__req') return $this->reportMessage();
-            else if ($req === '__opt') return TRUE;
-            else return ($data = $req) || TRUE;
-        }
-        $data = (int)$data;
-    }
-    public function type_float(&$data, $req = '__opt') {
-        if (!isset($data)) {
-            if ($req === '__req') return $this->reportMessage();
-            else if ($req === '__opt') return TRUE;
-            else return ($data = $req) || TRUE;
-        }
-        $data = (float)$data;
-    }
-    public function type_map(&$data, $req = '__opt') {
-        if (!isset($data)) {
-            if ($req === '__req') return $this->reportMessage();
-            else if ($req === '__opt') return TRUE;
-            else return ($data = $req) || TRUE;
-        }
-        $data = new \U_Map($data);
-    }
-    public function type_arr(&$data, $req = '__opt') {
-        if (!isset($data)) {
-            if ($req === '__req') return $this->reportMessage();
-            else if ($req === '__opt') return TRUE;
-            else return ($data = $req) || TRUE;
-        }
-        $data = (array)$data;
-    }
-    public function type_bool(&$data, $req = '__opt') {
-        if (!isset($data)) {
-            if ($req === '__req') return $this->reportMessage();
-            else if ($req === '__opt') return TRUE;
-            else return ($data = $req) || TRUE;
-        }
-        $data = (bool)$data;
-    }
-
-    public function op_range(&$data, $range) {
+    public function op_range(&$target, $data, $range) {
         if (!isset($data)) {
             return TRUE;
         }
@@ -116,7 +105,7 @@ class Filter {
 
     }
 
-    public function op_match(&$data, $pattern) {
+    public function op_match(&$target, $data, $pattern) {
         if (!isset($data)) {
             return TRUE;
         }

@@ -13,7 +13,7 @@ class DMap implements \ArrayAccess {
         return isset($this->$offset);
     }
 
-    public function offsetGet($offset) {
+    public function &offsetGet($offset) {
         return $this->$offset;
     }
 
