@@ -16,7 +16,7 @@ class Proxy {
 
         if ($config) {
             $proxy = new self();
-            $proxy->config = config;
+            $proxy->config = $config;
             $proxy->filterNamespace = $app->config->get('app.namespace');
         } else {
             $proxy = new \U_Stub();
