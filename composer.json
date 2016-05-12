@@ -11,6 +11,7 @@
         "psr-4": {
             "Ice\\Frame\\": "src/Frame",
             "Ice\\Resource\\": "src/Resource",
+            "Ice\\Filter\\": "src/Filter",
             "Ice\\Util\\": "src/Util"
         },
         "files": ["class_alias.php"]
