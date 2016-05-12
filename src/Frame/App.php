@@ -47,6 +47,7 @@ class App {
 
         $this->proxy_resource = \Ice\Resource\Proxy::buildForApp($this);
         $this->proxy_service  = \Ice\Frame\Service\Proxy::buildForApp($this);
+        $this->proxy_filter   = \Ice\Filter\Proxy::buildForApp($this);
     }
 
     protected function preSwitch() {

@@ -2,25 +2,182 @@
 namespace Ice\Filter;
 class Compiler {
 
-    public function __construct($srcCode) {
-        $this->srcCode    = $srcCode;
-        $this->srcCodeLen = strlen($srcCode);
-        $this->dstCode    = '';
+    // 语法版本. 如果语法规则变更, 需要修改.上层会据此变更编译产出路径
+    const SYNTAX_VERSION = 1;
+
+    public function __construct() {
     }
 
-    protected $indentLevel = 0;
-    protected $indentStr   = '    ';
-    public $dstCode     = '';
-    public $srcCode     = '';
-    protected $srcCodeLen  = 100;
-	public $line = 1;
-	public $lineStart = 0;
-    protected function appendCode($dstCode = "\n", $indent = 0) {
-        $this->dstCode .= str_repeat($this->indentStr, $this->indentLevel + $indent) . $dstCode;
+    protected function resetCode($srcCode) {
+        $this->dstCode     = '';
+        $this->srcCode     = $srcCode;
+        $this->srcCodeLen  = strlen($srcCode);
+        $this->line        = 1;
+        $this->lineStart   = 0;
+        $this->indentLevel = 0;
+        $this->indentStr   = '    ';
     }
-	protected function appendEmptyLine() {
-		$this->dstCode .= "\n";
-	}
+
+    public $dstCode;
+    public $srcCode;
+    public $srcCodeLen;
+	public $line;
+	public $lineStart;
+    protected $indentLevel;
+    protected $indentStr;
+
+    /*
+语法规则:
+CHARS_NUMERIC := [0-9]
+CHARS_ID      := [a-zA-Z_0-9]
+CHARS_ALL     := .
+
+CHAR_LIST_ID      := CHARS_ID | CHARS_ID CHAR_LIST_ID
+CHAR_LIST_NUMERIC := [ "-" ] CHARS_NUMERIC [ "." CHARS_NUMERIC ]
+
+CHAR_LIST_STRING_LITERAL_D_QUOTES := "\"" CHARS_ALL "\""
+CHAR_LIST_STRING_LITERAL_S_QUOTES := "'" CHARS_ALL "'"
+CHAR_LIST_STRING_LITERAL          := CHAR_LIST_STRING_LITERAL_D_QUOTES | CHAR_LIST_STRING_LITERAL_S_QUOTES
+
+WORD_TYPE           := CHAR_LIST_ID
+WORD_DEFAULT_OR_REQ := "__opt" | "__req" | CHAR_LIST_STRING_LITERAL | CHAR_LIST_NUMERIC | CHAR_LIST_ID
+WORD_FIELD_NAME     := CHAR_LIST_ID
+WORD_OP_NAME        := CHAR_LIST_ID
+WORD_OP_ARG         := CHAR_LIST_ID | CHAR_LIST_NUMERIC | CHAR_LIST_STRING_LITERAL
+
+LIST_OP_ARG := WORD_OP_ARG | WORD_OP_ARG "," LIST_OP_ARG
+
+STATEMENT_OP      := WORD_OP_NAME "(" LIST_OP_ARG ")"
+STATEMENT_LIST_OP := STATEMENT_OP | STATEMENT_OP "|" STATEMENT_LIST_OP
+
+STATEMENT_FIELD      := WORD_FIELD_NAME STATEMENT_FIELD_FILTER
+STATEMENT_LIST_FIELD := STATEMENT_FIELD | STATEMENT_FIELD ";" STATEMENT_LIST_FIELD [ ";" ]
+
+STATEMENT_BLOCK := "{" STATEMENT_LIST_FIELD "}"
+
+STATEMENT_TYPE_OR_EXTEND := "(" WORD_TYPE  [ ":" WORD_DEFAULT_OR_REQ ] ")"
+
+STATEMENT_FIELD_FILTER = STATEMENT_TYPE_OR_EXTEND [ STATEMENT_LIST_OP ] [ STATEMENT_BLOCK ]
+
+ROOT_STATEMENT := STATEMENT_FIELD_FILTER
+    */
+    public function compile($srcCode, $proxyClassName, $baseFilterClassName) {
+        try {
+            $this->resetCode($srcCode);
+
+            $this->recursiveCompile('$data', '$expectData', 2);
+            $dstCode = '<' . "?php
+class {$proxyClassName} extends {$baseFilterClassName} {
+    public function filter(\$data) {
+        try {
+{$this->dstCode}
+        } catch (\Ice\Filter\RunException \$e) {
+            return FALSE;
+        }
+        return \$this->expectData(\$expectData, \$data);
+    }
+}";
+        } catch (CompileException $e) {
+            return FALSE;
+        }
+
+        return $dstCode;
+    }
+
+    protected function recursiveCompile($dataLiteral, $expectDataLiteral, $indent = 0) {
+        // 类型解析
+        $this->readToken(Token::BRACKET_START);
+        $tokenType = $this->readToken(Token::LITERAL_ID);
+        $lcTypeName = strtolower($tokenType->literal);
+        $ucTypeName = ucfirst($lcTypeName);
+        $this->appendCode("{$expectDataLiteral} = \$this->default{$ucTypeName};\n", $indent);
+
+        // 类型默认值处理
+        $token = $this->readToken(Token::COLON | Token::BRACKET_END);
+        if ($token->isValid(Token::COLON)) {
+            $tokenDefault = $this->readToken(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
+            $token = $this->readToken(Token::BRACKET_END);
+            $typeArg = $tokenDefault->isValid(Token::LITERAL_ID) && !$tokenDefault->isValid(Token::KEYWORD) ? "'{$tokenDefault->literal}'" : $tokenDefault->literal;
+            $this->appendCode("\$this->type_{$lcTypeName}({$dataLiteral}, {$typeArg});\n", $indent);
+        } else {
+            $this->appendCode("\$this->type_{$lcTypeName}({$dataLiteral});\n", $indent);
+        }
+        $mustArray = in_array($lcTypeName, array('map', 'arr'));
+
+		// OP, 继承, 块数据列表
+        do {
+            $token = $this->readToken(Token::LITERAL_ID | Token::BLOCK_START | Token::AT, FALSE);
+			if (!$token) {
+				break;
+			}
+			// OP
+			if ($token->isValid(Token::LITERAL_ID)) {
+				$tokenOpName = $token;
+				$token = $this->readToken(Token::COLON, FALSE);
+				$tmpCode = "\$this->op_{$tokenOpName->literal}({$dataLiteral}";
+				if ($token) {
+					// 处理参数列表
+					do {
+						$tokenArg = $this->readToken(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
+						$tmpCode .= $tokenArg->isValid(Token::LITERAL_ID) && !$tokenDefault->isValid(Token::KEYWORD)
+                                ? ", '{$tokenArg->literal}'"
+                                : ", {$tokenArg->literal}";
+						$token = $this->readToken(Token::COMMA, FALSE);
+						if (empty($token)) {
+							break;
+						}
+					} while (TRUE);
+				}
+				$tmpCode .= ");\n";
+				$this->appendCode($tmpCode, $indent);
+				$this->readToken(Token::PIPE, FALSE);
+			// 块数据
+			} else if ($token->isValid(Token::BLOCK_START)) {
+                // 数组检测
+                if ($mustArray) {
+                    $this->appendCode("if (is_array({$dataLiteral})) {\n", $indent);
+                    $indent ++;
+                }
+
+                do {
+					$this->appendEmptyLine();
+                    $token = $this->readToken(Token::STAR | Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC, FALSE);
+					if (!$token) {
+						break;
+					}
+					// 星号匹配: 所有子元素应用相同的过滤规则
+                    if ($token->isValid(Token::STAR)) {
+                        $this->appendCode("foreach ({$dataLiteral} as \$k => \$v) {\n", $indent);
+
+						$GLOBALS['debug'] = TRUE;
+                        $this->recursiveCompile("{$dataLiteral}[\$k]", "{$expectDataLiteral}[\$k]", $indent + 1);
+
+                        $this->appendCode("}\n", $indent);
+                    } else if ($token->isValid(Token::LITERAL_STRING | Token::LITERAL_NUMERIC)) {
+                        $this->recursiveCompile("{$dataLiteral}[{$token->literal}]", "{$expectDataLiteral}[{$token->literal}]", $indent);
+                    } else if ($token->isValid(Token::LITERAL_ID)) {
+                        $this->recursiveCompile("{$dataLiteral}['{$token->literal}']", "{$expectDataLiteral}['{$token->literal}']", $indent);
+                    }
+                } while (!$token->isValid(Token::BLOCK_END));
+
+				$this->readToken(Token::BLOCK_END);
+
+                // 数组检测结尾
+                if ($mustArray) {
+                    $indent --;
+                    $this->appendCode("}\n", $indent);
+                }
+
+
+			// 继承
+			} else if ($token->isValid(Token::AT)) {
+				$token = $this->readToken(Token::LITERAL_STRING);
+				$this->appendCode("\$this->extend_filter({$dataLiteral}, {$token->literal});\n", $indent);
+				$this->readToken(Token::PIPE, FALSE);
+			}
+        } while (TRUE);
+		$this->readToken(Token::SEMICOLON, FALSE);
+    }
     protected function readToken($expectType = 0xFFFFFFFF, $strict = TRUE) {
         $startPos = $this->position;
         $token = null;
@@ -125,11 +282,11 @@ class Compiler {
                         $this->position ++;
                     }
                     if (strcasecmp($literal, 'null') === 0) {
-                        $token = Token::buildToken($literal, $startPos, Token::LITERAL_ID | Token::KEYWORD_NULL);
+                        $token = Token::buildToken($literal, $startPos, Token::LITERAL_ID | Token::KEYWORD);
                     } else if (strcasecmp($literal, 'true') === 0) {
-                        $token = Token::buildToken($literal, $startPos, Token::LITERAL_ID | Token::KEYWORD_TRUE);
+                        $token = Token::buildToken($literal, $startPos, Token::LITERAL_ID | Token::KEYWORD);
                     } else if (strcasecmp($literal, 'false') === 0) {
-                        $token = Token::buildToken($literal, $startPos, Token::LITERAL_ID | Token::KEYWORD_FALSE);
+                        $token = Token::buildToken($literal, $startPos, Token::LITERAL_ID | Token::KEYWORD);
                     } else {
                         $token = Token::buildToken($literal, $startPos, Token::LITERAL_ID);
                     }
@@ -170,154 +327,16 @@ class Compiler {
         }
         return $token;
     }
-    /*
-语法规则:
-CHARS_NUMERIC := [0-9]
-CHARS_ID      := [a-zA-Z_0-9]
-CHARS_ALL     := .
 
-CHAR_LIST_ID      := CHARS_ID | CHARS_ID CHAR_LIST_ID
-CHAR_LIST_NUMERIC := [ "-" ] CHARS_NUMERIC [ "." CHARS_NUMERIC ]
-
-CHAR_LIST_STRING_LITERAL_D_QUOTES := "\"" CHARS_ALL "\""
-CHAR_LIST_STRING_LITERAL_S_QUOTES := "'" CHARS_ALL "'"
-CHAR_LIST_STRING_LITERAL          := CHAR_LIST_STRING_LITERAL_D_QUOTES | CHAR_LIST_STRING_LITERAL_S_QUOTES
-
-WORD_TYPE           := CHAR_LIST_ID
-WORD_DEFAULT_OR_REQ := "__opt" | "__req" | CHAR_LIST_STRING_LITERAL | CHAR_LIST_NUMERIC | CHAR_LIST_ID
-WORD_FIELD_NAME     := CHAR_LIST_ID
-WORD_OP_NAME        := CHAR_LIST_ID
-WORD_OP_ARG         := CHAR_LIST_ID | CHAR_LIST_NUMERIC | CHAR_LIST_STRING_LITERAL
-
-LIST_OP_ARG := WORD_OP_ARG | WORD_OP_ARG "," LIST_OP_ARG
-
-STATEMENT_OP      := WORD_OP_NAME "(" LIST_OP_ARG ")"
-STATEMENT_LIST_OP := STATEMENT_OP | STATEMENT_OP "|" STATEMENT_LIST_OP
-
-STATEMENT_FIELD      := WORD_FIELD_NAME STATEMENT_FIELD_FILTER
-STATEMENT_LIST_FIELD := STATEMENT_FIELD | STATEMENT_FIELD ";" STATEMENT_LIST_FIELD [ ";" ]
-
-STATEMENT_BLOCK := "{" STATEMENT_LIST_FIELD "}"
-
-STATEMENT_TYPE_OR_EXTEND := "(" WORD_TYPE  [ ":" WORD_DEFAULT_OR_REQ ] ")"
-
-STATEMENT_FIELD_FILTER = STATEMENT_TYPE_OR_EXTEND [ STATEMENT_LIST_OP ] [ STATEMENT_BLOCK ]
-
-ROOT_STATEMENT := STATEMENT_FIELD_FILTER
-    */
     protected function revertToken($token) {
         $this->position = $token->pos;
     }
 
-    public function compile($proxyClassName, $baseFilterClassName) {
-        $this->recursiveCompile('$data', '$expectData', 2);
-        $dstCode = '<' . "?php
-class {$proxyClassName} extends {$baseFilterClassName} {
-    public function filter(\$data) {
-
-{$this->dstCode}
-
-        return \$this->expectData(\$expectData, \$data);
+    protected function appendCode($dstCode = "\n", $indent = 0) {
+        $this->dstCode .= str_repeat($this->indentStr, $this->indentLevel + $indent) . $dstCode;
     }
-}";
+	protected function appendEmptyLine() {
+		$this->dstCode .= "\n";
+	}
 
-        return $dstCode;
-    }
-
-    public function recursiveCompile($dataLiteral, $expectDataLiteral, $indent = 0) {
-        // 类型解析
-        $this->readToken(Token::BRACKET_START);
-        $tokenType = $this->readToken(Token::LITERAL_ID);
-        $lcTypeName = strtolower($tokenType->literal);
-        $ucTypeName = ucfirst($lcTypeName);
-        $this->appendCode("{$expectDataLiteral} = \$this->default{$ucTypeName};\n", $indent);
-
-        // 类型默认值处理
-        $token = $this->readToken(Token::COLON | Token::BRACKET_END);
-        if ($token->isValid(Token::COLON)) {
-            $tokenDefault = $this->readToken(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
-            $token = $this->readToken(Token::BRACKET_END);
-            $typeArg = $tokenDefault->isValid(Token::LITERAL_ID) ? "'{$tokenDefault->literal}'" : $tokenDefault->literal;
-            $this->appendCode("\$this->type_{$lcTypeName}({$dataLiteral}, {$typeArg});\n", $indent);
-        } else {
-            $this->appendCode("\$this->type_{$lcTypeName}({$dataLiteral});\n", $indent);
-        }
-        $mustArray = in_array($lcTypeName, array('map', 'arr'));
-
-		// OP, 继承, 块数据列表
-        do {
-            $token = $this->readToken(Token::LITERAL_ID | Token::BLOCK_START | Token::AT, FALSE);
-			if (!$token) {
-				break;
-			}
-			// OP
-			if ($token->isValid(Token::LITERAL_ID)) {
-				$tokenOpName = $token;
-				$token = $this->readToken(Token::COLON, FALSE);
-				$tmpCode = "\$this->op_{$tokenOpName->literal}({$dataLiteral}";
-				if ($token) {
-					// 处理参数列表
-					do {
-						$tokenArg = $this->readToken(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
-						if ($tokenArg->isValid(Token::LITERAL_ID)) {
-							$tmpCode .= ", '{$tokenArg->literal}'";
-						} else {
-							$tmpCode .= ", {$tokenArg->literal}";
-						}
-						$token = $this->readToken(Token::COMMA, FALSE);
-						if (empty($token)) {
-							break;
-						}
-					} while (TRUE);
-				}
-				$tmpCode .= ");\n";
-				$this->appendCode($tmpCode, $indent);
-				$this->readToken(Token::PIPE, FALSE);
-			// 块数据
-			} else if ($token->isValid(Token::BLOCK_START)) {
-                // 数组检测
-                if ($mustArray) {
-                    $this->appendCode("if (is_array({$dataLiteral})) {\n", $indent);
-                    $indent ++;
-                }
-
-                do {
-					$this->appendEmptyLine();
-                    $token = $this->readToken(Token::STAR | Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC, FALSE);
-					if (!$token) {
-						break;
-					}
-					// 星号匹配: 所有子元素应用相同的过滤规则
-                    if ($token->isValid(Token::STAR)) {
-                        $this->appendCode("foreach ({$dataLiteral} as \$k => \$v) {\n", $indent);
-
-						$GLOBALS['debug'] = TRUE;
-                        $this->recursiveCompile("{$dataLiteral}[\$k]", "{$expectDataLiteral}[\$k]", $indent + 1);
-
-                        $this->appendCode("}\n", $indent);
-                    } else if ($token->isValid(Token::LITERAL_STRING | Token::LITERAL_NUMERIC)) {
-                        $this->recursiveCompile("{$dataLiteral}[{$token->literal}]", "{$expectDataLiteral}[{$token->literal}]", $indent);
-                    } else if ($token->isValid(Token::LITERAL_ID)) {
-                        $this->recursiveCompile("{$dataLiteral}['{$token->literal}']", "{$expectDataLiteral}['{$token->literal}']", $indent);
-                    }
-                } while (!$token->isValid(Token::BLOCK_END));
-
-				$this->readToken(Token::BLOCK_END);
-
-                // 数组检测结尾
-                if ($mustArray) {
-                    $indent --;
-                    $this->appendCode("}\n", $indent);
-                }
-
-
-			// 继承
-			} else if ($token->isValid(Token::AT)) {
-				$token = $this->readToken(Token::LITERAL_STRING);
-				$this->appendCode("\$this->extends({$dataLiteral}, {$token->literal});\n", $indent);
-				$this->readToken(Token::PIPE, FALSE);
-			}
-        } while (TRUE);
-		$this->readToken(Token::SEMICOLON, FALSE);
-    }
 }

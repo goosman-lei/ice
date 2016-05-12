@@ -37,4 +37,8 @@ class Code {
     const MYSQL_SET_COLLATION_FAILED = 100402;
     const MYSQL_QUERY_SQL_TOO_LONG   = 100403;
     const MYSQL_QUERY_WRITE_NO_WHERE = 100404;
+
+    // Filter相关错误
+    const FILTER_COMPILE_FAILED      = 100500;
+    const FILTER_RUN_STRICT_UNEXPECT = 100501;
 }

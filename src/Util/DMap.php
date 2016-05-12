@@ -2,6 +2,9 @@
 namespace Ice\Util;
 class DMap implements \ArrayAccess {
     public function __construct($datas = array()) {
+        if (!is_array($datas)) {
+            return ;
+        }
         foreach ($datas as $k => $v) {
             $this->$k = $v;
         }

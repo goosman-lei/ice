@@ -7,25 +7,23 @@ class Token {
     const LITERAL_NUMERIC = 0x00002;
     const LITERAL_ID      = 0x00004;
 
-    const KEYWORD_TRUE    = 0x00008;
-    const KEYWORD_FALSE   = 0x00010;
-    const KEYWORD_NULL    = 0x00020;
+    const KEYWORD         = 0x00008;
 
-    const TYPE            = 0x00040;
-    const REQUIREMENT     = 0x00080;
+    const TYPE            = 0x00010;
+    const REQUIREMENT     = 0x00020;
 
-    const COLON           = 0x00100;
-    const COMMA           = 0x00200;
-    const SEMICOLON       = 0x00400;
-    const BLOCK_START     = 0x00800;
-    const BLOCK_END       = 0x01000;
-    const BRACKET_START   = 0x02000;
-    const BRACKET_END     = 0x04000;
-    const AT              = 0x08000;
-    const PIPE            = 0x10000;
-    const STAR            = 0x20000;
+    const COLON           = 0x00040;
+    const COMMA           = 0x00080;
+    const SEMICOLON       = 0x00100;
+    const BLOCK_START     = 0x00200;
+    const BLOCK_END       = 0x00400;
+    const BRACKET_START   = 0x00800;
+    const BRACKET_END     = 0x01000;
+    const AT              = 0x02000;
+    const PIPE            = 0x04000;
+    const STAR            = 0x08000;
 
-    const EOF             = 0x40000;
+    const EOF             = 0x10000;
 
     public $literal;
     public $type;
@@ -54,14 +52,8 @@ class Token {
         if ($type & self::LITERAL_ID) {
             $typeStr .= ' LITERAL_ID |';
         }
-        if ($type & self::KEYWORD_TRUE) {
-            $typeStr .= ' KEYWORD_TRUE |';
-        }
-        if ($type & self::KEYWORD_FALSE) {
-            $typeStr .= ' KEYWORD_FALSE |';
-        }
-        if ($type & self::KEYWORD_NULL) {
-            $typeStr .= ' KEYWORD_NULL |';
+        if ($type & self::KEYWORD) {
+            $typeStr .= ' KEYWORD |';
         }
         if ($type & self::TYPE) {
             $typeStr .= ' TYPE |';

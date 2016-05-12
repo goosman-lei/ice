@@ -2,41 +2,55 @@
 namespace Ice\Filter;
 class Proxy {
     protected $config;
-    protected $opClass;
 
-    public function __construct($config) {
-        $this->config  = $config;
-        $this->opClass = isset($this->config['op_class']) ? $this->config['op_class'] : '\\Ice\\Filter\\Op';
+    protected $filterNamespace;
+
+    protected $compiler;
+
+    protected function __construct() {
+        $this->compiler = new Compiler();
     }
 
-    public function get($code) {
-        // TODO 预处理阶段
+    public static function buildForApp($app) {
+        $config = $app->config->get('app.runner.filter');
 
-        $uniqkey = md5($srcCode);
+        if ($config) {
+            $proxy = new self();
+            $proxy->config = config;
+            $proxy->filterNamespace = $app->config->get('app.namespace');
+        } else {
+            $proxy = new \U_Stub();
+        }
 
-        $targetClassName = '__FILTER_' . $uniqkey;
-        $compilePath     = \F_Ice::$ins->mainApp->config->rtrim($this->config['compile_path'], '/');
-        $syntaxVersion   = self::SYNTAX_VERSION;
-        $targetFileName  = "${compilePath}/${syntaxVersion}/${uniqkey}.php";
+        return $proxy;
+    }
 
-        if (!is_file($targetFileName)) {
-            try {
-                $objectCode = Compiler::compile($srcCode, $targetClassName);
-            } catch (CompileException $e) {
-                $this->warn($e->getMessage(), self::CKCR_COMPILE_ERROR);
-                return FALSE;
+    public function get($code, $strictMode = FALSE) {
+        $uniqkey        = md5($srcCode);
+        $compilePath    = $this->config['compile_path'];
+        $syntaxVersion  = Compiler::SYNTAX_VERSION;
+        $proxyClassName = "\\{$this->filterNamespace}\\__FILTER_{$uniqkey}";
+        $baseFilterClassName = isset($this->config['base_filter']) ? $this->config['base_filter'] : '\\Ice\\Filter\\Filter';
+
+        $targetFname = "{$compilePath}/{$syntaxVersion}/{$uniqkey}.php";
+
+        if (!is_file($targetFname)) {
+            $dstCode = $this->compiler->compile($srcCode, $proxyClassName, $baseFilterClassName);
+            if ($dstCode === FALSE) {
+                return new \U_Stub();
             }
 
-            if (!is_dir(dirname($targetFileName))) {
-                @umask(0);
-                @mkdir(dirname($targetFileName), 0777, TRUE);
+            @umask(0);
+            if (!is_dir(dirname($targetFname))) {
+                @mkdir(dirname($targetFname), 0777, TRUE);
             }
-            file_put_contents($targetFileName, $objectCode);
-            @chmod($targetFileName, 0777);
+
+            file_put_contents($targetFname, $dstCode);
+            @chmod($targetFname, 0777);
         }
         require_once $targetFileName;
 
-        return new $targetClassName($this->config);
+        return new $proxyClassName($strictMode);
 
     }
 }
