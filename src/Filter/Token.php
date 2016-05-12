@@ -47,39 +47,56 @@ class Token {
         $typeStr = '[';
         if ($type & self::LITERAL_STRING) {
             $typeStr .= ' LITERAL_STRING |';
-        } else if ($type & self::LITERAL_NUMERIC) {
+        }
+        if ($type & self::LITERAL_NUMERIC) {
             $typeStr .= ' LITERAL_NUMERIC |';
-        } else if ($type & self::LITERAL_ID) {
+        }
+        if ($type & self::LITERAL_ID) {
             $typeStr .= ' LITERAL_ID |';
-        } else if ($type & self::KEYWORD_TRUE) {
+        }
+        if ($type & self::KEYWORD_TRUE) {
             $typeStr .= ' KEYWORD_TRUE |';
-        } else if ($type & self::KEYWORD_FALSE) {
+        }
+        if ($type & self::KEYWORD_FALSE) {
             $typeStr .= ' KEYWORD_FALSE |';
-        } else if ($type & self::KEYWORD_NULL) {
+        }
+        if ($type & self::KEYWORD_NULL) {
             $typeStr .= ' KEYWORD_NULL |';
-        } else if ($type & self::TYPE) {
+        }
+        if ($type & self::TYPE) {
             $typeStr .= ' TYPE |';
-        } else if ($type & self::REQUIREMENT) {
+        }
+        if ($type & self::REQUIREMENT) {
             $typeStr .= ' REQUIREMENT |';
-        } else if ($type & self::COLON) {
+        }
+        if ($type & self::COLON) {
             $typeStr .= ' COLON |';
-        } else if ($type & self::COMMA) {
+        }
+        if ($type & self::COMMA) {
             $typeStr .= ' COMMA |';
-        } else if ($type & self::SEMICOLON) {
+        }
+        if ($type & self::SEMICOLON) {
             $typeStr .= ' SEMICOLON |';
-        } else if ($type & self::BLOCK_START) {
+        }
+        if ($type & self::BLOCK_START) {
             $typeStr .= ' BLOCK_START |';
-        } else if ($type & self::BLOCK_END) {
+        }
+        if ($type & self::BLOCK_END) {
             $typeStr .= ' BLOCK_END |';
-        } else if ($type & self::BRACKET_START) {
+        }
+        if ($type & self::BRACKET_START) {
             $typeStr .= ' BRACKET_START |';
-        } else if ($type & self::BRACKET_END) {
+        }
+        if ($type & self::BRACKET_END) {
             $typeStr .= ' BRACKET_END |';
-        } else if ($type & self::AT) {
+        }
+        if ($type & self::AT) {
             $typeStr .= ' AT |';
-        } else if ($type & self::PIPE) {
+        }
+        if ($type & self::PIPE) {
             $typeStr .= ' PIPE |';
-        } else if ($type & self::EOF) {
+        }
+        if ($type & self::EOF) {
             $typeStr .= ' EOF |';
         }
 

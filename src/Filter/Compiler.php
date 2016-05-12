@@ -10,16 +10,21 @@ class Compiler {
 
     protected $indentLevel = 0;
     protected $indentStr   = '    ';
-    protected $dstCode     = '';
-    protected $srcCode     = '';
+    public $dstCode     = '';
+    public $srcCode     = '';
     protected $srcCodeLen  = 100;
+	public $line = 1;
+	public $lineStart = 0;
     protected function appendCode($dstCode = "\n", $indent = 0) {
         $this->dstCode .= str_repeat($this->indentStr, $this->indentLevel + $indent) . $dstCode;
     }
-    protected function readTokenV2($expectType = 0xFFFFFFFF) {
+	protected function appendEmptyLine() {
+		$this->dstCode .= "\n";
+	}
+    protected function readToken($expectType = 0xFFFFFFFF, $strict = TRUE) {
         $startPos = $this->position;
         $token = null;
-        while ($this->position < $this->srcCodeLen) {
+        while (!isset($token) && $this->position < $this->srcCodeLen) {
             $literal = $this->srcCode[$this->position];
             $this->position ++;
             switch ($literal) {
@@ -29,8 +34,16 @@ class Compiler {
                 case "\v":
                 case "\f":
                 case "\t":
+					if ($literal == "\n") {
+						$this->line ++;
+						$this->lineStart = min($this->srcCodeLen, $this->position);
+					}
                     $startPos ++;
                     while ($this->position < $this->srcCodeLen && strpos(" \n\v\f\t", $this->srcCode[$this->position]) !== FALSE) {
+						if ($this->srcCode[$this->position] == "\n") {
+							$this->line ++;
+							$this->lineStart = min($this->srcCodeLen, $this->position);
+						}
                         $this->position ++;
                         $startPos ++;
                     }
@@ -96,7 +109,7 @@ class Compiler {
                     }
                     if (!$quoted) {
                         $this->position = $startPos;
-                        throw new CompileException($this->srcCode, $this->position, 'CompilerReadToken: Quote have no completed');
+                        throw new CompileException($this, 'CompilerReadToken: Quote have no completed');
                     }
                     $token = Token::buildToken($literal, $startPos, Token::LITERAL_STRING);
                     break;
@@ -128,7 +141,7 @@ class Compiler {
                         if ($this->srcCode[$this->position] === '.') {
                             if ($existsDot) {
                                 $this->position = $startPos;
-                                throw new CompileException($this->srcCode, $this->position, 'CompilerReadToken: Here is invalid Numeric');
+                                throw new CompileException($this, 'CompilerReadToken: Numeric literal multi dot');
                             }
                             $existsDot = TRUE;
                         }
@@ -139,7 +152,7 @@ class Compiler {
                     break;
                 default:
                     $this->position = $startPos;
-                    throw new CompileException($this->srcCode, $this->position, 'CompilerReadToken: Unrecognized token');
+                    throw new CompileException($this, 'CompilerReadToken: Unrecognized token');
                     break;
             }
 
@@ -148,7 +161,12 @@ class Compiler {
             $token = Token::buildToken('', $startPos, Token::EOF);
         }
         if (!$token->isValid($expectType)) {
-            throw new CompileException($this->srcCode, $this->position, 'CompilerReadToken: Unexpected token');
+			if ($strict) {
+				throw new CompileException($this, sprintf('CompilerReadToken: Unexpected token and strict mode(expect: %s, get: %s)', Token::typeToString($expectType), Token::typeToString($token)));
+			} else {
+				$this->revertToken($token);
+				return null;
+			}
         }
         return $token;
     }
@@ -187,28 +205,38 @@ STATEMENT_FIELD_FILTER = STATEMENT_TYPE_OR_EXTEND [ STATEMENT_LIST_OP ] [ STATEM
 
 ROOT_STATEMENT := STATEMENT_FIELD_FILTER
     */
-    protected function revertTokenV2($token) {
+    protected function revertToken($token) {
         $this->position = $token->pos;
     }
 
-    public function compile() {
-        $this->compileV2('$data', 0);
-        echo $this->dstCode . chr(10);
+    public function compile($proxyClassName, $baseFilterClassName) {
+        $this->recursiveCompile('$data', '$expectData', 2);
+        $dstCode = '<' . "?php
+class {$proxyClassName} extends {$baseFilterClassName} {
+    public function filter(\$data) {
+
+{$this->dstCode}
+
+        return \$this->expectData(\$expectData, \$data);
+    }
+}";
+
+        return $dstCode;
     }
 
-    public function compileV2($dataLiteral, $indent = 0) {
+    public function recursiveCompile($dataLiteral, $expectDataLiteral, $indent = 0) {
         // 类型解析
-        $this->readTokenV2(Token::BRACKET_START);
-        $tokenType = $this->readTokenV2(Token::LITERAL_ID);
+        $this->readToken(Token::BRACKET_START);
+        $tokenType = $this->readToken(Token::LITERAL_ID);
         $lcTypeName = strtolower($tokenType->literal);
         $ucTypeName = ucfirst($lcTypeName);
-        $this->appendCode("\$expectData = \$this->default{$ucTypeName};\n", $indent);
+        $this->appendCode("{$expectDataLiteral} = \$this->default{$ucTypeName};\n", $indent);
 
         // 类型默认值处理
-        $token = $this->readTokenV2(Token::COLON | Token::BRACKET_END);
+        $token = $this->readToken(Token::COLON | Token::BRACKET_END);
         if ($token->isValid(Token::COLON)) {
-            $tokenDefault = $this->readTokenV2(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
-            $token = $this->readTokenV2(Token::BRACKET_END);
+            $tokenDefault = $this->readToken(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
+            $token = $this->readToken(Token::BRACKET_END);
             $typeArg = $tokenDefault->isValid(Token::LITERAL_ID) ? "'{$tokenDefault->literal}'" : $tokenDefault->literal;
             $this->appendCode("\$this->type_{$lcTypeName}({$dataLiteral}, {$typeArg});\n", $indent);
         } else {
@@ -216,23 +244,37 @@ ROOT_STATEMENT := STATEMENT_FIELD_FILTER
         }
         $mustArray = in_array($lcTypeName, array('map', 'arr'));
 
+		// OP, 继承, 块数据列表
         do {
-            $token = $this->readTokenV2(Token::LITERAL_ID | Token::BLOCK_START | Token::EOF);
-            // OP操作处理
-            if ($token->isValid(Token::LITERAL_ID)) {
-                $tokenOpName = $token;
-                $token = $this->readTokenV2(Token::COLON | Token::PIPE | Token::SEMICOLON | Token::BLOCK_START);
-                // 后跟参数列表
-                if ($token->isValid(Token::COLON)) {
-                // 结束当前OP
-                } else if ($token->isValid(Token::PIPE)) {
-                // 结束当前Op. 并返还BLOCK_START
-                } else if ($token->isValid(Token::BLOCK_START)) {
-                // 结束当前Field: ROOT节点. 后面应该接着读到Token::EOF
-                } else if ($token->isValid(Token::SEMICOLON)) {
-                }
-            // 块数据操作处理
-            } else if ($token->isValid(Token::BLOCK_START)) {
+            $token = $this->readToken(Token::LITERAL_ID | Token::BLOCK_START | Token::AT, FALSE);
+			if (!$token) {
+				break;
+			}
+			// OP
+			if ($token->isValid(Token::LITERAL_ID)) {
+				$tokenOpName = $token;
+				$token = $this->readToken(Token::COLON, FALSE);
+				$tmpCode = "\$this->op_{$tokenOpName->literal}({$dataLiteral}";
+				if ($token) {
+					// 处理参数列表
+					do {
+						$tokenArg = $this->readToken(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
+						if ($tokenArg->isValid(Token::LITERAL_ID)) {
+							$tmpCode .= ", '{$tokenArg->literal}'";
+						} else {
+							$tmpCode .= ", {$tokenArg->literal}";
+						}
+						$token = $this->readToken(Token::COMMA, FALSE);
+						if (empty($token)) {
+							break;
+						}
+					} while (TRUE);
+				}
+				$tmpCode .= ");\n";
+				$this->appendCode($tmpCode, $indent);
+				$this->readToken(Token::PIPE, FALSE);
+			// 块数据
+			} else if ($token->isValid(Token::BLOCK_START)) {
                 // 数组检测
                 if ($mustArray) {
                     $this->appendCode("if (is_array({$dataLiteral})) {\n", $indent);
@@ -240,29 +282,42 @@ ROOT_STATEMENT := STATEMENT_FIELD_FILTER
                 }
 
                 do {
-                    $token = $this->readTokenV2(Token::STAR | Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
+					$this->appendEmptyLine();
+                    $token = $this->readToken(Token::STAR | Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC, FALSE);
+					if (!$token) {
+						break;
+					}
+					// 星号匹配: 所有子元素应用相同的过滤规则
                     if ($token->isValid(Token::STAR)) {
                         $this->appendCode("foreach ({$dataLiteral} as \$k => \$v) {\n", $indent);
 
-                        $this->compileV2("{$dataLiteral}[\$k]", $indent + 1);
+						$GLOBALS['debug'] = TRUE;
+                        $this->recursiveCompile("{$dataLiteral}[\$k]", "{$expectDataLiteral}[\$k]", $indent + 1);
 
                         $this->appendCode("}\n", $indent);
                     } else if ($token->isValid(Token::LITERAL_STRING | Token::LITERAL_NUMERIC)) {
-                        $this->compileV2("{$dataLiteral}[{$token->literal}]", $indent);
+                        $this->recursiveCompile("{$dataLiteral}[{$token->literal}]", "{$expectDataLiteral}[{$token->literal}]", $indent);
                     } else if ($token->isValid(Token::LITERAL_ID)) {
-                        $this->compileV2("{$dataLiteral}['{$token->literal}']", $indent);
+                        $this->recursiveCompile("{$dataLiteral}['{$token->literal}']", "{$expectDataLiteral}['{$token->literal}']", $indent);
                     }
                 } while (!$token->isValid(Token::BLOCK_END));
+
+				$this->readToken(Token::BLOCK_END);
 
                 // 数组检测结尾
                 if ($mustArray) {
                     $indent --;
-                    $this->appendCode("}\n");
+                    $this->appendCode("}\n", $indent);
                 }
-            }
-        } while (!$token->isValid(Token::EOF | Token::SEMICOLON | Token::BRACKET_END));
-        if ($token->isValid(Token::BRACKET_END)) {
-            $this->revertTokenV2($token);
-        }
+
+
+			// 继承
+			} else if ($token->isValid(Token::AT)) {
+				$token = $this->readToken(Token::LITERAL_STRING);
+				$this->appendCode("\$this->extends({$dataLiteral}, {$token->literal});\n", $indent);
+				$this->readToken(Token::PIPE, FALSE);
+			}
+        } while (TRUE);
+		$this->readToken(Token::SEMICOLON, FALSE);
     }
 }
