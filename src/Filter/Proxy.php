@@ -50,7 +50,7 @@ class Proxy {
             file_put_contents($targetFname, $dstCode);
             @chmod($targetFname, 0777);
         }
-        require_once $targetFileName;
+        require_once $targetFname;
 
         return new $proxyClassNameFull($this->config, $strictMode);
     }
