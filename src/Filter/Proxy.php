@@ -50,7 +50,6 @@ class Proxy {
         }
         require_once $targetFileName;
 
-        return new $proxyClassName($strictMode);
-
+        return new $proxyClassName($this->config, $strictMode);
     }
 }

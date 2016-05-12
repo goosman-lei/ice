@@ -1,6 +1,7 @@
 <?php
 namespace Ice\Filter;
 class Filter {
+    protected $config       = array();
     protected $strictMode   = FALSE;
 
     protected $defaultMap   = array();
@@ -10,7 +11,8 @@ class Filter {
     protected $defaultBool  = FALSE;
     protected $defaultStr   = '';
 
-    public function __construct($strictMode = FALSE) {
+    public function __construct($config, $strictMode = FALSE) {
+        $this->config     = $config;
         $this->strictMode = $strictMode;
     }
 
