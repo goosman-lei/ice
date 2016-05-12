@@ -25,17 +25,19 @@ class Proxy {
         return $proxy;
     }
 
-    public function get($code, $strictMode = FALSE) {
+    public function get($srcCode, $strictMode = FALSE) {
         $uniqkey        = md5($srcCode);
         $compilePath    = $this->config['compile_path'];
         $syntaxVersion  = Compiler::SYNTAX_VERSION;
-        $proxyClassName = "\\{$this->filterNamespace}\\__FILTER_{$uniqkey}";
+        $proxyNamespace = $this->filterNamespace;
+        $proxyClassName = "__FILTER_{$uniqkey}";
+        $proxyClassNameFull = "\\{$proxyNamespace}\\{$proxyClassName}";
         $baseFilterClassName = isset($this->config['base_filter']) ? $this->config['base_filter'] : '\\Ice\\Filter\\Filter';
 
         $targetFname = "{$compilePath}/{$syntaxVersion}/{$uniqkey}.php";
 
         if (!is_file($targetFname)) {
-            $dstCode = $this->compiler->compile($srcCode, $proxyClassName, $baseFilterClassName);
+            $dstCode = $this->compiler->compile($srcCode, $proxyNamespace, $proxyClassName, $baseFilterClassName);
             if ($dstCode === FALSE) {
                 return new \U_Stub();
             }
@@ -50,6 +52,6 @@ class Proxy {
         }
         require_once $targetFileName;
 
-        return new $proxyClassName($this->config, $strictMode);
+        return new $proxyClassNameFull($this->config, $strictMode);
     }
 }

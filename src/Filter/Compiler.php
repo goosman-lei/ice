@@ -61,12 +61,13 @@ STATEMENT_FIELD_FILTER = STATEMENT_TYPE_OR_EXTEND [ STATEMENT_LIST_OP ] [ STATEM
 
 ROOT_STATEMENT := STATEMENT_FIELD_FILTER
     */
-    public function compile($srcCode, $proxyClassName, $baseFilterClassName) {
+    public function compile($srcCode, $proxyNamespace, $proxyClassName, $baseFilterClassName) {
         try {
             $this->resetCode($srcCode);
 
             $this->recursiveCompile('$data', '$expectData', 2);
             $dstCode = '<' . "?php
+namespace $proxyNamespace;
 class {$proxyClassName} extends {$baseFilterClassName} {
     public function filter(\$data) {
         try {
@@ -119,7 +120,7 @@ class {$proxyClassName} extends {$baseFilterClassName} {
 					// 处理参数列表
 					do {
 						$tokenArg = $this->readToken(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
-						$tmpCode .= $tokenArg->isValid(Token::LITERAL_ID) && !$tokenDefault->isValid(Token::KEYWORD)
+						$tmpCode .= $tokenArg->isValid(Token::LITERAL_ID) && !$tokenArg->isValid(Token::KEYWORD)
                                 ? ", '{$tokenArg->literal}'"
                                 : ", {$tokenArg->literal}";
 						$token = $this->readToken(Token::COMMA, FALSE);
