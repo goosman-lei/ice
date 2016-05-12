@@ -22,7 +22,7 @@ class Filter {
 
     public function expectData(&$expectData, $srcData) {
         foreach ($expectData as $k => &$v) {
-            if (is_array($v)) {
+            if (!is_array($v) && !($v instanceof \ArrayAccess)) {
                 $expectData[$k] = $srcData[$k];
             } else {
                 $this->expectData($expectData[$k], $srcData[$k]);
