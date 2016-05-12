@@ -2,13 +2,18 @@
 namespace Ice\Filter;
 class Compiler {
 
+    public function __construct($srcCode) {
+        $this->srcCode    = $srcCode;
+        $this->srcCodeLen = strlen($srcCode);
+        $this->dstCode    = '';
+    }
 
     protected $indentLevel = 0;
     protected $indentStr   = '    ';
     protected $dstCode     = '';
     protected $srcCode     = '';
     protected $srcCodeLen  = 100;
-    protected static function appendCode($dstCode = "\n", $indent = 0) {
+    protected function appendCode($dstCode = "\n", $indent = 0) {
         $this->dstCode .= str_repeat($this->indentStr, $this->indentLevel + $indent) . $dstCode;
     }
     protected function readTokenV2($expectType = 0xFFFFFFFF) {
@@ -186,7 +191,12 @@ ROOT_STATEMENT := STATEMENT_FIELD_FILTER
         $this->position = $token->pos;
     }
 
-    protected function compileV2($dataLiteral, $indent = 0) {
+    public function compile() {
+        $this->compileV2('$data', 0);
+        echo $this->dstCode . chr(10);
+    }
+
+    public function compileV2($dataLiteral, $indent = 0) {
         // 类型解析
         $this->readTokenV2(Token::BRACKET_START);
         $tokenType = $this->readTokenV2(Token::LITERAL_ID);
