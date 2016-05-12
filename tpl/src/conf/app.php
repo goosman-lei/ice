@@ -22,7 +22,8 @@ $runner = array(
         'log' => $service_logger,
     ),
     'daemon' => array(
-        'log' => $daemon_logger,
+        'log'    => $daemon_logger,
+        'filter' => $daemon_filter,
     ),
 );
 
