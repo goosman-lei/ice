@@ -59,7 +59,7 @@ class Compiler {
                     $token = Token::buildToken($literal, $startPos, Token::BLOCK_START);
                     break;
                 case '}':
-                    $token = Token::buildToken($literal, $startPos, Token::BLOK_END);
+                    $token = Token::buildToken($literal, $startPos, Token::BLOCK_END);
                     break;
                 case '(':
                     $token = Token::buildToken($literal, $startPos, Token::BRACKET_START);
@@ -135,7 +135,7 @@ class Compiler {
                         $literal .= $srcCode[$this->position];
                         $this->position ++;
                     }
-                    $token = Token::buildToken($literal, $startPos, Token::NUMERIC);
+                    $token = Token::buildToken($literal, $startPos, Token::LITERAL_NUMERIC);
                     break;
                 default:
                     $this->position = $startPos;
