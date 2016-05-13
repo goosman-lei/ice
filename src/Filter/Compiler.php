@@ -184,6 +184,7 @@ class {$proxyClassName} extends {$baseFilterClassName} {
                 } while (!$token->isValid(Token::BLOCK_END));
 
                 $this->readToken(Token::BLOCK_END);
+                $this->readToken(Token::PIPE, FALSE);
 
                 // 数组检测结尾
                 if ($mustArray) {

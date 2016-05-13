@@ -15,7 +15,7 @@ class Hello extends \FD_Daemon {
                 new_emoticon(int:0)
             }{
                 new_emoticon(int:3)
-            }
+            }strip:new_emoticon
         };
         host_white(arr){
             *(str)
