@@ -15,7 +15,7 @@ class_alias('\\Ice\\Frame\\Daemon\\Daemon',     'FD_Daemon');
 class_alias('\\Ice\\Util\\Time',                'U_Time');
 class_alias('\\Ice\\Util\\Env',                 'U_Env');
 class_alias('\\Ice\\Util\\Ip',                  'U_Ip');
-class_alias('\\Ice\\Util\\I18N',                'U_Ip');
+class_alias('\\Ice\\Util\\I18N',                'U_I18N');
 class_alias('\\Ice\\Util\\Path',                'U_Path');
 class_alias('\\Ice\\Util\\Rusage',              'U_Rusage');
 
