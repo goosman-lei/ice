@@ -6,6 +6,15 @@ class Mysqli extends Abs {
         if (!isset($nodeOptions['dbname'])) {
             $nodeOptions['dbname'] = '';
         }
+        if (!isset($nodeOptions['warn_sql_length'])) {
+            $nodeOptions['warn_sql_length'] = 2097152;
+        }
+        if (!isset($nodeOptions['fatal_sql_length'])) {
+            $nodeOptions['fatal_sql_length'] = 51200;
+        }
+        if (!isset($nodeOptions['deny_empty_update_delete'])) {
+            $nodeOptions['deny_empty_update_delete'] = TRUE;
+        }
         return array($nodeConfig, $nodeOptions);
     }
 
