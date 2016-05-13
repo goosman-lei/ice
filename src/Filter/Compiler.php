@@ -14,6 +14,7 @@ class Compiler {
         $this->srcCodeLen  = strlen($srcCode);
         $this->line        = 1;
         $this->lineStart   = 0;
+        $this->position    = 0;
         $this->indentLevel = 0;
         $this->indentStr   = '    ';
     }
@@ -21,8 +22,9 @@ class Compiler {
     public $dstCode;
     public $srcCode;
     public $srcCodeLen;
-	public $line;
-	public $lineStart;
+    public $line;
+    public $lineStart;
+    public $position;
     protected $indentLevel;
     protected $indentStr;
 
@@ -125,35 +127,35 @@ class {$proxyClassName} extends {$baseFilterClassName} {
         }
         $mustArray = in_array($lcTypeName, array('map', 'arr'));
 
-		// OP, 继承, 块数据列表
+        // OP, 继承, 块数据列表
         do {
             $token = $this->readToken(Token::LITERAL_ID | Token::BLOCK_START | Token::AT, FALSE);
-			if (!$token) {
-				break;
-			}
-			// OP
-			if ($token->isValid(Token::LITERAL_ID)) {
-				$tokenOpName = $token;
-				$token = $this->readToken(Token::COLON, FALSE);
-				$tmpCode = "\$this->op_{$tokenOpName->literal}({$dataLiteral}";
-				if ($token) {
-					// 处理参数列表
-					do {
-						$tokenArg = $this->readToken(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
-						$tmpCode .= $tokenArg->isValid(Token::LITERAL_ID) && !$tokenArg->isValid(Token::KEYWORD)
+            if (!$token) {
+                break;
+            }
+            // OP
+            if ($token->isValid(Token::LITERAL_ID)) {
+                $tokenOpName = $token;
+                $token = $this->readToken(Token::COLON, FALSE);
+                $tmpCode = "\$this->op_{$tokenOpName->literal}({$dataLiteral}";
+                if ($token) {
+                    // 处理参数列表
+                    do {
+                        $tokenArg = $this->readToken(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
+                        $tmpCode .= $tokenArg->isValid(Token::LITERAL_ID) && !$tokenArg->isValid(Token::KEYWORD)
                                 ? ", '{$tokenArg->literal}'"
                                 : ", {$tokenArg->literal}";
-						$token = $this->readToken(Token::COMMA, FALSE);
-						if (empty($token)) {
-							break;
-						}
-					} while (TRUE);
-				}
-				$tmpCode .= ");\n";
-				$this->appendCode($tmpCode, $indent);
-				$this->readToken(Token::PIPE, FALSE);
-			// 块数据
-			} else if ($token->isValid(Token::BLOCK_START)) {
+                        $token = $this->readToken(Token::COMMA, FALSE);
+                        if (empty($token)) {
+                            break;
+                        }
+                    } while (TRUE);
+                }
+                $tmpCode .= ");\n";
+                $this->appendCode($tmpCode, $indent);
+                $this->readToken(Token::PIPE, FALSE);
+            // 块数据
+            } else if ($token->isValid(Token::BLOCK_START)) {
                 // 数组检测
                 if ($mustArray) {
                     $this->appendCode("if (is_array({$dataLiteral}) || {$dataLiteral} instanceof \\ArrayAccess) {\n", $indent);
@@ -161,16 +163,16 @@ class {$proxyClassName} extends {$baseFilterClassName} {
                 }
 
                 do {
-					$this->appendEmptyLine();
+                    $this->appendEmptyLine();
                     $token = $this->readToken(Token::STAR | Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC, FALSE);
-					if (!$token) {
-						break;
-					}
-					// 星号匹配: 所有子元素应用相同的过滤规则
+                    if (!$token) {
+                        break;
+                    }
+                    // 星号匹配: 所有子元素应用相同的过滤规则
                     if ($token->isValid(Token::STAR)) {
                         $this->appendCode("foreach ({$dataLiteral} as \$k => \$v) {\n", $indent);
 
-						$GLOBALS['debug'] = TRUE;
+                        $GLOBALS['debug'] = TRUE;
                         $this->recursiveCompile("{$dataLiteral}[\$k]", "{$expectDataLiteral}[\$k]", $indent + 1);
 
                         $this->appendCode("}\n", $indent);
@@ -181,7 +183,7 @@ class {$proxyClassName} extends {$baseFilterClassName} {
                     }
                 } while (!$token->isValid(Token::BLOCK_END));
 
-				$this->readToken(Token::BLOCK_END);
+                $this->readToken(Token::BLOCK_END);
 
                 // 数组检测结尾
                 if ($mustArray) {
@@ -190,14 +192,14 @@ class {$proxyClassName} extends {$baseFilterClassName} {
                 }
 
 
-			// 继承
-			} else if ($token->isValid(Token::AT)) {
-				$token = $this->readToken(Token::LITERAL_STRING);
-				$this->appendCode("\$this->extend_filter({$dataLiteral}, {$expectDataLiteral}, {$token->literal});\n", $indent);
-				$this->readToken(Token::PIPE, FALSE);
-			}
+            // 继承
+            } else if ($token->isValid(Token::AT)) {
+                $token = $this->readToken(Token::LITERAL_STRING);
+                $this->appendCode("\$this->extend_filter({$dataLiteral}, {$expectDataLiteral}, {$token->literal});\n", $indent);
+                $this->readToken(Token::PIPE, FALSE);
+            }
         } while (TRUE);
-		$this->readToken(Token::SEMICOLON, FALSE);
+        $this->readToken(Token::SEMICOLON, FALSE);
     }
     protected function readToken($expectType = 0xFFFFFFFF, $strict = TRUE) {
         $startPos = $this->position;
@@ -212,16 +214,16 @@ class {$proxyClassName} extends {$baseFilterClassName} {
                 case "\v":
                 case "\f":
                 case "\t":
-					if ($literal == "\n") {
-						$this->line ++;
-						$this->lineStart = min($this->srcCodeLen, $this->position);
-					}
+                    if ($literal == "\n") {
+                        $this->line ++;
+                        $this->lineStart = min($this->srcCodeLen, $this->position);
+                    }
                     $startPos ++;
                     while ($this->position < $this->srcCodeLen && strpos(" \n\v\f\t", $this->srcCode[$this->position]) !== FALSE) {
-						if ($this->srcCode[$this->position] == "\n") {
-							$this->line ++;
-							$this->lineStart = min($this->srcCodeLen, $this->position);
-						}
+                        if ($this->srcCode[$this->position] == "\n") {
+                            $this->line ++;
+                            $this->lineStart = min($this->srcCodeLen, $this->position);
+                        }
                         $this->position ++;
                         $startPos ++;
                     }
@@ -339,12 +341,12 @@ class {$proxyClassName} extends {$baseFilterClassName} {
             $token = Token::buildToken('', $startPos, Token::EOF);
         }
         if (!$token->isValid($expectType)) {
-			if ($strict) {
-				throw new CompileException($this, sprintf('CompilerReadToken: Unexpected token and strict mode(expect: %s, get: %s)', Token::typeToString($expectType), Token::typeToString($token)));
-			} else {
-				$this->revertToken($token);
-				return null;
-			}
+            if ($strict) {
+                throw new CompileException($this, sprintf('CompilerReadToken: Unexpected token and strict mode(expect: %s, get: %s)', Token::typeToString($expectType), Token::typeToString($token)));
+            } else {
+                $this->revertToken($token);
+                return null;
+            }
         }
         return $token;
     }
@@ -356,8 +358,8 @@ class {$proxyClassName} extends {$baseFilterClassName} {
     protected function appendCode($dstCode = "\n", $indent = 0) {
         $this->dstCode .= str_repeat($this->indentStr, $this->indentLevel + $indent) . $dstCode;
     }
-	protected function appendEmptyLine() {
-		$this->dstCode .= "\n";
-	}
+    protected function appendEmptyLine() {
+        $this->dstCode .= "\n";
+    }
 
 }
