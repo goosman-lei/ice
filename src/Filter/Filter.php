@@ -29,8 +29,11 @@ class Filter {
 
     protected function _expectData(&$expectData, $data) {
         foreach ($expectData as $k => $v) {
-            if (is_array($v)) {
-                $this->expectData($expectData[$k], $data[$k]);
+            if (!array_key_exists($k, $data)) {
+                unset($expectData[$k]);
+                continue;
+            } else if (is_array($v)) {
+                $this->_expectData($expectData[$k], $data[$k]);
             } else {
                 $expectData[$k] = $data[$k];
             }
