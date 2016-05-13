@@ -75,7 +75,7 @@ class DString {
                 }
                 break;
             default:
-                throw new Exception(__METHOD__ . " don't support character ${charset}");
+                return FALSE;
                 break;
         }
         return $ts;
@@ -144,53 +144,13 @@ class DString {
                 $ts .= substr($s, $i);
                 break;
             default:
-                $ts = $s;
+                return FALSE;
                 break;
         }
         return $ts;
     }
 
-    public static function vnsprintf($format, $args) {
-        if (empty($args) || !is_array($args)) {
-            return $format;
-        }
-        $replace_pairs = array();
-        foreach($args as $key => $val) {
-            $replace_pairs['{' . $key . '}'] = $val;
-        }
-        return strtr($format, $replace_pairs);
-    }
-
-    public static function ntml($args) {
-        $args = func_get_args();
-        $key = -1;
-        foreach($args as $val) {
-            if (is_array($val)) {
-                $ret[$key] = array_merge($ret[$key], $val);
-            } else {
-                $ret[] = array('text' => strval($val));
-                $key++;
-            }
-        }
-        return $ret;
-    }
-
-    public static function ntml2text($ntml) {
-        $str = '';
-        if($ntml && is_array($ntml)){
-            foreach($ntml as $val) {
-                if (isset($val['display']) && $val['display'] == 'no') {
-                    continue;
-                }
-                $str .= $val['text'];
-            }
-        }
-        return $str;
-    }
-
-    public static function versionDiff($v1, $v2)
-    {
-
+    public static function versionDiff($v1, $v2) {
         $i1 = explode('.', $v1);
         $i2 = explode('.', $v2);
         $l1 = count($i1);
@@ -208,39 +168,6 @@ class DString {
             }
         }
         return 0;
-    }
-
-    /**
-     * pad
-     * 按照指定块大小填充对齐
-     * @param string $text
-     * @param int $blockSize
-     * @static
-     * @access public
-     * @return void
-     */
-    public static function pad($text, $blockSize) {
-        $pad = $blockSize - (strlen($text) % $blockSize);
-        return $text . str_repeat(chr($pad), $pad);
-    }
-
-    /**
-     * unpad
-     * 删除掉填充对齐代码
-     * @param mixed $text
-     * @static
-     * @access public
-     * @return void
-     */
-    public static function unpad($text) {
-        $pad = ord($text[strlen($text) - 1]);
-        if ($pad > strlen($text)) {
-            return false;
-        }
-        if (strspn($text, chr($pad), strlen($text) - $pad) != $pad) {
-            return false;
-        }
-        return substr($text, 0, - 1 * $pad);
     }
 
     /**

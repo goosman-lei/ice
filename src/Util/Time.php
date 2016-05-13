@@ -2,6 +2,10 @@
 namespace Ice\Util;
 class Time {
     public static function now() {
-        return time();
+        static $now;
+        if (!isset($now)) {
+            $now = time();
+        }
+        return php_sapi_name() === 'cli' ? time() : $now;
     }
 }
