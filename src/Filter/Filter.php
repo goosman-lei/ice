@@ -42,7 +42,7 @@ class Filter {
         $proxy   = \F_Ice::$ins->workApp->proxy_filter->get($extendSrcCode, $this->strictMode);
         $tmpData = $proxy->filter($data, $expectData);
         if (is_array($data)) {
-            $data = array_merge($data, $tmpData);
+            $data = array_merge($data, (array)$tmpData);
         } else if ($data instanceof \U_Map) {
             $data->merge($tmpData);
         }
