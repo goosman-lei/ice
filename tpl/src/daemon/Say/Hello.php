@@ -52,7 +52,7 @@ class Hello extends \FD_Daemon {
         echo $code . chr(10) . chr(10);
         echo json_encode($filterdData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . chr(10) . chr(10);
 
-        $client = $this->workApp->proxy_service->get('demo-local', 'Say');
+        $client = $this->ice->workApp->proxy_service->get('internal', 'Say');
         $this->output($client->hello('Daemon'));
         $this->output(json_encode($this->request->options, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         $this->output(json_encode($this->request->argv, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));

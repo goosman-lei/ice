@@ -28,40 +28,52 @@ class Compiler {
 
     /*
 语法规则:
-CHARS_NUMERIC := [0-9]
-CHARS_ID      := [a-zA-Z_0-9]
-CHARS_ALL     := .
+LITERAL_ID      := REGEXP( [-_a-zA-Z0-9]+ )
+LITERAL_STRING  := "\"" REGEXP( .* ) "\"" | "'" REGEXP( .* ) "'"
+LITERAL_NUMERIC := [ "-" ] REGEXP( [0-9]+ ) [ "." REGEXP( [0-9]+ ) ]
 
-CHAR_LIST_ID      := CHARS_ID | CHARS_ID CHAR_LIST_ID
-CHAR_LIST_NUMERIC := [ "-" ] CHARS_NUMERIC [ "." CHARS_NUMERIC ]
+OP_NAME        := LITERAL_ID
+FIELD_NAME     := LITERAL_ID
+TYPE_NAME      := LITERAL_ID
+OP_ARG         := LITERAL_STRING | LITERAL_ID | LITERAL_NUMERIC
+REQ_OR_DEFAULT := "__opt" | "__req" | LITERAL_STRING | LITERAL_ID | LITERAL_NUMERIC
 
-CHAR_LIST_STRING_LITERAL_D_QUOTES := "\"" CHARS_ALL "\""
-CHAR_LIST_STRING_LITERAL_S_QUOTES := "'" CHARS_ALL "'"
-CHAR_LIST_STRING_LITERAL          := CHAR_LIST_STRING_LITERAL_D_QUOTES | CHAR_LIST_STRING_LITERAL_S_QUOTES
+TYPE        := "(" TYPE_NAME [ ":" REQ_OR_DEFAULT ] ")"
+OP_ARG_LIST := OP_ARG | OP_ARG "," OP_ARG_LIST
 
-WORD_TYPE           := CHAR_LIST_ID
-WORD_DEFAULT_OR_REQ := "__opt" | "__req" | CHAR_LIST_STRING_LITERAL | CHAR_LIST_NUMERIC | CHAR_LIST_ID
-WORD_FIELD_NAME     := CHAR_LIST_ID
-WORD_OP_NAME        := CHAR_LIST_ID
-WORD_OP_ARG         := CHAR_LIST_ID | CHAR_LIST_NUMERIC | CHAR_LIST_STRING_LITERAL
+FIELD_RULE_NONAME := TYPE FILTER_LIST
+FIELD_RULE        := FIELD_NAME FIELD_RULE_NONAME
+FIELD_RULE_LIST   := FIELD_RULE [ ";" ] | FIELD_RULE ";" FIELD_RULE_LIST
 
-LIST_OP_ARG := WORD_OP_ARG | WORD_OP_ARG "," LIST_OP_ARG
+BLOCK_FILTER  := "{" FIELD_RULE_LIST "}"
+EXTEND_FILTER := "@" LITERAL_STRING
+OP_FILTER     := OP_NAME [ ":" OP_ARG_LIST ]
 
+FILTER_LIST := BLOCK_FILTER | EXTEND_FILTER | OP_FILTER | BLOCK_FILTER FILTER_LIST | ( EXTEND_FILTER | OP_FILTER ) [ "|" ] FILTER_LIST
 
-STATEMENT_OP      := WORD_OP_NAME ":" LIST_OP_ARG
-STATEMENT_EXTEND  := "@" STATEMENT_OP
-STATEMENT_LIST_OP := STATEMENT_OP | STATEMENT_BLOCK | STATEMENT_EXTEND | STATEMENT_OP "|" STATEMENT_LIST_OP
+ROOT := FIELD_RULE_NONAME
 
-STATEMENT_FIELD      := WORD_FIELD_NAME STATEMENT_FIELD_FILTER
-STATEMENT_LIST_FIELD := STATEMENT_FIELD | STATEMENT_FIELD ";" STATEMENT_LIST_FIELD [ ";" ]
-
-STATEMENT_BLOCK := "{" STATEMENT_LIST_FIELD "}"
-
-STATEMENT_TYPE_OR_EXTEND := "(" WORD_TYPE  [ ":" WORD_DEFAULT_OR_REQ ] ")"
-
-STATEMENT_FIELD_FILTER := STATEMENT_TYPE_OR_EXTEND [ STATEMENT_LIST_OP ]
-
-ROOT_STATEMENT := STATEMENT_FIELD_FILTER
+语法示例:
+(map){
+    code(int);
+    data(map){
+        is_new_tag(str);
+        picSize(int);
+        webp(str);
+        hide_chat_emoticon(str);
+        emoticon_shops(map){
+            *(map) @"ext1"|@"ext2"{
+                enable(str) range;
+                new_emoticon(int:0)
+            }{
+                new_emoticon(int:3)
+            }
+        };
+        host_white(arr){
+            *(str)
+        }
+    }
+}
     */
     public function compile($srcCode, $proxyNamespace, $proxyClassName, $baseFilterClassName) {
         try {
@@ -277,9 +289,9 @@ class {$proxyClassName} extends {$baseFilterClassName} {
                 case 's': case 't': case 'u': case 'v': case 'w': case 'x': case 'y': case 'z': case 'A':
                 case 'B': case 'C': case 'D': case 'E': case 'F': case 'G': case 'H': case 'I': case 'J':
                 case 'K': case 'L': case 'M': case 'N': case 'O': case 'P': case 'Q': case 'R': case 'S':
-                case 'T': case 'U': case 'V': case 'W': case 'X': case 'Y': case 'Z': case '_':
+                case 'T': case 'U': case 'V': case 'W': case 'X': case 'Y': case 'Z': case '_': case '-':
                     while ($this->position < $this->srcCodeLen 
-                        && strpos('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_', $this->srcCode[$this->position]) !== FALSE) {
+                        && strpos('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-', $this->srcCode[$this->position]) !== FALSE) {
                         $literal .= $this->srcCode[$this->position];
                         $this->position ++;
                     }
