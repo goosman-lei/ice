@@ -1,5 +1,5 @@
 <?php
-namespace ${PROJECT_NAMESPACE}\Daemon\Say;
+namespace ice\demo\Daemon\Say;
 class Hello extends \FD_Daemon {
     public function execute() {
             $code = '(map){
@@ -9,8 +9,8 @@ class Hello extends \FD_Daemon {
         picSize(int);
         webp(str);
         hide_chat_emoticon(str);
-        emoticon_shops(map){
-            *(map) @"ext1"|@"ext2"{
+        emoticon_shops(arr){
+            *(map) @"ext.emoticon_1"|@"ext.emoticon_2"{
                 enable(str) range;
                 new_emoticon(int:0)
             }{
