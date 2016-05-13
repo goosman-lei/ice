@@ -26,7 +26,7 @@ class DMap implements \ArrayAccess {
     }
 
     public function merge($datas) {
-        if (!is_array($datas) || !($datas instanceof \DMap)) {
+        if (!is_array($datas) && !($datas instanceof DMap)) {
             return;
         }
         foreach ($datas as $k => $v) {
