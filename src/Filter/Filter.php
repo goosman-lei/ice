@@ -23,7 +23,11 @@ class Filter {
         }
     }
 
-    public function expectData(&$expectData, $data) {
+    public function expectData($expectData, $data) {
+        return $this->_expectData($expectData, $data);
+    }
+
+    protected function _expectData(&$expectData, $data) {
         foreach ($expectData as $k => $v) {
             if (is_array($v)) {
                 $this->expectData($expectData[$k], $data[$k]);
@@ -78,7 +82,9 @@ class Filter {
             else if ($req === '__opt') return TRUE;
             else return ($data = $req) || TRUE;
         }
-        $data = new \U_Map($data);
+        if (!($data instanceof \U_Map)) {
+            $data = new \U_Map($data);
+        }
     }
     public function type_arr(&$data, $req = '__opt') {
         if (!isset($data)) {

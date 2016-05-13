@@ -79,11 +79,11 @@ ROOT := FIELD_RULE_NONAME
         try {
             $this->resetCode($srcCode);
 
-            $this->recursiveCompile('$data', '$expectData', 3);
+            $this->recursiveCompile('$data', '$expectData', 3, TRUE);
             $dstCode = '<' . "?php
 namespace $proxyNamespace;
 class {$proxyClassName} extends {$baseFilterClassName} {
-    public function filter(\$data) {
+    public function filter(\$data, &\$expectData = null) {
         try {
 {$this->dstCode}
         } catch (\Ice\Filter\RunException \$e) {
@@ -99,13 +99,19 @@ class {$proxyClassName} extends {$baseFilterClassName} {
         return $dstCode;
     }
 
-    protected function recursiveCompile($dataLiteral, $expectDataLiteral, $indent = 0) {
+    protected function recursiveCompile($dataLiteral, $expectDataLiteral, $indent = 0, $isRoot = FALSE) {
         // 类型解析
         $this->readToken(Token::BRACKET_START);
         $tokenType = $this->readToken(Token::LITERAL_ID);
         $lcTypeName = strtolower($tokenType->literal);
         $ucTypeName = ucfirst($lcTypeName);
-        $this->appendCode("{$expectDataLiteral} = \$this->default{$ucTypeName};\n");
+        if ($isRoot) {
+            $this->appendCode("if (is_null(\$expectData)) {\n", $indent);
+            $this->appendCode("{$expectDataLiteral} = \$this->default{$ucTypeName};\n", $indent + 1);
+            $this->appendCode("}\n", $indent);
+        } else {
+            $this->appendCode("{$expectDataLiteral} = \$this->default{$ucTypeName};\n", $indent);
+        }
 
         // 类型默认值处理
         $token = $this->readToken(Token::COLON | Token::BRACKET_END);
