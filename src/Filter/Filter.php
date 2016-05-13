@@ -11,13 +11,23 @@ class Filter {
     protected $defaultBool  = FALSE;
     protected $defaultStr   = '';
 
+    protected $extendConfig;
+
     public function __construct($config, $strictMode = FALSE) {
         $this->config     = $config;
         $this->strictMode = $strictMode;
+        if (isset($this->config['extend_path'])) {
+            $this->extendConfig = new \F_Config($this->config['extend_path']);
+        }
     }
 
     public function extend_filter(&$target, $data, $filter) {
-        
+        $extendSrcCode = $this->extendConfig->get($filter);
+        if (empty($extendSrcCode)) {
+            return ;
+        }
+        $proxy  = \F_Ice::$ins->workApp->proxy_filter->get($extendSrcCode, $this->strictMode);
+        $target = $proxy->filter($data);
     }
 
     public function type_str(&$target, $data, $req = '__opt') {
