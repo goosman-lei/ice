@@ -24,4 +24,13 @@ class DMap implements \ArrayAccess {
     public function offsetUnset($offset) {
         unset($this->$offset);
     }
+
+    public function merge($datas) {
+        if (!is_array($datas) && !($datas instanceof DMap)) {
+            return;
+        }
+        foreach ($datas as $k => $v) {
+            $this->$k = $v;
+        }
+    }
 }

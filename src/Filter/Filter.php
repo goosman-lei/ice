@@ -18,68 +18,95 @@ class Filter {
         $this->strictMode = $strictMode;
         if (isset($this->config['extend_path'])) {
             $this->extendConfig = new \F_Config($this->config['extend_path']);
+        } else {
+            $this->extendConfig = new \U_Stub();
         }
     }
 
-    public function extend_filter(&$target, $data, $filter) {
+    public function expectData($expectData, $data) {
+        return $this->_expectData($expectData, $data);
+    }
+
+    protected function _expectData(&$expectData, $data) {
+        foreach ($expectData as $k => $v) {
+            if (!array_key_exists($k, $data)) {
+                unset($expectData[$k]);
+                continue;
+            } else if (is_array($v)) {
+                $this->_expectData($expectData[$k], $data[$k]);
+            } else {
+                $expectData[$k] = $data[$k];
+            }
+        }
+        return $expectData;
+    }
+
+    public function extend_filter(&$data, &$expectData, $filter) {
         $extendSrcCode = $this->extendConfig->get($filter);
         if (empty($extendSrcCode)) {
             return ;
         }
-        $proxy  = \F_Ice::$ins->workApp->proxy_filter->get($extendSrcCode, $this->strictMode);
-        $target = $proxy->filter($data);
+        $proxy   = \F_Ice::$ins->workApp->proxy_filter->get($extendSrcCode, $this->strictMode);
+        $tmpData = $proxy->filter($data, $expectData);
+        if (is_array($data)) {
+            $data = array_merge($data, (array)$tmpData);
+        } else if ($data instanceof \U_Map) {
+            $data->merge($tmpData);
+        }
     }
 
-    public function type_str(&$target, $data, $req = '__opt') {
+    public function type_str(&$data, $req = '__opt') {
         if (!isset($data)) {
             if ($req === '__req') return $this->reportMessage();
             else if ($req === '__opt') return TRUE;
             else return ($data = $req) || TRUE;
         }
-        $target = (string)$data;
+        $data = (string)$data;
     }
-    public function type_int(&$target, $data, $req = '__opt') {
+    public function type_int(&$data, $req = '__opt') {
         if (!isset($data)) {
             if ($req === '__req') return $this->reportMessage();
             else if ($req === '__opt') return TRUE;
             else return ($data = $req) || TRUE;
         }
-        $target = (int)$data;
+        $data = (int)$data;
     }
-    public function type_float(&$target, $data, $req = '__opt') {
+    public function type_float(&$data, $req = '__opt') {
         if (!isset($data)) {
             if ($req === '__req') return $this->reportMessage();
             else if ($req === '__opt') return TRUE;
             else return ($data = $req) || TRUE;
         }
-        $target = (float)$data;
+        $data = (float)$data;
     }
-    public function type_map(&$target, $data, $req = '__opt') {
+    public function type_map(&$data, $req = '__opt') {
         if (!isset($data)) {
             if ($req === '__req') return $this->reportMessage();
             else if ($req === '__opt') return TRUE;
             else return ($data = $req) || TRUE;
         }
-        $target = new \U_Map();
+        if (!($data instanceof \U_Map)) {
+            $data = new \U_Map($data);
+        }
     }
-    public function type_arr(&$target, $data, $req = '__opt') {
+    public function type_arr(&$data, $req = '__opt') {
         if (!isset($data)) {
             if ($req === '__req') return $this->reportMessage();
             else if ($req === '__opt') return TRUE;
             else return ($data = $req) || TRUE;
         }
-        $target = array();
+        $data = (array)$data;
     }
-    public function type_bool(&$target, $data, $req = '__opt') {
+    public function type_bool(&$data, $req = '__opt') {
         if (!isset($data)) {
             if ($req === '__req') return $this->reportMessage();
             else if ($req === '__opt') return TRUE;
             else return ($data = $req) || TRUE;
         }
-        $target = (bool)$data;
+        $data = (bool)$data;
     }
 
-    public function op_range(&$target, $data, $range) {
+    public function op_range(&$data, $range) {
         if (!isset($data)) {
             return TRUE;
         }
@@ -115,7 +142,7 @@ class Filter {
 
     }
 
-    public function op_match(&$target, $data, $pattern) {
+    public function op_match(&$data, $pattern) {
         if (!isset($data)) {
             return TRUE;
         }
@@ -128,6 +155,14 @@ class Filter {
         }
         if (!preg_match($pattern, $data)) {
             return $this->reportMessage();
+        }
+    }
+
+    public function op_strip(&$datas) {
+        $argv = func_get_args();
+        array_shift($argv);
+        foreach ($argv as $arg) {
+            unset($datas[$arg]);
         }
     }
 
