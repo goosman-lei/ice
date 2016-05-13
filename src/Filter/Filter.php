@@ -158,6 +158,14 @@ class Filter {
         }
     }
 
+    public function op_strip(&$datas) {
+        $argv = func_get_args();
+        array_shift($argv);
+        foreach ($argv as $arg) {
+            unset($datas[$arg]);
+        }
+    }
+
     protected function reportMessage($message = '') {
         $bt = debug_backtrace();
         $op = substr(@$bt[1]['function'], 3);
