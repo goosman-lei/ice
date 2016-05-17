@@ -13,7 +13,6 @@ class Mysqli extends Abs {
         }
 
         return $this->conn->query($sql);
-
     }
 
     public function __call($method, $arguments) {
@@ -65,4 +64,15 @@ class Mysqli extends Abs {
 
         return FALSE;
     }
+
+    /**
+     * isDuplicated
+     * 检查当前是否由于唯一键冲突失败
+     * @access protected
+     * @return void
+     */
+    protected function isDuplicated() {
+        return $this->conn->errno === 1062;
+    }
+
 }

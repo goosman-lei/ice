@@ -41,4 +41,10 @@ class Code {
     // Filter相关错误
     const FILTER_COMPILE_FAILED      = 100500;
     const FILTER_RUN_STRICT_UNEXPECT = 100501;
+
+    // Query相关错误
+    const QUERY_BUILD_EXPR_ERROR          = 100600;
+    const QUERY_ESCAPE_FIELD_VALUE_FAILED = 100601;
+    const QUERY_QUERY_FAILED              = 100602;
+    const QUERY_GET_HANDLER_FAILED        = 100603;
 }
