@@ -12,6 +12,8 @@ class_alias('\\Ice\\Frame\\Service\\Service',   'FS_Service');
 
 class_alias('\\Ice\\Frame\\Daemon\\Daemon',     'FD_Daemon');
 
+class_alias('\\Ice\\DB\\Query',                 'DB_Query');
+
 class_alias('\\Ice\\Util\\Time',                'U_Time');
 class_alias('\\Ice\\Util\\Env',                 'U_Env');
 class_alias('\\Ice\\Util\\Ip',                  'U_Ip');
