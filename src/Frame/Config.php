@@ -8,7 +8,7 @@ class Config {
         $this->confArr = self::loadConfig($rootPath);
     }
 
-    public function buildForApp($app) {
+    public static function buildForApp($app) {
         $config = new self($app->rootPath . '/conf');
         $config->confArr['app']['runner'] = $config->confArr['app']['runner'][$app->runType];
         return $config;

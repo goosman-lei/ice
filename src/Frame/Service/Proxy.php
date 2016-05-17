@@ -8,7 +8,7 @@ class Proxy {
     protected function __construct() {
     }
 
-    public function buildForApp($app) {
+    public static function buildForApp($app) {
         $proxy = new self();
 
         $proxy->_pool = $app->config->get('service.pool');
