@@ -13,10 +13,10 @@ $pool = array(
         ),
         'demo' => array(
             'master' => array(
-                array('host' => '10.10.10.60', 'port' => 3306),
+                array('host' => '127.0.0.1', 'port' => 3306),
             ),
             'slave' => array(
-                array('host' => '10.10.10.60', 'port' => 3306),
+                array('host' => '127.0.0.1', 'port' => 3306),
             ),
             'options' => array(
                 'timeout' => 1,
@@ -28,7 +28,7 @@ $pool = array(
     'curl' => array(
         'service' => array(
             'default' => array(
-                array('host' => 'ice-service.leiguoguo.lab.niceprivate.com')
+                array('host' => 'service.host.com') // 修改为service的host
             ),
         ),
     ),
