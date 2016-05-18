@@ -2,8 +2,8 @@
 namespace ${PROJECT_NAMESPACE}\Action\Say;
 class Helloworld extends \FW_Action {
     public function execute() {
-        $user = new User();
-        $uinfo = $user->getRow(array('id', '5012470'), 'id, name, location');
+        $userModel = new \${PROJECT_NAMESPACE}\Model\User();
+        $uinfo = $userModel->getRow(array('id', '1'), 'id, name, location');
         $client = $this->ice->mainApp->proxy_service->get('demo-local', 'Say');
         return $this->ice->mainApp->proxy_filter->get('(map){
             code(int);
@@ -30,16 +30,4 @@ class Helloworld extends \FW_Action {
             ),
         ));
     }
-}
-
-class User extends \DB_Query {
-    protected $tableName = 'kk_user';
-    protected $mapping   = array(
-        'id'     => 'i',
-        'passwd' => 's',
-        'name'   => 's',
-        'avatar' => 's',
-        'wid'    => 's',
-    );
-    protected $dbResource = 'demo';
 }
