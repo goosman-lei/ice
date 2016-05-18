@@ -110,6 +110,7 @@ class Hi extends \FW_Action{
     }
 }
 ```
+
 * daemon应用的入口, 代码位于src/daemon. 内部保持两层结构(src/action/Controller/Action.php)
 ```
 调用命令:
@@ -425,19 +426,19 @@ $web_temp_engine = array(
     ),
 );
 
-'engines'部分, 配置支持的模板引擎.
-上面例子中, 配置了json和smarty-default两种模板引擎.
-我们认为, 一套具体配置出来的模板引擎实例, 是应用选择模板引擎的最小单元.
-(同样使用smarty作为引擎, 但不同的模块可能需要不同的渲染选项)
+    'engines'部分, 配置支持的模板引擎.
+    上面例子中, 配置了json和smarty-default两种模板引擎.
+    我们认为, 一套具体配置出来的模板引擎实例, 是应用选择模板引擎的最小单元.
+    (同样使用smarty作为引擎, 但不同的模块可能需要不同的渲染选项)
 
-'routes'部分, 描述了一个请求, 怎样去选择应用那个模板引擎.
-以上面配置为例:
-/say/hi   这个请求, 使用json渲染
-/say/*    除了/say/hi外的所有/say/*请求, 均使用smarty-default渲染
-*         其他所有请求, 均使用json渲染
+    'routes'部分, 描述了一个请求, 怎样去选择应用那个模板引擎.
+    以上面配置为例:
+    /say/hi   这个请求, 使用json渲染
+    /say/*    除了/say/hi外的所有/say/*请求, 均使用smarty-default渲染
+    *         其他所有请求, 均使用json渲染
 
-整个routes部分的配置, 面向controller/action两层结构.
-'*'表示某层的默认引擎
+    整个routes部分的配置, 面向controller/action两层结构.
+    '*'表示某层的默认引擎
 ```
 
 ###应用开发中的Tips
