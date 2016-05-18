@@ -17,9 +17,11 @@ $runner = array(
         'routes'      => $web_routes,
         'temp_engine' => $web_temp_engine,
         'log'         => $web_logger,
+        'filter'      => $web_filter,
     ),
     'service' => array(
-        'log' => $service_logger,
+        'log'    => $service_logger,
+        'filter' => $service_filter,
     ),
     'daemon' => array(
         'log'    => $daemon_logger,
