@@ -11,15 +11,15 @@ class Filter {
     protected $defaultBool  = FALSE;
     protected $defaultStr   = '';
 
-    protected $extendConfig;
+    protected $refConfig;
 
     public function __construct($config, $strictMode = FALSE) {
         $this->config     = $config;
         $this->strictMode = $strictMode;
-        if (isset($this->config['extend_path'])) {
-            $this->extendConfig = new \F_Config($this->config['extend_path']);
+        if (isset($this->config['ref_path'])) {
+            $this->refConfig = new \F_Config($this->config['ref_path']);
         } else {
-            $this->extendConfig = new \U_Stub();
+            $this->refConfig = new \U_Stub();
         }
     }
 
@@ -45,12 +45,12 @@ class Filter {
         return $expectData;
     }
 
-    public function extend_filter(&$data, &$expectData, $filter) {
-        $extendSrcCode = $this->extendConfig->get($filter);
-        if (empty($extendSrcCode)) {
+    public function ref_filter(&$data, &$expectData, $filter) {
+        $refSrcCode = $this->refConfig->get($filter);
+        if (empty($refSrcCode)) {
             return ;
         }
-        $proxy   = \F_Ice::$ins->workApp->proxy_filter->get($extendSrcCode, $this->strictMode);
+        $proxy   = \F_Ice::$ins->workApp->proxy_filter->get($refSrcCode, $this->strictMode);
         $tmpData = $proxy->filter($data, $expectData);
         if (is_array($data)) {
             $data = array_merge($data, (array)$tmpData);

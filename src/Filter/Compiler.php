@@ -196,7 +196,7 @@ class {$proxyClassName} extends {$baseFilterClassName} {
             // 继承
             } else if ($token->isValid(Token::AT)) {
                 $token = $this->readToken(Token::LITERAL_STRING);
-                $this->appendCode("\$this->extend_filter({$dataLiteral}, {$expectDataLiteral}, {$token->literal});\n", $indent);
+                $this->appendCode("\$this->ref_filter({$dataLiteral}, {$expectDataLiteral}, {$token->literal});\n", $indent);
                 $this->readToken(Token::PIPE, FALSE);
             }
         } while (TRUE);

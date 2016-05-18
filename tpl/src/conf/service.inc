@@ -37,7 +37,7 @@ $service_logger = array(
 );
 
 $service_filter = array(
-    'compile_path' => $run_path . '/filter',
-    'base_filter'  => '\\Ice\\Filter\\Filter',
-    'extend_path'  => $root_path . '/filter',
+    'compile_path' => $run_path . '/filter', // 编译产出路径
+    'base_filter'  => '\\Ice\\Filter\\Filter', // Filter基类, 可继承后自己扩展op_xxx/type_xxx
+    'extend_path'  => $root_path . '/filter', // 标准的filter引用定义路径
 );

@@ -11,13 +11,14 @@
             "${PROJECT_NAMESPACE_ESCAPE}\\Action\\":  "src/action",
             "${PROJECT_NAMESPACE_ESCAPE}\\Service\\": "src/service",
             "${PROJECT_NAMESPACE_ESCAPE}\\Daemon\\":  "src/daemon",
-            "${PROJECT_NAMESPACE_ESCAPE}\\Lib\\":     "src/lib"
+            "${PROJECT_NAMESPACE_ESCAPE}\\Lib\\":     "src/lib",
+            "${PROJECT_NAMESPACE_ESCAPE}\\Model\\":     "src/model"
         }
     },
     "repositories": [
         {
             "type": "vcs",
-            "url": "/home/ldap/leiguoguo/ice"
+            "url": "git@github.com:goosman-lei/ice.git"
         },
         {
             "packagist": false
