@@ -2,7 +2,7 @@
 
 PHP-Web开发框架
 
-##基础功能开发
+##  基础功能开发
 
 * 三种运行方式: web, service, daemon
 	
@@ -16,7 +16,7 @@ PHP-Web开发框架
 	
 * 一组框架基础工具集: Logger, Config
 	
-##外围工具开发
+##  外围工具开发
 
 * 一套基础工具库: Util
 	
@@ -24,11 +24,11 @@ PHP-Web开发框架
 	
 * 一套数据过滤工具集: $app->proxy_filter
 
-##整体架构
+##  整体架构
 
 ![整体架构图](https://raw.githubusercontent.com/goosman-lei/ice/master/doc/resource/images/0001.ice-core-arch.png)
 
-###文件结构介绍
+###  文件结构介绍
 
 ```php
 框架文件结构
@@ -79,7 +79,7 @@ src/
         resource.php            # 依赖的资源配置文件
 ```
 
-###命名规范
+###  命名规范
 
 * 所有类均遵循PSR4命名规范
 
@@ -159,7 +159,7 @@ class Ip {
 }
 ```
 
-###核心类层次结构
+###  核心类层次结构
 
 ![核心类层次结构](https://raw.githubusercontent.com/goosman-lei/ice/master/doc/resource/images/0002.ice-core-class-hiberarchy.png)
 
@@ -221,9 +221,9 @@ class App {
 }
 ```
 
-##Exapmle
+##  Exapmle
 
-###应用代码构建方法
+###  应用代码构建方法
 
 ```
 1. 修改tpl/build.conf
@@ -237,9 +237,9 @@ class App {
     2) web: 所有请求从web server打到src/webroot/web.php
 ```
 
-###标准应用配置详解
+###  标准应用配置详解
 
-####src/conf/app.php
+####  src/conf/app.php
 
 ```php
 $namespace = 'ice\demo';
@@ -275,7 +275,7 @@ $runner = array(
 );
 ```
 
-####src/conf/resource.php
+####  src/conf/resource.php
 
 ```php
 // scheme到自定义实现的映射. 用于扩展自己的资源处理器
@@ -333,7 +333,7 @@ $pool = array(
 );
 ```
 
-####src/conf/service.php
+####  src/conf/service.php
 
 ```php
 $pool = array(
@@ -386,7 +386,7 @@ proxy = remote 用来说明此服务是远程部署, 通过HTTP WebService调用
 $config中指明了服务对应的资源(参考src/conf/resource.php). 框架会自动使用资源管理器, 获取对应资源并请求服务.
 ```
 
-####web应用对应的模板引擎配置(src/conf/web.inc)
+####  web应用对应的模板引擎配置(src/conf/web.inc)
 
 ```php
 $web_temp_engine = array(
@@ -444,7 +444,7 @@ $web_temp_engine = array(
 '*'表示某层的默认引擎
 ```
 
-###应用开发中的Tips
+###  应用开发中的Tips
 
 * workApp和mainApp
 
