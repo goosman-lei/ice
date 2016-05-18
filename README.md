@@ -2,7 +2,7 @@
 
 PHP-Web开发框架
 
-##  基础功能开发
+##  核心功能
 
 * 三种运行方式: web, service, daemon
 	
@@ -16,7 +16,7 @@ PHP-Web开发框架
 	
 * 一组框架基础工具集: Logger, Config
 	
-##  外围工具开发
+##  外围工具
 
 * 一套基础工具库: Util
 	
