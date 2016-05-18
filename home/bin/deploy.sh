@@ -27,3 +27,4 @@ rm -rf $DEPLOY_PATH/src
 rm -rf $DEPLOY_PATH/vendor
 cp -rf $ROOT_PATH/src $DEPLOY_PATH/src
 cp -rf $ROOT_PATH/vendor $DEPLOY_PATH/vendor
+cp -rf $ROOT_PATH/class_alias.php $DEPLOY_PATH/class_alias.php

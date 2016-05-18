@@ -86,6 +86,11 @@ demo: array(
 */
 $web_routes = array(
     'default' => '\\Ice\\Frame\\Web\\Router\\RStatic',
+    '~= ;^/manual/markdown/(?P<section>[\w-]+)$;i' => array(
+        'class'  => 'Manual',
+        'action' => 'Markdown',
+        'params' => array('section' => 'section'),
+    ),
 );
 
 $web_temp_engine = array(

@@ -11,7 +11,7 @@ $pool = array(
             'warn_sql_length' => 51200,
             'fatal_sql_length' => 2097152,
         ),
-        'demo' => array(
+        'ice_home' => array(
             'master' => array(
                 array('host' => '127.0.0.1', 'port' => 3306),
             ),
@@ -20,15 +20,9 @@ $pool = array(
             ),
             'options' => array(
                 'timeout' => 1,
-                'user'    => '',
-                'passwd'  => '',
-            ),
-        ),
-    ),
-    'curl' => array(
-        'service' => array(
-            'default' => array(
-                array('host' => 'service.host.com') // 修改为service的host
+                'user'    => 'work',
+                'passwd'  => 'work',
+                'dbname'  => 'ice_home',
             ),
         ),
     ),

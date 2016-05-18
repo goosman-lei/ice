@@ -13,7 +13,8 @@
             "ice\\home\\Daemon\\":  "src/daemon",
             "ice\\home\\Lib\\":     "src/lib",
             "ice\\home\\Model\\":     "src/model"
-        }
+        },
+        "files": ["class_alias.php"]
     },
     "repositories": [
         {
