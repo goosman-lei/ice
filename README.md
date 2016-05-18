@@ -35,3 +35,7 @@ PHP-Web开发框架
 * 一份架构介绍文档
 	
 * 一套Example使用示例
+
+##整体架构图
+
+![整体架构图](https://raw.githubusercontent.com/goosman-lei/ice/master/doc/resource/images/0001.ice-core-arch.png)
