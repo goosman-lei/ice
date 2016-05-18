@@ -51,10 +51,10 @@ class App {
         $this->proxy_filter   = \Ice\Filter\Proxy::buildForApp($this);
     }
 
-    protected function prevSwitch() {
+    public function prevSwitch() {
     }
 
-    protected function postSwitch() {
+    public function postSwitch() {
     }
 
     public function __get($name) {
