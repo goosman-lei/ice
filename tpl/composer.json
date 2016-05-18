@@ -18,7 +18,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:goosman-lei/ice.git"
+            "url": "git@gitlab.niceprivate.com:back/ice.git"
         },
         {
             "packagist": false
