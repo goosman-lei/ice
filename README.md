@@ -91,8 +91,6 @@ src/
         resource.php            # 依赖的资源配置文件
 ```
 
-###层次结构
-
 ###命名规范
 
 * 所有类均遵循PSR4命名规范
@@ -100,7 +98,7 @@ src/
 * PROJECT_GROUP和PROJECT_NAME共同作用, 唯一定义一个项目
 ```
 PROJECT_GROUP="ice"
-PROJECT_NAME="DEMO"
+PROJECT_NAME="demo"
 ```
 
 * 项目均需定义在唯一的名字空间下, 建议直接使用PROJECT_GROUP和PROJECT_NAME组合构成顶层的两级名字空间
@@ -170,7 +168,9 @@ class Ip {
 }
 ```
 
-###对象句柄结构
+###核心类层次结构
+
+![核心类层次结构](https://raw.githubusercontent.com/goosman-lei/ice/master/doc/resource/images/0002.ice-core-class-hiberarchy.png)
 
 * 三种启动方式的入口, 均持有$ice句柄
 
