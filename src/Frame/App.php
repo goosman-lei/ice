@@ -8,6 +8,7 @@ class App {
     public $config;
     public $proxy_resource;
     public $proxy_service;
+    public $proxy_filter;
 
     public $runType;
 
@@ -50,7 +51,7 @@ class App {
         $this->proxy_filter   = \Ice\Filter\Proxy::buildForApp($this);
     }
 
-    protected function preSwitch() {
+    protected function prevSwitch() {
     }
 
     protected function postSwitch() {

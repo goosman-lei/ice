@@ -38,8 +38,12 @@ class Ice {
 
     public function switchWorkApp($newWorkApp) {
         $oldWorkApp = $this->workApp;
+        
+        $newWorkApp->prevSwitch();
 
         $this->workApp = $newWorkApp;
+
+        $newWorkApp->postSwitch();
 
         return $oldWorkApp;
     }
