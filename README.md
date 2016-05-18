@@ -84,17 +84,20 @@ src/
 * 所有类均遵循PSR4命名规范
 
 * PROJECT_GROUP和PROJECT_NAME共同作用, 唯一定义一个项目
+
 ```
 PROJECT_GROUP="ice"
 PROJECT_NAME="demo"
 ```
 
 * 项目均需定义在唯一的名字空间下, 建议直接使用PROJECT_GROUP和PROJECT_NAME组合构成顶层的两级名字空间
+
 ```
 PROJECT_NAMESPACE="$PROJECT_GROUP\\$PROJECT_NAME"
 ```
 
 * web应用的入口, 代码位于src/action. 内部保持两层结构(src/action/Controller/Action.php).
+
 ```
 // 假定使用默认路由, 则URI /say/hi被解析到
 src/action/Say/Hi.php
@@ -111,6 +114,7 @@ class Hi extends \FW_Action{
 ```
 
 * daemon应用的入口, 代码位于src/daemon. 内部保持两层结构(src/action/Controller/Action.php)
+
 ```
 调用命令:
     php src/daemon/cli.php --class=say --action=hi
@@ -127,6 +131,7 @@ class Hi extends \FD_Daemon {
 ```
 
 * service应用的入口, 代码位于src/service, 内部保持一层结构(src/action/Service.php)
+
 ```
 对于服务say/hi
 代码路径:
@@ -142,6 +147,7 @@ class Say extends \FS_Service {
 ```
 
 * 本地类库, 代码位于src/lib, 命名空间为PROJECT_GROUP\PROJECT_NAME\Lib
+
 ```
 假定有本地类库Ip
 则代码路径:
@@ -218,6 +224,7 @@ class App {
 ##Exapmle
 
 ###应用代码构建方法
+
 ```
 1. 修改tpl/build.conf
 2. 执行bin/ice-skel
@@ -233,6 +240,7 @@ class App {
 ###标准应用配置详解
 
 ####src/conf/app.php
+
 ```php
 $namespace = 'ice\demo';
 $app_class = '\\Ice\\Frame\\App';
@@ -268,6 +276,7 @@ $runner = array(
 ```
 
 ####src/conf/resource.php
+
 ```php
 // scheme到自定义实现的映射. 用于扩展自己的资源处理器
 $mapping = array(
@@ -325,6 +334,7 @@ $pool = array(
 ```
 
 ####src/conf/service.php
+
 ```php
 $pool = array(
     'demo-local' => array(
@@ -377,6 +387,7 @@ $config中指明了服务对应的资源(参考src/conf/resource.php). 框架会
 ```
 
 ####web应用对应的模板引擎配置(src/conf/web.inc)
+
 ```php
 $web_temp_engine = array(
     'engines' => array(
@@ -418,24 +429,25 @@ $web_temp_engine = array(
     ),
 );
 
-    'engines'部分, 配置支持的模板引擎.
-    上面例子中, 配置了json和smarty-default两种模板引擎.
-    我们认为, 一套具体配置出来的模板引擎实例, 是应用选择模板引擎的最小单元.
-    (同样使用smarty作为引擎, 但不同的模块可能需要不同的渲染选项)
+'engines'部分, 配置支持的模板引擎.
+上面例子中, 配置了json和smarty-default两种模板引擎.
+我们认为, 一套具体配置出来的模板引擎实例, 是应用选择模板引擎的最小单元.
+(同样使用smarty作为引擎, 但不同的模块可能需要不同的渲染选项)
 
-    'routes'部分, 描述了一个请求, 怎样去选择应用那个模板引擎.
-    以上面配置为例:
-    /say/hi   这个请求, 使用json渲染
-    /say/*    除了/say/hi外的所有/say/*请求, 均使用smarty-default渲染
-    *         其他所有请求, 均使用json渲染
+'routes'部分, 描述了一个请求, 怎样去选择应用那个模板引擎.
+以上面配置为例:
+/say/hi   这个请求, 使用json渲染
+/say/*    除了/say/hi外的所有/say/*请求, 均使用smarty-default渲染
+*         其他所有请求, 均使用json渲染
 
-    整个routes部分的配置, 面向controller/action两层结构.
-    '*'表示某层的默认引擎
+整个routes部分的配置, 面向controller/action两层结构.
+'*'表示某层的默认引擎
 ```
 
 ###应用开发中的Tips
 
 * workApp和mainApp
+
 ```
 mainApp指启动应用的项目.
 workApp是当前调用上下文所在的项目. (在以local方式调用service时, 会自动切换workApp到被调用service项目)
@@ -447,6 +459,7 @@ workApp是当前调用上下文所在的项目. (在以local方式调用service�
 ```
 
 * 请不要产生跨层调用, 正确的调用层次关系是
+
 ```
 action  => service
 daemon  => service
@@ -461,6 +474,7 @@ model   => lib
 * 仅daemon/action下可以使用四种输入输出数据对象
 
 * daemon的输入输出数据对象接口
+
 ```
 $this->clientEnv 无可用信息
 
@@ -485,6 +499,7 @@ $this->response->action;                // 路由后的action
 ```
 
 * web action的输入输出数据对象接口
+
 ```
 $this->clientEnv->ip                    // 客户端IP地址
 
