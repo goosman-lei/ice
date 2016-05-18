@@ -29,11 +29,15 @@ class Filter {
 
     protected function _expectData(&$expectData, $data) {
         foreach ($expectData as $k => $v) {
-            if (!array_key_exists($k, $data)) {
+            if (!isset($data[$k])) {
                 unset($expectData[$k]);
                 continue;
             } else if (is_array($v)) {
                 $this->_expectData($expectData[$k], $data[$k]);
+                // 如果期望类型是map, 做一次和普通数组的区分处理
+                if ($data[$k] instanceof \U_Map) {
+                    $expectData[$k] = new \U_Map($expectData[$k]);
+                }
             } else {
                 $expectData[$k] = $data[$k];
             }
