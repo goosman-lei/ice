@@ -196,7 +196,7 @@ class Web {
             $tplData = $actionObj->execute(); 
             $actionObj->postExecute();
 
-            $this->response->setTplData($tplData);
+            $this->response->addTplData($tplData);
             $this->response->output();
         } catch (\Exception $e) {
             \F_Ice::$ins->mainApp->logger_comm->fatal(array(
