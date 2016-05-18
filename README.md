@@ -100,7 +100,6 @@ PROJECT_NAMESPACE="$PROJECT_GROUP\\$PROJECT_NAME"
 src/action/Say/Hi.php
 
 实现代码如下
-<?php
 namespace PROJECT_GROUP\PROJECT_NAME\Action\Say;
 class Hi extends \FW_Action{
     public function execute() {
@@ -119,7 +118,6 @@ class Hi extends \FW_Action{
 src/daemon/Say/Hi.php
 
 实现代码如下
-<?php
 namespace PROJECT_GROUP\PROJECT_NAME\Daemon\Say;
 class Hi extends \FD_Daemon {
     public function execute() {
@@ -135,7 +133,6 @@ class Hi extends \FD_Daemon {
 src/service/Say.php
 
 示例实现代码如下
-<?php
 namespace PROJECT_GROUP\PROJECT_NAME\Service;
 class Say extends \FS_Service {
     public function hi() {
@@ -151,7 +148,6 @@ class Say extends \FS_Service {
 src/lib/Ip.php
 
 示例实现代码如下:
-<?php
 namespace PROJECT_GROUP\PROJECT_NAME\Lib;
 class Ip {
 }
@@ -238,7 +234,6 @@ class App {
 
 ####src/conf/app.php
 ```php
-<?php
 $namespace = 'ice\demo';
 $app_class = '\\Ice\\Frame\\App';
 
@@ -274,7 +269,6 @@ $runner = array(
 
 ####src/conf/resource.php
 ```php
-<?php
 // scheme到自定义实现的映射. 用于扩展自己的资源处理器
 $mapping = array(
     'connector' => array(
@@ -332,7 +326,6 @@ $pool = array(
 
 ####src/conf/service.php
 ```php
-<?php
 $pool = array(
     'demo-local' => array(
         'proxy'  => 'local',
@@ -385,7 +378,6 @@ $config中指明了服务对应的资源(参考src/conf/resource.php). 框架会
 
 ####web应用对应的模板引擎配置(src/conf/web.inc)
 ```php
-<?php
 $web_temp_engine = array(
     'engines' => array(
         'json' => array(
