@@ -20,9 +20,9 @@ PHP-Web开发框架
 
 * ✓ 一套基础工具库: Util
 	
-* ✓ 一套基于mysqli的数据库工具集
+* ✓ 一套基于mysqli的数据库工具集: DB_Query
 	
-* ✓ 一套数据过滤工具集
+* ✓ 一套数据过滤工具集: $app->proxy_filter
 	
 ##协议规范
 
