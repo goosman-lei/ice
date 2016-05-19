@@ -91,8 +91,8 @@ class Response extends \Ice\Frame\Abs\Response {
         return $this->tplData;
     }
 
-    public function setTplData($datas) {
-        $this->tplData = $datas;
+    public function addTplData($datas) {
+        $this->tplData = array_merge($this->tplData, $datas);
     }
 
     public function cleanBody() {
