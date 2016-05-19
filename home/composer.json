@@ -4,6 +4,7 @@
     "version": "0.0.1-dev",
     "type": "library",
     "require": {
+        "michelf/php-markdown": ">=1.6.0",
         "Ice/Framework": ">=0.0.1-dev"
     },
     "autoload": {
