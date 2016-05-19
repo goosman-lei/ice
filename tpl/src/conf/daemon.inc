@@ -5,14 +5,14 @@
 $daemon_logger = array(
     'comm' => array(
         'log_fmt' => array(
-            'fmt_now'             => '', # 默认Y-m-d H:i:s
+            'fmt_now'             => '', # 默认-Y-m-d H:i:s
             'client_env.ip'       => '',
             'server_env.hostname' => '',
             'request.class'       => '',
             'request.action'      => '',
         ),
         'log_fmt_wf' => array(
-            'fmt_now'             => '', # 默认Y-m-d H:i:s
+            'fmt_now'             => '', # 默认-Y-m-d H:i:s
             'client_env.ip'       => '',
             'server_env.hostname' => '',
             'request.class'       => '',
