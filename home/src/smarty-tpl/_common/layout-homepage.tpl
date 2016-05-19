@@ -51,9 +51,9 @@ $(function() {
                 <li><a href="https://github.com/goosman-lei/ice/blob/master/README.md">ManualPage</a></li>
             </ul>
         </div>
-        <div class="right">
-        {block name=body}{/block}
-        </div>
+        <div class="right">{block name=body}
+{$body_content}
+        {/block}</div>
     </div>
 </body>
 </html>

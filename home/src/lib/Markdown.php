@@ -9,10 +9,10 @@ class Markdown {
     }
 
     public function render($path) {
-        $srcFile = $this->markdownPath . '/' . ltrim(dirname($path)) . '/' . basename($path, '.md')  . '.md';
-        $dstFile = $this->compiledPath . '/' . ltrim(dirname($path)) . '/' . basename($path, '.html')  . '.html';
+        $srcFile = $this->markdownPath . '/' . ltrim(dirname($path), '/') . '/' . basename($path, '.md')  . '.md';
+        $dstFile = $this->compiledPath . '/' . ltrim(dirname($path), '/') . '/' . basename($path, '.html')  . '.html';
 
-        if (!is_file($srcPath)) {
+        if (!is_file($srcFile)) {
             return '';
         }
 

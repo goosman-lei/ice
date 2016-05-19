@@ -118,7 +118,6 @@ $web_temp_engine = array(
                 'template_dir'          => $root_path . '/smarty-tpl',
                 'plugins_dir'           => array(),
                 'compile_dir'           => $run_path . '/smarty-compiled/' ,
-                'default_modifiers'     => array('escape:"html"'),
                 'left_delimiter'        => '{',
                 'right_delimiter'       => '}',
             ),
