@@ -30,7 +30,7 @@ abstract class Abs {
     abstract public function display($tplPath);
 
     public function render() {
-        $tplPath = strtolower($this->response->controller . '/' . $this->response->action);
+        $tplPath = strtolower($this->response->class . '/' . $this->response->action);
         $this->clearAssign();
         $this->assign($this->response->getTplData());
         return $this->display($tplPath);
