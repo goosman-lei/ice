@@ -36,7 +36,7 @@ class Internal {
         );
 
         $serviceNamespace = \F_Ice::$ins->workApp->config->get('app.namespace');
-        $serviceClass = "\\{$serviceNamespace}\\Service\\" . ucfirst(strtolower($class));
+        $serviceClass = "\\{$serviceNamespace}\\Service\\" . $class;
         if (!class_exists($serviceClass) || !method_exists($serviceClass, $action)) {
             \F_Ice::$ins->mainApp->logger_ws->warn($logData, \F_ECode::WS_PROXY_UNKONW_SERVICE);
             return array(

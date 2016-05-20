@@ -80,7 +80,7 @@ class Query {
      * @return void
      */
     public function execute($sql) {
-        return $this->query($sql, parent::RS_NONE);
+        return $this->query($sql, self::RS_NONE);
     }
 
 
@@ -207,7 +207,7 @@ class Query {
      * @return 成功且有onDup 影响行数
      */
     public function insert($setValues, $onDup = FALSE) {
-        $valClause   = $this->buildSet($setValues);
+        $valClause   = $this->buildValues($setValues);
         if (!$valClause) {
             return FALSE;
         }
@@ -937,11 +937,11 @@ class Query {
     /**
      * getTableName 
      * 
-     * @param mixed $where 增加分表策略时使用
+     * @param mixed $where 增加分表策略时使用. 目前暂时不使用
      * @access public
      * @return void
      */
-    public function getTableName($where) {
+    public function getTableName($where = array()) {
         return $this->tableName;
     }
 }
