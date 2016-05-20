@@ -937,11 +937,11 @@ class Query {
     /**
      * getTableName 
      * 
-     * @param mixed $where 增加分表策略时使用
+     * @param mixed $where 增加分表策略时使用. 目前暂时不使用
      * @access public
      * @return void
      */
-    public function getTableName($where) {
+    public function getTableName($where = array()) {
         return $this->tableName;
     }
 }
