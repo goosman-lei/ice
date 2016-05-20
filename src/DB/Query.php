@@ -207,7 +207,7 @@ class Query {
      * @return 成功且有onDup 影响行数
      */
     public function insert($setValues, $onDup = FALSE) {
-        $valClause   = $this->buildSet($setValues);
+        $valClause   = $this->buildValues($setValues);
         if (!$valClause) {
             return FALSE;
         }
