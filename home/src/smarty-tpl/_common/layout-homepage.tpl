@@ -16,11 +16,10 @@ $(function() {
     font-family: Sans-Serif;
 }
 .body .left {
-    padding-right: 0.5em;
-    margin: 0.5em 0.5em 0.5em 0px;
-    border-right: 3px solid black;
+    padding: 5px 15px 5px 0px;
+    border-right: 4px solid black;
     text-align: right;
-    width: 18em;
+    width: 220px;
     float: left;
 }
 .body .left .title {
@@ -34,8 +33,10 @@ $(function() {
     margin-top: 5px;
 }
 .body .right {
-    margin: 0em 4em 0em 2em;
-    font-size: 2em;
+    margin: 5px 0px 5px 10px;
+    float: left;
+    font-size: 1.3em;
+    width: 775px;
 }
 {block name=style}{/block}
     </style>
@@ -52,7 +53,6 @@ $(function() {
             </ul>
         </div>
         <div class="right">{block name=body}
-{$body_content}
         {/block}</div>
     </div>
 </body>

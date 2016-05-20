@@ -125,6 +125,10 @@ $web_temp_engine = array(
     ),
     'routes' => array(
         '*' => 'smarty-default',
+        'homepage' => array(
+            '*' => 'smarty-default',
+            'issue_submit' => 'json',
+        ),
     ),
 );
 
