@@ -1,3 +1,0 @@
-<?php
-$pool = array(
-);
