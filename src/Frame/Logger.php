@@ -210,7 +210,7 @@ class Logger {
                         $argStr = 'array(';
                         $argStr .= 'count=' . count($arg);
                         foreach ($arg as $k => $v) {
-                            $argStr .= ', ' . substr(var_export($k, TRUE), 0, 32) . '=' . substr(var_export($v, TRUE), 0, 32);
+                            $argStr .= ', ' . substr(json_encode($k, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 0, 32) . '=' . substr(json_encode($v, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 0, 32);
                         }
                         $argStr .= ')';
                     } else if (is_object($arg)) {
@@ -218,7 +218,7 @@ class Logger {
                     } else if (is_resource($arg)) {
                         $argStr = 'resource(' . get_resource_type($arg) . ')';
                     } else {
-                        $argStr = var_export($arg, TRUE);
+                        $argStr = json_encode($arg, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
                     }
                     $args[] = $argStr;
                 }
