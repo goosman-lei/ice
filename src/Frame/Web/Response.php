@@ -33,20 +33,22 @@ class Response extends \Ice\Frame\Abs\Response {
     }
 
     protected function findTempEngine($config) {
-        if (!\U_Array::icaseKeySearch($this->class, $config)) {
+        $lowerClass  = strtolower($this->class);
+        $lowerAction = strtolower($this->action);
+        if (!isset($config[$lowerClass])) {
             return $config['*'];
         }
 
-        $config = $config[$this->class];
+        $config = $config[$lowerClass];
         if (!is_array($config)) {
             return $config;
         }
 
-        if (!\U_Array::icaseKeySearch($this->action, $config)) {
+        if (!isset($config[$lowerAction])) {
             return $config['*'];
         }
 
-        return $config[$this->action];
+        return $config[$lowerAction];
     }
 
     public function output() {
