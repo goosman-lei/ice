@@ -170,6 +170,15 @@ class Filter {
         }
     }
 
+    public function op_escape(&$data, $type = 'html') {
+        switch ($type) {
+            case 'html':
+            default:
+                $data = htmlspecialchars($data);
+                break;
+        }
+    }
+
     protected function reportMessage($message = '') {
         $bt = debug_backtrace();
         $op = substr(@$bt[1]['function'], 3);
