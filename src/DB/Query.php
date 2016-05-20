@@ -80,7 +80,7 @@ class Query {
      * @return void
      */
     public function execute($sql) {
-        return $this->query($sql, parent::RS_NONE);
+        return $this->query($sql, self::RS_NONE);
     }
 
 
