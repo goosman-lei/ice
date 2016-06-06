@@ -12,6 +12,7 @@
     * [输入输出](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-resource.md)
     * [DB查询工具](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-resource.md)
     * [Feature机制](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-feature.md)
+    * [日志处理](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-logger.md)
 * [命名规范](https://github.com/goosman-lei/ice/blob/master/doc/markdown/specification-name.md)
 * [开发规范](https://github.com/goosman-lei/ice/blob/master/doc/markdown/specification-develop.md)
 * [配置规范](https://github.com/goosman-lei/ice/blob/master/doc/markdown/specification-config.md)
@@ -46,8 +47,6 @@ PHP-Web开发框架.
 * 一个资源管理机制: $app->proxy_resource
 	
 * 一个服务管理机制: $app->proxy_service
-    * Ice大的层面, 分应用层(Web和Daemon运行方式下的入口)和服务层.
-    * Ice强调服务的逻辑解耦, 部署上可灵活控制, 对应的, 通过服务的proxy屏蔽掉不同部署方式的调用细节.
 	
 * 一组框架基础工具集: Logger, Config
 	
