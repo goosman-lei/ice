@@ -11,6 +11,7 @@
     * [资源管理](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-resource.md)
     * [输入输出](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-resource.md)
     * [DB查询工具](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-resource.md)
+    * [Feature机制](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-feature.md)
 * [命名规范](https://github.com/goosman-lei/ice/blob/master/doc/markdown/specification-name.md)
 * [开发规范](https://github.com/goosman-lei/ice/blob/master/doc/markdown/specification-develop.md)
 * [配置规范](https://github.com/goosman-lei/ice/blob/master/doc/markdown/specification-config.md)
@@ -36,26 +37,13 @@ PHP-Web开发框架.
 
 ##  核心功能
 
-* 四种运行方式:
-    * web: 面向用户的服务入口. 包括PC/App-API/OpenAPI等场景.
-    * service: 内部的服务层构建.
-    * daemon: 内部的后台脚本服务.
-    * embeded: 嵌入式接口, 将Ice嵌入到其他框架的应用场景. 典型应用场景: 旧框架切换到ice, 先用ice开发独立服务(逻辑解耦), 然后用嵌入式运行方式, 融合两者(逐步替换), 最终再达到分离的目的.
+* 四种运行方式
 	
-* 四种交互数据结构: 类比linux命令, 可以通过参数和环境变量两种方式与外界交互. 对Web环境而言, 多一个客户端环境, 因此, 将交互数据抽象为4类
-    * Request: 输入的参数.
-    * Response: 输出的数据.
-    * ClientEnv: 客户端的环境.
-    * ServerEnv: 服务端的环境.
+* 四种交互数据结构
 	
-* 两个框架基础封装: Ice看中服务的逻辑解耦, 部署上, 可以接受同机部署(同进程运行). 因此, 抽象出App这个概念, 来代表每个独立的应用, 在运行时以此划分上下文
-    * Ice: 框架全局
-    * App: 代表一个应用(一个独立的上下文)
+* 两个框架基础封装
 	
 * 一个资源管理机制: $app->proxy_resource
-    * 任何面向连接的资源访问, 均可抽象两个步骤组成: 连接(含授权), 命令.(忽略关闭连接, 语言层面已经解决)
-    * 对资源的管理, 比如熔断, 降级等, 是通用策略, 并且通常是应用在连接层面. (某些场景命令层面可提供数据)
-    * 基于此, Ice将一个资源拆分为Connector和Handler两部分. 并在外层增加一个proxy调度层, 用作对资源的调度管理.
 	
 * 一个服务管理机制: $app->proxy_service
     * Ice大的层面, 分应用层(Web和Daemon运行方式下的入口)和服务层.

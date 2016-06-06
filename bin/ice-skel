@@ -15,6 +15,7 @@ $TPL_DIR/src/conf/resource.php:$PROJECT_SRC_DIR/conf/resource.php
 $TPL_DIR/src/conf/service.php:$PROJECT_SRC_DIR/conf/service.php
 $TPL_DIR/src/filter/ext.php:$PROJECT_SRC_DIR/filter/ext.php
 $TPL_DIR/src/model/User.php:$PROJECT_SRC_DIR/model/User.php
+$TPL_DIR/src/embeded_demo:$PROJECT_SRC_DIR/embeded_demo.php
 #web
 $TPL_DIR/src/webroot/web.php:$PROJECT_SRC_DIR/webroot/web.php
 $TPL_DIR/src/conf/web.inc:$PROJECT_SRC_DIR/conf/web.inc

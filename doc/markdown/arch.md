@@ -23,6 +23,7 @@ src/
         Daemon/                 # daemon启动器内部处理涉及的相关代码
         Service/                # service启动器内部处理涉及的相关代码. 服务管理proxy.
         Web/                    # web启动器内部处理涉及相关代码.
+        Embeded/                # embeded启动器内部处理涉及相关代码
         Ice.php                 # 框架主对象
         App.php                 # 应用对象.
         Logger.php              # 日志工具
