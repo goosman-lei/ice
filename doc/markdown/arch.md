@@ -2,7 +2,7 @@
 
 ##  整体架构图
 
-![整体架构图](/doc/resource/images/0001.ice-core-arch.png)
+![整体架构图](https://raw.githubusercontent.com/goosman-lei/ice/master/doc/resource/images/0001.ice-core-arch.png)
 
 ##  目录结构介绍
 
