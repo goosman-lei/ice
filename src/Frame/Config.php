@@ -9,8 +9,13 @@ class Config {
     }
 
     public static function buildForApp($app) {
-        $config = new self($app->rootPath . '/conf');
-        $config->confArr['app']['runner'] = $config->confArr['app']['runner'][$app->runType];
+        if ($app->runType === 'embeded') {
+            $config = new self(@\F_Ice::$ins->runner->mainAppConf['conf_path']);
+            $config->confArr = \F_Ice::$ins->runner->mainAppConf;
+        } else {
+            $config = new self($app->rootPath . '/conf');
+            $config->confArr['app']['runner'] = $config->confArr['app']['runner'][$app->runType];
+        }
         return $config;
     }
 
