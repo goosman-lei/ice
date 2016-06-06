@@ -1,34 +1,68 @@
-# ice
+# 介绍
 
-PHP-Web开发框架
+PHP-Web开发框架.
+
+目标: 帮助解决, 创业团队从0到10亿PV过程中, php-web开发相关的典型问题.
 
 ##  核心功能
 
-* 三种运行方式: web, service, daemon
+* 四种运行方式:
+    * web: 面向用户的服务入口. 包括PC/App-API/OpenAPI等场景.
+    * service: 内部的服务层构建.
+    * daemon: 内部的后台脚本服务.
+    * embeded: 嵌入式接口, 将Ice嵌入到其他框架的应用场景. 典型应用场景: 旧框架切换到ice, 先用ice开发独立服务(逻辑解耦), 然后用嵌入式运行方式, 融合两者(逐步替换), 最终再达到分离的目的.
 	
-* 四种请求数据结构: Request, Response, ClientEnv, ServerEnv
+* 四种交互数据结构: 类比linux命令, 可以通过参数和环境变量两种方式与外界交互. 对Web环境而言, 多一个客户端环境, 因此, 将交互数据抽象为4类
+    * Request: 输入的参数.
+    * Response: 输出的数据.
+    * ClientEnv: 客户端的环境.
+    * ServerEnv: 服务端的环境.
 	
-* 两个框架基础封装: Ice, App
+* 两个框架基础封装: Ice看中服务的逻辑解耦, 部署上, 可以接受同机部署(同进程运行). 因此, 抽象出App这个概念, 来代表每个独立的应用, 在运行时以此划分上下文
+    * Ice: 框架全局
+    * App: 代表一个应用(一个独立的上下文)
 	
 * 一个资源管理机制: $app->proxy_resource
+    * 任何面向连接的资源访问, 均可抽象两个步骤组成: 连接(含授权), 命令.(忽略关闭连接, 语言层面已经解决)
+    * 对资源的管理, 比如熔断, 降级等, 是通用策略, 并且通常是应用在连接层面. (某些场景命令层面可提供数据)
+    * 基于此, Ice将一个资源拆分为Connector和Handler两部分. 并在外层增加一个proxy调度层, 用作对资源的调度管理.
 	
 * 一个服务管理机制: $app->proxy_service
+    * Ice大的层面, 分应用层(Web和Daemon运行方式下的入口)和服务层.
+    * Ice强调服务的逻辑解耦, 部署上可灵活控制, 对应的, 通过服务的proxy屏蔽掉不同部署方式的调用细节.
 	
 * 一组框架基础工具集: Logger, Config
 	
 ##  外围工具
 
-* 一套基础工具库: Util
+* 一套基础工具库: Util. 期望将通用数据结构, 常用数据操作的算法等, 在Util中沉淀积累.
 	
-* 一套基于mysqli的数据库工具集: DB_Query
+* 一套基于mysqli的数据库工具集: DB_Query. 提供过程化的SQL查询方法, 简化DB操作.
 	
-* 一套数据过滤工具集: $app->proxy_filter
+* 一套数据过滤工具集: $app->proxy_filter.
 
-##  整体架构
+##  应用示例
+
+```
+1. 修改tpl/build.conf
+2. 执行bin/ice-skel
+3. 在tpl/build.conf指定的输出路径下, 就自动产生的应用代码
+
+4. 将生成的应用代码, 建立新的git. 形成自己的项目
+
+5. 部署:
+    1) service: 所有请求从web server打到src/webroot/service.php
+    2) web: 所有请求从web server打到src/webroot/web.php
+```
+
+
+#  整体架构
+
+##  整体架构图
 
 ![整体架构图](https://raw.githubusercontent.com/goosman-lei/ice/master/doc/resource/images/0001.ice-core-arch.png)
 
-###  文件结构介绍
+##  目录结构介绍
 
 ```php
 框架文件结构
@@ -79,7 +113,48 @@ src/
         resource.php            # 依赖的资源配置文件
 ```
 
-###  命名规范
+# Filter模块
+
+![Filter模块设计图](https://raw.githubusercontent.com/goosman-lei/ice/master/doc/resource/images/0001.ice-core-filter-design.png)
+
+##  设计目标
+
+* 描述业务数据结构
+* 验证输入数据, 修正输出数据
+* 作为输入输出数据的统一出入口, 提供HOOK价值
+
+## 应用示例
+
+```php
+$data = array(
+    'code' => 0,
+    'data' => array(
+        'uid'     => 5012470,
+        'uname'   => 'goosman-lei',
+        'service' => array('code' => 1, 'data' => 'Hello Jack'),
+        'user'    => array('id' => '5012470', 'name' => 'goosman-lei', 'location' => '北京'),
+    ),
+);
+$filteredData = $this->ice->mainApp->proxy_filter->get('(map){
+    code(int);
+    data(map){
+        uid(int);
+        uname(str);
+        service(map){
+            code(int);
+            data(str);
+        };
+        user(map){
+            id(int);
+            name(str);
+            location(str);
+        }
+    }
+}')->filter($data);
+```
+
+
+#  命名规范
 
 * 所有类均遵循PSR4命名规范
 
@@ -221,25 +296,12 @@ class App {
 }
 ```
 
-##  Exapmle
 
-###  应用代码构建方法
+#  配置介绍
 
-```
-1. 修改tpl/build.conf
-2. 执行bin/ice-skel
-3. 在tpl/build.conf指定的输出路径下, 就自动产生的应用代码
+##  标准应用配置详解
 
-4. 将生成的应用代码, 建立新的git. 形成自己的项目
-
-5. 部署:
-    1) service: 所有请求从web server打到src/webroot/service.php
-    2) web: 所有请求从web server打到src/webroot/web.php
-```
-
-###  标准应用配置详解
-
-####  src/conf/app.php
+###  src/conf/app.php
 
 ```php
 $namespace = 'ice\demo';
@@ -275,7 +337,7 @@ $runner = array(
 );
 ```
 
-####  src/conf/resource.php
+###  src/conf/resource.php
 
 ```php
 // scheme到自定义实现的映射. 用于扩展自己的资源处理器
@@ -333,7 +395,7 @@ $pool = array(
 );
 ```
 
-####  src/conf/service.php
+###  src/conf/service.php
 
 ```php
 $pool = array(
@@ -386,7 +448,7 @@ proxy = remote 用来说明此服务是远程部署, 通过HTTP WebService调用
 $config中指明了服务对应的资源(参考src/conf/resource.php). 框架会自动使用资源管理器, 获取对应资源并请求服务.
 ```
 
-####  web应用对应的模板引擎配置(src/conf/web.inc)
+###  web应用对应的模板引擎配置(src/conf/web.inc)
 
 ```php
 $web_temp_engine = array(
@@ -444,7 +506,7 @@ $web_temp_engine = array(
 '*'表示某层的默认引擎
 ```
 
-###  应用开发中的Tips
+#  应用开发中的Tips
 
 * workApp和mainApp
 
