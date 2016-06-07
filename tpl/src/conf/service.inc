@@ -5,7 +5,7 @@
 $service_logger = array(
     'comm' => array(
         'log_fmt' => array(
-            'fmt_time'            => '', # 默认Y-m-d H:i:s
+            'fmt_time'            => '', # 默认-Y-m-d H:i:s
             'client_env.ip'       => '',
             'server_env.hostname' => '',
             'request.uri'         => '',
@@ -15,7 +15,7 @@ $service_logger = array(
             'request.id'          => '',
         ),
         'log_fmt_wf' => array(
-            'fmt_time'            => '', # 默认Y-m-d H:i:s
+            'fmt_time'            => '', # 默认-Y-m-d H:i:s
             'client_env.ip'       => '',
             'server_env.hostname' => '',
             'request.uri'         => '',

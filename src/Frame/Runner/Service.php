@@ -73,8 +73,7 @@ class Service {
         }
 
         try {
-            $ucfirstClass  = ucfirst(strtolower($this->request->class));
-            $className = "\\{$this->mainAppConf['namespace']}\\Service\\{$ucfirstClass}";
+            $className = "\\{$this->mainAppConf['namespace']}\\Service\\{$this->request->class}";
 
             if (!class_exists($className) || !method_exists($className, $this->request->action)) {
                 \F_Ice::$ins->mainApp->logger_comm->warn(array(

@@ -78,7 +78,7 @@ class Daemon {
         $action = @$this->request->options['action'];
         if (empty($class) || empty($action)) {
             \F_Ice::$ins->mainApp->logger_comm->fatal(array(
-                'class'  => $this->request->controller,
+                'class'  => $this->request->class,
                 'action' => $this->request->action,
                 'msg'    => 'dispatch error: no class or action',
             ), \F_ECode::ROUTE_ERROR);
