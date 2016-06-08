@@ -22,7 +22,7 @@
         },
         {
             "type": "composer",
-            "url": "http://packagist.phpcomposer.com"
+            "url": "https://packagist.phpcomposer.com"
         }
     ]
 }
