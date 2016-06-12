@@ -57,11 +57,17 @@ class Query {
         if ($onReturn !== self::RS_NONE && is_object($rs) && ($rs instanceof \Mysqli_Result)) {
             switch ($onReturn) {
                 case self::RS_NUM:
-                    $rows = $rs->fetch_all(\MYSQLI_NUM);
+                    $rows = array();
+                    while ($row = $rs->fetch_row()) {
+                        $rows[] = $row;
+                    }
                     break;
                 case self::RS_ARRAY:
                 default:
-                    $rows = $rs->fetch_all(\MYSQLI_ASSOC);
+                    $rows = array();
+                    while ($row = $rs->fetch_assoc()) {
+                        $rows[] = $row;
+                    }
                     break;
             }
             return is_array($rows) ? $rows : FALSE;
