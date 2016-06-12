@@ -83,8 +83,8 @@ class Config {
             if ($fname == '.' || $fname == '..') {
                 continue;
             } else if (is_dir($fpath)) {
-                $confArr[$fpath] = array();
-                self::refreshConfigRecursive($fpath, $confArr[$fpath]);
+                $confArr[$fname] = array();
+                self::refreshConfigRecursive($fpath, $confArr[$fname]);
             } else if (is_file($fpath) && substr($fpath, - 4) === '.php') {
                 $confKey = preg_replace(';\.php$;i', '', $fname);
 
