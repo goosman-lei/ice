@@ -20,6 +20,8 @@ class Code {
     const WS_PROXY_UNKONW_PROXY    = 100220;
     const WS_PROXY_UNKONW_SERVICE  = 100221;
     const WS_PROXY_READ_ERROR      = 100222;
+    const WS_PROXY_MESSAGE_ERROR   = 100223;
+    const WS_PROXY_MESSAGE_REPEAT  = 100224;
 
     const WS_ERROR_RESPONSE        = 100230;
     // 资源管理器相关错误

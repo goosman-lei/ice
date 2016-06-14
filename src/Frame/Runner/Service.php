@@ -91,6 +91,8 @@ class Service {
             $serviceObj = new $className();
             $serviceObj->setIce($this->ice);
 
+            $serviceObj->message = \Ice\Message\Factory::factory($this->request->class, $this->request->action, $this->request->params);
+
             $result = call_user_func_array(array($serviceObj, $this->request->action), $this->request->params);
             $code = isset($result['code']) ? $result['code'] : \F_ECode::WS_ERROR_RESPONSE;
             $data = isset($result['data']) ? $result['data'] : null;

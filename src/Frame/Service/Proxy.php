@@ -45,6 +45,11 @@ class Proxy {
                 'proxy_class' => '\\Ice\\Frame\\Service\\Proxy\\Internal',
                 'service_config' => array(),
             );
+        } else if ($serviceName == 'message') {
+            $serviceInfo = array(
+                'proxy_class' => '\\Ice\\Frame\\Service\\Proxy\\Message',
+                'service_config' => array(),
+            );
         } else if (!isset($this->_confArr[$serviceName])) {
             \F_Ice::$ins->mainApp->logger_ws->warn(array(
                 'service_name' => $serviceName,
