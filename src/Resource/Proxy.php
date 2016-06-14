@@ -142,6 +142,7 @@ class Proxy {
             }
             $nodeInfo = $nodeInfos[$nodeSn];
             $nodeInfo['uri'] = $uri;
+            $nodeInfo['sn']  = $nodeSn;
 
             $conn = $this->getRealConn($nodeSn, $nodeInfo);
             if (!isset($conn) || $conn === FALSE) {

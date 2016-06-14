@@ -49,4 +49,8 @@ class Code {
     const QUERY_ESCAPE_FIELD_VALUE_FAILED = 100601;
     const QUERY_QUERY_FAILED              = 100602;
     const QUERY_GET_HANDLER_FAILED        = 100603;
+
+    // Rabbitmq相关错误
+    const RABBITMQ_CONN_ERROR    = 100700;
+    const RABBITMQ_COMMAND_ERROR = 100701;
 }
