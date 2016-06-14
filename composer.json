@@ -13,6 +13,7 @@
             "Ice\\Filter\\": "src/Filter",
             "Ice\\DB\\": "src/DB",
             "Ice\\Util\\": "src/Util"
+            "Ice\\Message\\": "src/Message"
         },
         "files": ["class_alias.php"]
     },
