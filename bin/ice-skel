@@ -31,7 +31,10 @@ $TPL_DIR/src/service/Say.php:$PROJECT_SRC_DIR/service/Say.php
 #daemon
 $TPL_DIR/src/conf/daemon.inc:$PROJECT_SRC_DIR/conf/daemon.inc
 $TPL_DIR/src/daemon/cli.php:$PROJECT_SRC_DIR/daemon/cli.php
-$TPL_DIR/src/daemon/Say/Hello.php:$PROJECT_SRC_DIR/daemon/Say/Hello.php
+$TPL_DIR/src/daemon/Demo/Command.php:$PROJECT_SRC_DIR/daemon/Demo/Command.php
+$TPL_DIR/src/daemon/Demo/Service.php:$PROJECT_SRC_DIR/daemon/Demo/Service.php
+$TPL_DIR/src/daemon/Demo/Filter.php:$PROJECT_SRC_DIR/daemon/Demo/Filter.php
+$TPL_DIR/src/daemon/Demo/Message.php:$PROJECT_SRC_DIR/daemon/Demo/Message.php
 EOL
 
 
@@ -52,7 +55,7 @@ function ui_make_dir_tree() {
     mkdir -p "$PROJECT_SRC_DIR/smarty-tpl/_common"
     mkdir -p "$PROJECT_SRC_DIR/smarty-tpl/say"
     mkdir -p "$PROJECT_SRC_DIR/action/Say"
-    mkdir -p "$PROJECT_SRC_DIR/daemon/Say"
+    mkdir -p "$PROJECT_SRC_DIR/daemon/Demo"
 }
 
 function ui_cp_files() {

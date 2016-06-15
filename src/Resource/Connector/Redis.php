@@ -13,7 +13,7 @@ class Redis extends Abs {
     }
 
     public static function getSn($nodeConfig, $nodeOptions) {
-        return sprintf('%s:%s:%s:%s', $nodeConfig['host'], $nodeConfig['port']);
+        return sprintf('%s:%s', $nodeConfig['host'], $nodeConfig['port']);
     }
 
     public static function getConn($nodeInfo) {
