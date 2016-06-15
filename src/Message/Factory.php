@@ -22,7 +22,7 @@ class Factory {
 
         $message = new $messageClass($class, $action, $params, $messageConfig);
 
-        $message->setPushMode(isset($config['mode']) ? $config['mode'] : 'full');
+        $message->setPublishMode(isset($config['mode']) ? $config['mode'] : 'full');
 
         $message->createId();
 
@@ -61,7 +61,7 @@ class Factory {
         $messageObj = new $messageClass($class, $action, @$data['params'], $messageConfig);
         $messageObj->id       = @$data['id'];
         $messageObj->runMode  = $runMode == 'master' ? Abs::MODE_MASTER : Abs::MODE_SLAVE;
-        $messageObj->pushMode = Abs::MODE_NONE;
+        $messageObj->setPublishMode(Abs::MODE_NONE);
 
         return $messageObj;
 

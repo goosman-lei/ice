@@ -34,7 +34,7 @@ abstract class Abs {
         $this->config = $config;
     }
 
-    public function setPushMode($publishMode) {
+    public function setPublishMode($publishMode) {
         if (array_key_exists($publishMode, self::$modeMapping)) {
             $this->publishMode = self::$modeMapping[$publishMode];
         }
