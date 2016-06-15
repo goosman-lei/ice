@@ -53,4 +53,9 @@ class Code {
     // Rabbitmq相关错误
     const RABBITMQ_CONN_ERROR    = 100700;
     const RABBITMQ_COMMAND_ERROR = 100701;
+
+    // Redis相关错误
+    const REDIS_CONN_ERROR       = 100800;
+    const REDIS_FOBIDDEN_COMMAND = 100801;
+    const REDIS_COMMAND_ERROR    = 100802;
 }
