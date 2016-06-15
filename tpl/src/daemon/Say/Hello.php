@@ -1,7 +1,34 @@
 <?php
-namespace ice\demo\Daemon\Say;
+namespace ${PROJECT_NAMESPACE}\Daemon\Say;
 class Hello extends \FD_Daemon {
+    public static function slave_handler($msg) {
+        $proxy = $this->ice->workApp->proxy_service->get('message', 'Say');
+        echo 'slave msg: ' . $msg . chr(10);
+        $proxy->call('slave', $msg);
+    }
+    public static function master_handler($msg) {
+        $proxy = $this->ice->workApp->proxy_service->get('message', 'Say');
+        echo 'master msg: ' . $msg . chr(10);
+        $proxy->call('master', $msg);
+    }
     public function execute() {
+        // 多机房消息主入口
+        if (FALSE) {
+            $client = $this->ice->workApp->proxy_service->get('internal', 'Say');
+            $client->hello('Daemon');
+        }
+        // 多机房消费从业务补充入口
+        if (FALSE) {
+            $proxyQueue = \F_Ice::$ins->workApp->proxy_resource->get('slave_resource');
+            $proxyQueue->consume('multi_server_room_slave_queue', array(self, 'slave_handler'));
+            $proxyQueue->wait();
+        }
+        // 多机房消费主业务补充入口
+        if (FALSE) {
+            $proxyQueue = \F_Ice::$ins->workApp->proxy_resource->get('master_resource');
+            $proxyQueue->consume('multi_server_room_master_queue', array(self, 'master_handler'));
+            $proxyQueue->wait();
+        }
             $code = '(map){
     code(int);
     data(map){

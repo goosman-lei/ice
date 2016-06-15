@@ -93,7 +93,7 @@ class Rabbitmq extends Abs {
         return TRUE;
     }
 
-    public function wait($queue, $allowed_methods=null, $non_blocking = false, $timeout = 0) {
+    public function wait($allowed_methods=null, $non_blocking = false, $timeout = 0) {
         try {
             $this->conn->wait($allowed_methods, $non_blocking, $timeout);
         } catch (\Exception $e) {
@@ -103,7 +103,6 @@ class Rabbitmq extends Abs {
                 'code'        => $e->getCode(),
                 'sn'          => $this->nodeInfo['sn'],
                 'command'     => 'wait',
-                'queue'       => $queue,
             ), \F_ECode::RABBITMQ_COMMAND_ERROR);
             return FALSE;
         }

@@ -26,14 +26,6 @@ class Factory {
 
         $message->createId();
 
-        if ($message->isMaster()) {
-            $message->publishMaster();
-        }
-
-        if ($message->isSlave()) {
-            $message->publishSlave();
-        }
-
         return $message;
     }
 

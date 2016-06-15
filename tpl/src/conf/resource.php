@@ -25,6 +25,16 @@ $pool = array(
             ),
         ),
     ),
+    'rabbitmq' => array(
+        'demo' => array(
+            'default' => array(
+                array('host' => '10.10.10.31', 'port' => '5672', 'options' => array(
+                    'user'   => 'nice',
+                    'passwd' => '',
+                )),
+            ),
+        ),
+    ),
     'curl' => array(
         'service' => array(
             'default' => array(

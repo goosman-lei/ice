@@ -25,7 +25,7 @@ abstract class Abs {
 
     public $config;
 
-    public $pushMode = self::MODE_FULL;
+    public $publishMode = self::MODE_FULL;
 
     public function __construct($class, $action, $params, $config) {
         $this->class  = $class;
@@ -34,9 +34,9 @@ abstract class Abs {
         $this->config = $config;
     }
 
-    public function setPushMode($pushMode) {
-        if (array_key_exists($pushMode, self::$modeMapping)) {
-            $this->pushMode = self::$modeMapping[$pushMode];
+    public function setPushMode($publishMode) {
+        if (array_key_exists($publishMode, self::$modeMapping)) {
+            $this->publishMode = self::$modeMapping[$publishMode];
         }
     }
 
@@ -61,7 +61,14 @@ abstract class Abs {
 
     abstract public function publishSlave();
 
-    abstract public function complete();
+    public function complete() {
+        if ($this->publishMode & self::MODE_MASTER) {
+            $this->publishMaster();
+        }
+        if ($this->publishMode & self::MODE_SLAVE) {
+            $this->publishSlave();
+        }
+    }
 
     abstract public function isCompleted();
 
