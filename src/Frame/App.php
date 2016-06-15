@@ -24,6 +24,7 @@ class App {
         $rootPath = \F_Ice::$ins->mainApp->rootPath . '/../vendor/' . $projectGroup . '/' . $projectName . '/src';
         $runType  = 'service';
         self::$apps[$cachedSn] = new self($rootPath, $runType);
+        self::$apps[$cachedSn]->init();
 
         return self::$apps[$cachedSn];
     }
@@ -33,11 +34,9 @@ class App {
         $this->runType = $runType;
 
         $this->config = \F_Config::buildForApp($this);
-
-        $this->init();
     }
 
-    protected function init() {
+    public function init() {
         $logConfigs = $this->config->get('app.runner.log');
         if (isset($logConfigs) && is_array($logConfigs)) {
             foreach ($logConfigs as $loggerName => $logConfig) {

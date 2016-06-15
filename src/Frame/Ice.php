@@ -31,6 +31,7 @@ class Ice {
         $mainAppClass     = $this->runner->mainAppConf['app_class'];
         $this->mainApp    = new $mainAppClass($this->rootPath, $this->runner->name);
         $this->workApp    = $this->mainApp;
+        $this->mainApp->init();
 
         // setup errorhandler
         $this->errorHandler = new \Ice\Frame\Error\Handler();
