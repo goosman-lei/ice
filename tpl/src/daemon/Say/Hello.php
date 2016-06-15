@@ -2,12 +2,14 @@
 namespace ${PROJECT_NAMESPACE}\Daemon\Say;
 class Hello extends \FD_Daemon {
     public function slave_handler($msg) {
+        $msg->get('channel')->basic_ack($msg->get('delivery_tag'));
         $msg = $msg->getBody();
         $proxy = $this->ice->workApp->proxy_service->get('message', 'Say');
         echo 'slave msg: ' . $msg . chr(10);
         $proxy->call('slave', $msg);
     }
     public function master_handler($msg) {
+        $msg->get('channel')->basic_ack($msg->get('delivery_tag'));
         $msg = $msg->getBody();
         $proxy = $this->ice->workApp->proxy_service->get('message', 'Say');
         echo 'master msg: ' . $msg . chr(10);
@@ -22,13 +24,13 @@ class Hello extends \FD_Daemon {
         // 多机房消费从业务补充入口
         if (FALSE) {
             $proxyQueue = \F_Ice::$ins->workApp->proxy_resource->get('rabbitmq://demo');
-            $proxyQueue->consume('multi_server_room_slave_queue', array($this, 'slave_handler'), TRUE);
+            $proxyQueue->consume('multi_server_room_slave_queue', array($this, 'slave_handler'));
             $proxyQueue->wait();
         }
         // 多机房消费主业务补充入口
         if (FALSE) {
             $proxyQueue = \F_Ice::$ins->workApp->proxy_resource->get('rabbitmq://demo');
-            $proxyQueue->consume('multi_server_room_master_queue', array($this, 'master_handler'), TRUE);
+            $proxyQueue->consume('multi_server_room_master_queue', array($this, 'master_handler'));
             $proxyQueue->wait();
         }
         exit;

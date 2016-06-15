@@ -14,6 +14,7 @@ abstract class Abs {
         'master' => self::MODE_MASTER,
         'slave'  => self::MODE_SLAVE,
         'full'   => self::MODE_FULL,
+        'none'   => self::MODE_NONE,
     );
 
     public $runMode = self::MODE_SLAVE;

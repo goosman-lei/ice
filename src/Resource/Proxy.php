@@ -104,7 +104,7 @@ class Proxy {
             $params = array();
             parse_str($match['params'], $params);
             $strategy = isset($params['algo']) ? $params['algo'] : $strategy;
-            $forceNew = isset($params['force_new']) ? $params['force_new'] : $forceNew;
+            $forceNew = (bool)(isset($params['force_new']) ? $params['force_new'] : $forceNew);
         }
 
         $uriSn = sprintf("%s://%s/%s", $scheme, $unitname, $cluster);
@@ -144,7 +144,7 @@ class Proxy {
             $nodeInfo['uri'] = $uri;
             $nodeInfo['sn']  = $nodeSn;
 
-            $conn = $this->getRealConn($nodeSn, $nodeInfo);
+            $conn = $this->getRealConn($nodeSn, $nodeInfo, $forceNew);
             if (!isset($conn) || $conn === FALSE) {
                 \F_Ice::$ins->mainApp->logger_comm->warn(array(
                     'uri'    => $uri,
