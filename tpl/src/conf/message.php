@@ -1,7 +1,7 @@
 <?php
 $default_class = "\\${PROJECT_NAMESPACE_ESCAPE}\\Lib\\ServiceMessage";
 $say = array(
-    'hello' => array(
+    'message' => array(
         'mode' => 'full',
         'config' => array(
             'server_room'          => 'pbs_zgc',
