@@ -19,8 +19,9 @@ class Message extends \FD_Daemon {
     }
     public function execute() {
         // 多机房消息主入口
-        $client = $this->ice->workApp->proxy_service->get('internal', 'Say');
-        $client->hello('Daemon');
+        $proxy = $this->ice->workApp->proxy_service->get('internal', 'Say');
+        echo 'main: ' . chr(10);
+        var_dump($proxy->hello('Daemon'));
 
         // 模拟等待消息入队列成功
         sleep(2);

@@ -25,6 +25,13 @@ $pool = array(
             ),
         ),
     ),
+    'redis' => array(
+        'demo' => array(
+            'default' => array(
+                array('host' => '127.0.0.1', 'port' => 6487)
+            ),
+        ),
+    ),
     'rabbitmq' => array(
         'demo' => array(
             'default' => array(
