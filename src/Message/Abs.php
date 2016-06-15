@@ -24,6 +24,8 @@ abstract class Abs {
     public $action;
     public $params;
 
+    public $extra = array();
+
     public $config;
 
     public $publishMode = self::MODE_FULL;
@@ -54,6 +56,9 @@ abstract class Abs {
             'action' => $this->action,
             'params' => $this->params,
         ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
+    public function addExtra() {
     }
 
     abstract public function createId();
