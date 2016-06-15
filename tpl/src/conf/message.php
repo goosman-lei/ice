@@ -1,5 +1,5 @@
 <?php
-$default_class = "\\${PROJECT_NAMESPACE}\\Lib\\ServiceMessage";
+$default_class = "\\${PROJECT_NAMESPACE_ESCAPE}\\Lib\\ServiceMessage";
 $say = array(
     'hello' => array(
         'mode' => 'full',
