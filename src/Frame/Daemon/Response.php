@@ -18,7 +18,7 @@ class Response extends \Ice\Frame\Abs\Response {
         fwrite($this->stdout, "$content\n");
     }
 
-    public function error($code, $content) {
+    public function error($code, $content = '') {
         if (!is_string($content)) {
             $content = json_encode($content, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }

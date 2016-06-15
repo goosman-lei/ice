@@ -76,7 +76,7 @@ class Rabbitmq extends Abs {
         return TRUE;
     }
 
-    private function consume($queue = "", $callback = null, $noAck = false) {
+    public function consume($queue = "", $callback = null, $noAck = false) {
         try {
             $this->conn->basic_consume($queue, '', false, $noAck, false, false, $callback);
         } catch (\Exception $e) {

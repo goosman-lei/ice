@@ -22,10 +22,13 @@ class ServiceMessage extends \MSG_Abs {
     public function complete() {
         $proxy = \F_Ice::$ins->workApp->proxy_resource->get($this->config['status_resource']);
         $msgId = sprintf("%s:%s:%s:%s:%s", $this->config['server_room'], $this->runMode, $this->class, $this->action, $this->id);
-        return $proxy->set($msgId, 1, array(
+        $return = $proxy->set($msgId, 1, array(
             'EX' => $this->config['complete_sign_expire'],
             'NX',
         ));
+        // 必须在紧挨着返回前, 调用父类的complete.
+        parent::complete();
+        return $return;
     }
 
     public function isCompleted() {
