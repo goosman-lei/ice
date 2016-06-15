@@ -6,17 +6,19 @@ class Factory {
     public static function factory($class, $action, $params) {
         $config     = \F_Ice::$ins->workApp->config->get("message.{$class}.{$action}");
         if (empty($config) || !is_array($config)) {
-            return NULL;
+            return new \U_Stub;
         }
 
         $messageClass = isset($config['class'])
                     ? $config['class']
                     : \F_Ice::$ins->workApp->config->get("message.default_class");
         if (empty($messageClass) || !class_exists($messageClass) || !($messageClass instanceof \Ice\Message\Abs)) {
-            return NULL;
+            return new \U_Stub;
         }
 
-        $message = new $messageClass($class, $action, $params);
+        $messageConfig = isset($config['config']) ? $config['config'] : array();
+
+        $message = new $messageClass($class, $action, $params, $messageConfig);
 
         $message->setPushMode(isset($config['mode']) ? $config['mode'] : 'full');
 
@@ -38,11 +40,11 @@ class Factory {
     public static function unserialize($message, $runMode) {
         $data = json_decode($message, TRUE);
         if (empty($data)) {
-            return NULL;
+            return new \U_Stub;
         }
 
         if (!isset($data['class']) || !isset($data['action'])) {
-            return NULL;
+            return new \U_Stub;
         }
 
         $class  = $data['class'];
@@ -50,18 +52,19 @@ class Factory {
 
         $config     = \F_Ice::$ins->workApp->config->get("message.{$class}.{$action}");
         if (empty($config) || !is_array($config)) {
-            return NULL;
+            return new \U_Stub;
         }
 
         $messageClass = isset($config['class'])
                     ? $config['class']
                     : \F_Ice::$ins->workApp->config->get("message.default_class");
         if (empty($messageClass) || !class_exists($messageClass) || !($messageClass instanceof \Ice\Message\Abs)) {
-            return NULL;
+            return new \U_Stub;
         }
 
+        $messageConfig = isset($config['config']) ? $config['config'] : array();
 
-        $messageObj = new $messageClass($class, $action, @$data['params']);
+        $messageObj = new $messageClass($class, $action, @$data['params'], $messageConfig);
         $messageObj->id       = @$data['id'];
         $messageObj->runMode  = $runMode == 'master' ? Abs::MODE_MASTER : Abs::MODE_SLAVE;
         $messageObj->pushMode = Abs::MODE_NONE;

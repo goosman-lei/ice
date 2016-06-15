@@ -47,7 +47,7 @@ class Rabbitmq extends Abs {
                 $options['context']);
 
             # 创建channel
-            $channel = new PhpAmqpLib\Channel\AMQPChannel($conn);
+            $channel = new \PhpAmqpLib\Channel\AMQPChannel($conn);
             # 对consumer生效. 预取设置
             $channel->basic_qos($options['consumer']['prefetch_size'], $options['consumer']['prefetch_count'], FALSE);
         } catch (\Exception $e) {

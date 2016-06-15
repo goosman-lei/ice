@@ -23,12 +23,15 @@ abstract class Abs {
     public $action;
     public $params;
 
+    public $config;
+
     public $pushMode = self::MODE_FULL;
 
-    public function __construct($class, $action, $params) {
+    public function __construct($class, $action, $params, $config) {
         $this->class  = $class;
         $this->action = $action;
         $this->params = $params;
+        $this->config = $config;
     }
 
     public function setPushMode($pushMode) {
@@ -52,7 +55,7 @@ abstract class Abs {
         ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
-    abstract public function craeteId();
+    abstract public function createId();
 
     abstract public function publishMaster();
 
