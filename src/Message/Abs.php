@@ -66,10 +66,10 @@ abstract class Abs {
     abstract public function isCompleted();
 
     public function isMaster() {
-        return $this->mode & self::MODE_MASTER;
+        return $this->runMode & self::MODE_MASTER;
     }
 
     public function isSlave() {
-        return $this->mode & self::MODE_SLAVE;
+        return $this->runMode & self::MODE_SLAVE;
     }
 }

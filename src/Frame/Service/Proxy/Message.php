@@ -13,7 +13,7 @@ class Message {
         );
 
         $messageObj = \Ice\Message\Factory::unserialize($message, $runMode);
-        if (!($messageObj instanceof \MSG_Abs)) {
+        if (empty($messageObj)) {
             \F_Ice::$ins->mainApp->logger_ws->warn($logData, \F_ECode::WS_PROXY_MESSAGE_ERROR);
             return array(
                 'code' => \F_ECode::WS_PROXY_MESSAGE_ERROR,

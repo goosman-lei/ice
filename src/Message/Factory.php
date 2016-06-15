@@ -4,7 +4,9 @@ class Factory {
     protected $config;
 
     public static function factory($class, $action, $params) {
-        $config     = \F_Ice::$ins->workApp->config->get("message.{$class}.{$action}");
+        $lowerClass  = strtolower($class);
+        $lowerAction = strtolower($action);
+        $config     = \F_Ice::$ins->workApp->config->get("message.{$lowerClass}.{$lowerAction}");
         if (empty($config) || !is_array($config)) {
             return new \U_Stub;
         }
@@ -12,7 +14,7 @@ class Factory {
         $messageClass = isset($config['class'])
                     ? $config['class']
                     : \F_Ice::$ins->workApp->config->get("message.default_class");
-        if (empty($messageClass) || !class_exists($messageClass) || !($messageClass instanceof \Ice\Message\Abs)) {
+        if (empty($messageClass) || !class_exists($messageClass) || !is_subclass_of($messageClass, "\\Ice\\Message\\Abs")) {
             return new \U_Stub;
         }
 
@@ -21,8 +23,6 @@ class Factory {
         $message = new $messageClass($class, $action, $params, $messageConfig);
 
         $message->setPushMode(isset($config['mode']) ? $config['mode'] : 'full');
-
-        $message->createData();
 
         $message->createId();
 
@@ -50,7 +50,9 @@ class Factory {
         $class  = $data['class'];
         $action = $data['action'];
 
-        $config     = \F_Ice::$ins->workApp->config->get("message.{$class}.{$action}");
+        $lowerClass  = strtolower($class);
+        $lowerAction = strtolower($action);
+        $config     = \F_Ice::$ins->workApp->config->get("message.{$lowerClass}.{$lowerAction}");
         if (empty($config) || !is_array($config)) {
             return new \U_Stub;
         }
@@ -58,7 +60,7 @@ class Factory {
         $messageClass = isset($config['class'])
                     ? $config['class']
                     : \F_Ice::$ins->workApp->config->get("message.default_class");
-        if (empty($messageClass) || !class_exists($messageClass) || !($messageClass instanceof \Ice\Message\Abs)) {
+        if (empty($messageClass) || !class_exists($messageClass) || !is_subclass_of($messageClass, "\\Ice\\Message\\Abs")) {
             return new \U_Stub;
         }
 

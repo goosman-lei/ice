@@ -56,9 +56,8 @@ class Rabbitmq extends Abs {
         return TRUE;
     }
 
-    public function produce($msgData, $exchange = '', $routingKey = '') {
+    public function produce($msgBody, $exchange = '', $routingKey = '') {
         try {
-            $msgBody = json_encode($msgData, \JSON_UNESCAPED_UNICODE | \JSON_UNESCAPED_SLASHES);
             $amqpMsg = new \PhpAmqpLib\Message\AMQPMessage($msgBody, $this->nodeOptions['msg_properties']);
             $this->conn->basic_publish($amqpMsg, $exchange, $routingKey);
         } catch (\Exception $e) {
