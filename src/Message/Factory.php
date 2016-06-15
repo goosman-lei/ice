@@ -24,6 +24,8 @@ class Factory {
 
         $message->setPublishMode(isset($config['mode']) ? $config['mode'] : 'full');
 
+        $message->addExtra();
+
         $message->createId();
 
         return $message;
