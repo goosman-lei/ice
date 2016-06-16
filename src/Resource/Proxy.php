@@ -79,7 +79,7 @@ class Proxy {
     }
 
     public function get($uri) {
-        // <schme> "://" <unitname> "/" <cluster> [ "?algo=random&force_new=true" ]
+        // <schme> "://" <unitname> "/" <cluster> [ "?algo=random&force_new=1" ]
         $isMatch = preg_match(';^
             (?P<scheme>[\w-]++)
             ://
