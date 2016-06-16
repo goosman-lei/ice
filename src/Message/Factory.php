@@ -63,6 +63,7 @@ class Factory {
         $messageObj = new $messageClass($class, $action, @$data['params'], $messageConfig);
         $messageObj->id       = @$data['id'];
         $messageObj->runMode  = $runMode == 'master' ? Abs::MODE_MASTER : Abs::MODE_SLAVE;
+        $messageObj->extra    = isset($data['extra']) ? $data['extra'] : array();
         $messageObj->setPublishMode('none');
 
         return $messageObj;

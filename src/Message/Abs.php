@@ -55,9 +55,16 @@ abstract class Abs {
             'class'  => $this->class,
             'action' => $this->action,
             'params' => $this->params,
+            'extra'  => $this->extra,
         ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
+    /**
+     * addExtra 
+     * 供应用扩展: 添加额外的数据. 比如提前在message层生成下面分布式业务要使用的ID
+     * @access public
+     * @return void
+     */
     public function addExtra() {
     }
 
