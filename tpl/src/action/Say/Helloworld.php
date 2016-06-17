@@ -18,7 +18,8 @@ class Helloworld extends \FW_Action {
                     id(int);
                     name(str);
                     location(str);
-                }
+                };
+                is_local(str)
             }
         }')->filter(array(
             'code' => 0,
@@ -27,6 +28,7 @@ class Helloworld extends \FW_Action {
                 'uname' => 'goosman-lei',
                 'service' => $client->hello('Jack'),
                 'user'    => $uinfo,
+                'is_local' => $this->ice->runner->feature->isEnable('is_local_access') ? 'yes' : 'no',
             ),
         ));
     }
