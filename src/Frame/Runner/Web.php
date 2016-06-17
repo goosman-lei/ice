@@ -18,6 +18,7 @@ class Web {
 
     // context
     public $ice;
+    public $feature;
 
     public function __construct($confPath) {
         $this->rootPath = realpath(dirname($confPath) . '/..');
@@ -35,6 +36,8 @@ class Web {
         $this->setupIce($this);
 
         $this->route();
+
+        $this->initFeature();
 
         $this->dispatch();
     }
@@ -166,6 +169,10 @@ class Web {
                 return ;
             }
         }
+    }
+
+    protected function initFeature() {
+        $this->feature = new \Ice\Frame\Feature($this->clientEnv);
     }
 
     protected function dispatch() {
