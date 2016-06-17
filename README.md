@@ -47,6 +47,8 @@ PHP-Web开发框架.
 * 一个资源管理机制: $app->proxy_resource
 	
 * 一个服务管理机制: $app->proxy_service
+
+* 一套客户端差异性Feature管理机制: $ice->runner->feature->isEnable('ios-ge-7')
 	
 * 一组框架基础工具集: Logger, Config
 	
