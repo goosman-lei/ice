@@ -1,6 +1,6 @@
 <?php
 namespace Ice\Frame;
-class Features {
+class Feature {
     protected $features = array();
 
     public function enable($featureName) {
@@ -16,7 +16,7 @@ class Features {
     }
 
     public function __construct($env) {
-        $config  = \F_Ice::$ins->mainApp->config->get('features.config');
+        $config  = \F_Ice::$ins->mainApp->config->get('feature.config');
         $request = \F_Ice::$ins->runner->request;
 
         $validFeatures = array();
