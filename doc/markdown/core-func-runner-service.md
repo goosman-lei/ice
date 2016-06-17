@@ -1,5 +1,7 @@
 # Service运行方式
 
+![Service应用结构图](https://raw.githubusercontent.com/goosman-lei/ice/master/doc/resource/images/0006.ice-core-func-runner-service.png)
+
 ## Service
 
 Service作为service运行方式的程序入口.

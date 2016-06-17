@@ -1,6 +1,6 @@
 # 资源管理
 
-资源管理, 是Ice中的一个特色的Feature.
+![资源管理模块设计图](https://raw.githubusercontent.com/goosman-lei/ice/master/doc/resource/images/0007.ice-core-func-resource.png)
 
 ## 设计思路
 

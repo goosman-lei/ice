@@ -1,5 +1,7 @@
 # Web运行方式
 
+![Web应用结构图](https://raw.githubusercontent.com/goosman-lei/ice/master/doc/resource/images/0004.ice-core-func-runner-web.png)
+
 ## Action
 
 Action作为Web运行方式的程序入口.
