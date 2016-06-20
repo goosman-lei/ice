@@ -24,7 +24,7 @@ class App {
         $rootPath = \F_Ice::$ins->mainApp->rootPath . '/../vendor/' . $projectGroup . '/' . $projectName . '/src';
         $runType  = 'service';
         self::$apps[$cachedSn] = new self($rootPath, $runType);
-        self::$apps[$cachedSn]->init();
+        self::$apps[$cachedSn]->_init();
 
         return self::$apps[$cachedSn];
     }
@@ -36,7 +36,7 @@ class App {
         $this->config = \F_Config::buildForApp($this);
     }
 
-    public function init() {
+    public function _init() {
         $logConfigs = $this->config->get('app.runner.log');
         if (isset($logConfigs) && is_array($logConfigs)) {
             foreach ($logConfigs as $loggerName => $logConfig) {
@@ -48,6 +48,11 @@ class App {
         $this->proxy_resource = \Ice\Resource\Proxy::buildForApp($this);
         $this->proxy_service  = \Ice\Frame\Service\Proxy::buildForApp($this);
         $this->proxy_filter   = \Ice\Filter\Proxy::buildForApp($this);
+
+        $this->init(); // 提供给应用层扩展使用
+    }
+
+    public function init() {
     }
 
     public function prevSwitch() {
