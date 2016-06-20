@@ -9,14 +9,12 @@
         * [Embeded](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-runner-embeded.md)
     * [Filter](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-filter.md)
     * [资源管理](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-resource.md)
-    * [输入输出](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-resource.md)
-    * [DB查询工具](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-resource.md)
+    * [输入输出](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-input-output.md)
+    * [DB查询工具](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-db.md)
     * [Feature机制](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-feature.md)
     * [日志处理](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-logger.md)
 * [命名规范](https://github.com/goosman-lei/ice/blob/master/doc/markdown/specification-name.md)
 * [开发规范](https://github.com/goosman-lei/ice/blob/master/doc/markdown/specification-develop.md)
-* [配置规范](https://github.com/goosman-lei/ice/blob/master/doc/markdown/specification-config.md)
-* [API](https://github.com/goosman-lei/ice/blob/master/doc/markdown/api.md)
 
 # 介绍
 
