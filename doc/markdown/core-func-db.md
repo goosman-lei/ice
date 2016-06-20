@@ -132,7 +132,7 @@ $model->insert(array(
 
 # INSERT INTO <table>(id, name) VALUES(5012470, 'goosman-lei'), (5012471, 'goosman.lei')
 
-$model->insert(array(
+$model->multiInsert(array(
     array(
         array('id', 5012470),
         array('name', 'goosman-lei'),
