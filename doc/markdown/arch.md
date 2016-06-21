@@ -16,6 +16,7 @@ bin/
 src/
     DB/                         # DB访问基础封装. 结构化的方法调用来做SQL查询. Model层可继承DB_Query
     Filter/                     # 过滤器. 按照过滤器指定语法, 描述数据规则, 进行校验/数据修正
+    Message/                    # 针对跨地域IDC的分布式通信方案(未生产环境验证)
     Frame/
         Abs/                    # 框架的一些基础抽象类
         Error/                  # 框架错误处理
@@ -24,6 +25,8 @@ src/
         Service/                # service启动器内部处理涉及的相关代码. 服务管理proxy.
         Web/                    # web启动器内部处理涉及相关代码.
         Embeded/                # embeded启动器内部处理涉及相关代码
+        Feature.php             # Feature组件
+        Config.php              # 配置加载工具
         Ice.php                 # 框架主对象
         App.php                 # 应用对象.
         Logger.php              # 日志工具
@@ -47,6 +50,7 @@ src/
     service/                    # 服务层
     model/                      # Model层
     lib/                        # 应用的本地类库
+    embeded_demo.php            # 嵌入式Runner的示例
     conf/
         app.php                 # 应用主配置
         service.inc             # service runner的个性化配置
@@ -54,6 +58,7 @@ src/
         web.inc                 # web runner的个性化配置
         service.php             # 依赖的服务配置文件
         resource.php            # 依赖的资源配置文件
+        message.php             # 跨地域IDC的分布式通信消息配置(未生产环境验证)
 ```
 
 ##  核心类层次结构
