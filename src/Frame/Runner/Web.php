@@ -198,6 +198,7 @@ class Web {
             $actionObj->setResponse($this->response);
             $actionObj->setServerEnv($this->serverEnv);
             $actionObj->setClientEnv($this->clientEnv);
+            $actionObj->setFeature($this->feature);
 
             $actionObj->prevExecute();
             $tplData = $actionObj->execute(); 

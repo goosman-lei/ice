@@ -34,12 +34,12 @@ Ice中的Feature就是借鉴这个思想而来的.
 
 ```php
 // 如果是ios 9以上版本, 差异性逻辑
-if ($this->ice->runner->feature->isEnable('ge-ios-9')) {
+if ($this->feature->isEnable('ge-ios-9')) {
     // ...
 }
 
 // 如果是baidu渠道3.2以上版本, 差异性逻辑
-if ($this->ice->runner->feature->isEnable('baidu-ge-3.2')) {
+if ($this->feature->isEnable('baidu-ge-3.2')) {
     // ...
 }
 ```

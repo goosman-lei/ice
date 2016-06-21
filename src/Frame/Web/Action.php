@@ -8,6 +8,8 @@ abstract class Action {
     protected $response;
     protected $serverEnv;
     protected $clientEnv;
+
+    protected $feature;
     
     public function __construct() {
     }
@@ -35,4 +37,9 @@ abstract class Action {
     public function setIce($ice) {
         $this->ice = $ice;
     }
+
+    public function setFeature($feature) {
+        $this->feature = $feature;
+    }
+
 }
