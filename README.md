@@ -1,20 +1,6 @@
-#  文档TOC
+#  文档
 
-* [整体架构](http://goosman-lei.github.io/ice/arch.html)
-* 核心功能
-    * [运行方式](http://goosman-lei.github.io/ice/core-func-runner.html)
-        * [Web](http://goosman-lei.github.io/ice/core-func-runner-web.html)
-        * [Service](http://goosman-lei.github.io/ice/core-func-runner-service.html)
-        * [Daemon](http://goosman-lei.github.io/ice/core-func-runner-daemon.html)
-        * [Embeded](http://goosman-lei.github.io/ice/core-func-runner-embeded.html)
-    * [Filter](http://goosman-lei.github.io/ice/core-func-filter.html)
-    * [资源管理](http://goosman-lei.github.io/ice/core-func-resource.html)
-    * [输入输出](http://goosman-lei.github.io/ice/core-func-input-output.html)
-    * [DB查询工具](http://goosman-lei.github.io/ice/core-func-db.html)
-    * [Feature机制](http://goosman-lei.github.io/ice/core-func-feature.html)
-    * [日志处理](http://goosman-lei.github.io/ice/core-func-logger.html)
-* [命名规范](http://goosman-lei.github.io/ice/specification-name.html)
-* [开发规范](http://goosman-lei.github.io/ice/specification-develop.html)
+* [Go to Manual Pages](http://goosman-lei.github.io/ice/index.html)
 
 # 介绍
 
