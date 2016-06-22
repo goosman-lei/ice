@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ice by goosman-lei</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Ice</h1>
+        <p class="header">Ice framework for (php) web development</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/goosman-lei/ice/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/goosman-lei/ice/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/goosman-lei/ice">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/goosman-lei">goosman-lei</a></p>
+
+
+      </header>
+      <section>
+
+<h1>日志组件</h1>
+
+<p>日志是一个系统必不可少的部分.</p>
+
+<h2>日志和系统关系的思考</h2>
+
+<p>日志的记录时机, 主要取决于编码时的业务设计.</p>
+
+<p>但是, 日志的记录方式(要不要记录日志, 记录在哪里, 什么格式), 则和运行时有很高的相关性.</p>
+
+<p>(比如, Nginx可以在配置中, 去自定义日志的位置和记录的字段)</p>
+
+<p>Ice中提供了4种运行方式(Runner), 日志的配置, 位于src/conf/app.php中, runner的部分.</p>
+
+<p>不同的运行方式, 可以设置不同的日志规则.</p>
+
+<h2>Ice中的记录日志的方式(对象归属关系)</h2>
+
+<p>在Ice框架中, \F_Ice::$ins是整个框架的核心对象. 它通过mainApp和workApp两个成员, 产生了和应用描述对象App的关系.</p>
+
+<p>日志, 是应用相关的, 它作为App对象的logger_xxx成员, 供应用开发者调用.</p>
+
+<p>例如, 如下配置:</p>
+
+<pre><code class="php">$runner = array(
+    'web' =&gt; array(
+        'log' =&gt; array(
+            'comm' =&gt; array(...),
+            'ws'   =&gt; array(...),
+        )
+    ),
+);
+
+则当应用以web方式运行时, 对应$app对象会自动注册成员
+
+$app-&gt;logger_comm
+$app-&gt;logger_ws
+</code></pre>
+
+<p>另外一点, 关于mainApp和workApp的差异.</p>
+
+<p>mainApp就是指入口应用. workApp在应用启动时, 和mainApp相同, 只有当发生local类型的service调用时, workApp才会切换到被调用Service的App.</p>
+
+<h2>Ice中的日志配置</h2>
+
+<pre><code class="php">$web_logger = array(
+    'comm' =&gt; array(
+        'log_fmt' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认-Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
+        ),
+        'log_fmt_wf' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认-Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
+            'level'               =&gt; '',
+            'errno'               =&gt; '',
+            'trace'               =&gt; '',
+        ),
+        'log_file' =&gt; 'web.log',
+        'log_path' =&gt; $var_path . '/logs',
+        'split'    =&gt; array(
+            'type' =&gt; 'file',
+            'fmt'  =&gt; 'Ymd',
+        ),
+    ),
+    'ws' =&gt; array(
+        'log_fmt' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
+        ),
+        'log_fmt_wf' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
+            'level'               =&gt; '',
+            'errno'               =&gt; '',
+            'trace'               =&gt; '',
+        ),
+        'log_file' =&gt; 'web.ws.log',
+        'log_path' =&gt; $var_path . '/logs',
+        'split'    =&gt; array(
+            'type' =&gt; 'file',
+            'fmt'  =&gt; 'Ymd',
+        ),
+    ),
+);
+
+各配置项含义为:
+log_fmt:    info级别的日志格式
+log_fmt_wf: warning和fatal级别的日志格式(warning/fatal和正常的info日志分开, 是为了报警方便)
+log_file:   日志文件名.
+log_path:   日志文件存放路径
+split:      日志切分规则
+split.type: 日志切分方式. 支持file(文件名增加时间区分), dir(目录名增加时间区分), none(不切分)
+split.fmt:  日志切分使用的时间格式串. 可用来控制切分粒度
+
+log_fmt和log_fmt_wf中支持的子项有:
+fmt_time:       格式化的时间戳(请求时间), 默认Y-m-m H:i:s, 可通过参数指定格式
+fmt_now:        格式化的时间戳(记录日志当时时间), 默认Y-m-m H:i:s, 可通过参数指定格式
+level:          日志级别(info, warn, fatal)
+trace:          堆栈回溯信息
+mem_used:       内存使用
+client_env.xxx  当前ClientEnv对象的xxx属性
+server_env.xxx  当前ServerEnv对象的xxx属性
+request.xxx     当前Request对象的xxx属性
+a.b.c           自定义日志项. 值为应用通过$logger-&gt;set('a.b.c', 'value')设置
+
+注: 日志均使用json处理, 不使用常规的行式日志
+</code></pre>
+
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>

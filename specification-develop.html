@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ice by goosman-lei</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Ice</h1>
+        <p class="header">Ice framework for (php) web development</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/goosman-lei/ice/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/goosman-lei/ice/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/goosman-lei/ice">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/goosman-lei">goosman-lei</a></p>
+
+
+      </header>
+      <section>
+
+<h1>开发规范</h1>
+
+<ul>
+<li>workApp和mainApp</li>
+</ul>
+
+
+<pre><code>mainApp指启动应用的项目.
+workApp是当前调用上下文所在的项目. (在以local方式调用service时, 会自动切换workApp到被调用service项目)
+
+因此, 使用App对象的3种场景, 按照如下规则选择:
+1. 记录日志: 除非明确要使用workApp的日志配置, 否则使用mainApp-&gt;logger_xxx记录日志.
+2. 使用3类组件: 必须使用workApp-&gt;proxy_filter, workApp-&gt;proxy_resource, workApp-&gt;proxy_service调用. (因为依赖关系是一个层次结构配置而非全局)
+3. 读取配置: 除非明确要使用入口应用配置, 否则使用workdApp-&gt;config.
+</code></pre>
+
+<ul>
+<li>请不要产生跨层调用, 正确的调用层次关系是</li>
+</ul>
+
+
+<pre><code>action  =&gt; service
+daemon  =&gt; service
+service =&gt; model
+
+action  =&gt; lib
+daemon  =&gt; lib
+service =&gt; lib
+model   =&gt; lib
+</code></pre>
+
+<ul>
+<li>仅daemon/action下可以使用四种输入输出数据对象</li>
+</ul>
+
+
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>

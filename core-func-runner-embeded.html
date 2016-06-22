@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ice by goosman-lei</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Ice</h1>
+        <p class="header">Ice framework for (php) web development</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/goosman-lei/ice/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/goosman-lei/ice/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/goosman-lei/ice">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/goosman-lei">goosman-lei</a></p>
+
+
+      </header>
+      <section>
+
+<h1>Embeded运行方式</h1>
+
+<h2>Embeded</h2>
+
+<p>嵌入, 是一种特殊的应用场景.</p>
+
+<p>它本身是为了将其他的PHP代码, 和Ice粘合起来. 使其可以方便的使用基于Ice开发的服务.</p>
+
+<p>下面是一个嵌入的示例代码(tpl/src/embeded_demo.php)</p>
+
+<pre><code class="php">require_once __DIR__ . '/../vendor/autoload.php';
+
+$root_path = __DIR__;
+$var_path  = $root_path . '/../var';
+$options = array(
+    'client_ip'  =&gt; '0.0.0.0', # 客户端IP地址
+    'class'      =&gt; 'index',   # controller类, 无意义, 仅用作日志
+    'action'     =&gt; 'index',   # action方法, 无意义, 仅用作日志
+    'request_id' =&gt; '',        # 请求ID, 可选
+);
+$logger_config = array(
+    'comm' =&gt; array(
+        'log_fmt' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
+        ),
+        'log_fmt_wf' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
+            'level'               =&gt; '',
+            'errno'               =&gt; '',
+            'trace'               =&gt; '',
+        ),
+        'log_file' =&gt; 'web.log',
+        'log_path' =&gt; $var_path . '/logs',
+        'split'    =&gt; array(
+            'type' =&gt; 'file',
+            'fmt'  =&gt; 'Ymd',
+        ),
+    ),
+    'ws' =&gt; array(
+        'log_fmt' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
+        ),
+        'log_fmt_wf' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
+            'level'               =&gt; '',
+            'errno'               =&gt; '',
+            'trace'               =&gt; '',
+        ),
+        'log_file' =&gt; 'web.ws.log',
+        'log_path' =&gt; $var_path . '/logs',
+        'split'    =&gt; array(
+            'type' =&gt; 'file',
+            'fmt'  =&gt; 'Ymd',
+        ),
+    ),
+);
+$config = array(
+    'root_path' =&gt; $root_path,
+    'var_path'  =&gt; $root_path . '/../var',
+    'run_path'  =&gt; $var_path . '/run',
+    'log_path'  =&gt; $var_path . '/logs',
+    'conf_path' =&gt; $root_path . '/conf',
+
+    'runner' =&gt; array(
+        'log' =&gt; $logger_config,
+    ),
+);
+
+# 执行嵌入的方法调用, $options中描述当前请求环境, $config指定配置信息.
+# 注意, 这里配置中会多一个conf_path. 这个conf_path的路径下, 按照Ice的配置规范包含资源和服务等配置文件即可.
+\Ice\Frame\Runner\Embeded::embed($options, $config);
+
+$proxy = \F_Ice::$ins-&gt;mainApp-&gt;proxy_service-&gt;get('demo-remote', 'Say');
+$data  = $proxy-&gt;hello('Jack');
+var_dump($data);
+</code></pre>
+
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>

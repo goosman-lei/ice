@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ice by goosman-lei</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Ice</h1>
+        <p class="header">Ice framework for (php) web development</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/goosman-lei/ice/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/goosman-lei/ice/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/goosman-lei/ice">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/goosman-lei">goosman-lei</a></p>
+
+
+      </header>
+      <section>
+
+<h1>Web运行方式</h1>
+
+<p><img src="https://raw.githubusercontent.com/goosman-lei/ice/master/doc/resource/images/0004.ice-core-func-runner-web.png" alt="Web应用结构图" /></p>
+
+<h2>Action</h2>
+
+<p>Action作为Web运行方式的程序入口.</p>
+
+<p>代码目录为: src/action/<class>/<action>.php</p>
+
+<p>Action需要继承\FW_Action. 路由调度会自动执行Action的execute方法.</p>
+
+<p>另外, Action可以覆写prevExecute和postExecute方法, 对应execute执行前后的HOOK.</p>
+
+<h2>路由</h2>
+
+<p>Web方式默认路由为静态路由. 即使用URL path部分的前两级路径解析.</p>
+
+<p>同时, 在src/conf/web.inc中, 路由配置一项, 可以配置自定义路由规则, 或者自定义路由器.</p>
+
+<p>自定义路由规则支持7种, 优先级均高于自定义路由器. 7种自定义路由的优先级</p>
+
+<ol>
+<li>"==": 精确匹配</li>
+<li>"i=": 不区分大小写精确匹配</li>
+<li>"^=": 精确前缀匹配</li>
+<li>"i^": 不区分大小写前缀匹配</li>
+<li>"$=": 精确后缀匹配</li>
+<li>"i$": 不区分大小写后缀匹配</li>
+<li>"~=": 正则匹配</li>
+<li>自定义路由: 逗号分隔, 直到一个路由器返回TRUE</li>
+</ol>
+
+
+<p>路由配置示例</p>
+
+<pre><code class="php">$web_routes = array(
+    'default' =&gt; '\\Ice\\Frame\\Web\\Router\\RStatic',
+    'i= /say/helloworld' =&gt; array(  # 不区分大小写的/say/helloworld访问, 会被路由到src/action/Say/Helloworld.php
+        'class'  =&gt; 'Say',
+        'action' =&gt; 'Helloworld',
+    )
+);
+</code></pre>
+
+<h2>模板</h2>
+
+<p>Ice中没有提供自己的模板引擎. 但是对模板的适配进行了规范.</p>
+
+<p>基于这套规范, 将模板分为两部分:</p>
+
+<ul>
+<li><p>一部分是要使用的各种模板引擎</p></li>
+<li><p>另一部分是哪些请求使用什么模板引擎的路由规则.</p></li>
+</ul>
+
+
+<p>这样处理的原因在于, 很多项目初期, 是存在一个项目中多种输出数据的.(比如: Ajax接口要求Json返回, 普通接口要求HTML返回)</p>
+
+<p>模板配置, 详见src/conf/web.inc</p>
+
+<pre><code class="php">$web_temp_engine = array(
+    'engines' =&gt; array(
+        'json' =&gt; array(
+            'adapter' =&gt; '\\Ice\\Frame\\Web\\TempEngine\\Json',
+            'adapter_config' =&gt; array(
+                'headers' =&gt; array('Content-Type: text/json;CHARSET=UTF-8'),
+                'json_encode_options' =&gt; JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+                'error_tpl' =&gt; '',
+            ),
+        ),
+        'smarty-default' =&gt; array(
+            'adapter' =&gt; '\\Ice\\Frame\\Web\\TempEngine\\Smarty',
+            'adapter_config'  =&gt; array(
+                'headers'   =&gt; array('Content-Type: text/html;CHARSET=UTF-8'),
+                'error_tpl' =&gt; '_common/error',
+                'ext_name'  =&gt; '.tpl',
+            ),
+            'temp_engine_config' =&gt; array(
+                'cache_lifetime'        =&gt; 30 * 24 * 3600,
+                'caching'               =&gt; false,
+                'cache_dir'             =&gt; '',
+                'use_sub_dirs'          =&gt; TRUE,
+                'template_dir'          =&gt; $root_path . '/smarty-tpl',
+                'plugins_dir'           =&gt; array(),
+                'compile_dir'           =&gt; $run_path . '/smarty-compiled/' ,
+                'default_modifiers'     =&gt; array('escape:"html"'),
+                'left_delimiter'        =&gt; '{%',
+                'right_delimiter'       =&gt; '%}',
+            ),
+        ),
+    ),
+    'routes' =&gt; array(
+        '*' =&gt; 'json',
+        'say' =&gt; array(
+            '*' =&gt; 'smarty-default',
+            'hi' =&gt; 'json',
+        ),
+    ),
+);
+
+'engines'部分, 配置支持的模板引擎.
+上面例子中, 配置了json和smarty-default两种模板引擎.
+我们认为, 一套具体配置出来的模板引擎实例, 是应用选择模板引擎的最小单元.
+(同样使用smarty作为引擎, 但不同的模块可能需要不同的渲染选项)
+
+'routes'部分, 描述了一个请求, 怎样去选择应用那个模板引擎.
+以上面配置为例:
+/say/hi   这个请求, 使用json渲染
+/say/*    除了/say/hi外的所有/say/*请求, 均使用smarty-default渲染
+*         其他所有请求, 均使用json渲染
+
+整个routes部分的配置, 面向controller/action两层结构.
+'*'表示某层的默认引擎
+</code></pre>
+
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
