@@ -6,7 +6,6 @@
     <title>Ice by goosman-lei</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
     <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
@@ -14,22 +13,56 @@
     <![endif]-->
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <h1 class="header">Ice</h1>
-        <p class="header">Ice framework for (php) web development</p>
-
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/goosman-lei/ice/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/goosman-lei/ice/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/goosman-lei/ice">View On GitHub</a></li>
-        </ul>
-
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/goosman-lei">goosman-lei</a></p>
-
-
-      </header>
-      <section>
+	<div class="body">
+        <div class="left">
+            
+            <ul class="menus">
+                <li class="title">Ice Framework</li>
+                <li>
+                    序言
+                    <ul>
+                        <li><a href="https://github.com/goosman-lei/ice/zipball/master" target="_blank">.zip下载</a></li>
+                        <li><a href="https://github.com/goosman-lei/ice/tarball/master" target="_blank">.tar.gz下载</a></li>
+                        <li><a href="https://github.com/goosman-lei/ice" target="_blank">Github项目地址</a></li>
+                    </ul>
+                </li>
+                <li>
+                    文档
+                    <ul>
+                        <li><a href="/ice/arch.html">整体架构</a></li>
+                        <li>
+                            核心功能
+                            <ul>
+                                <li>
+                                <li>
+                                    <a href="/ice/core-func-runner.html">运行方式</a>
+                                    <ul>
+                                        <li><a href="/ice/core-func-runner-web.html">Web</a></li>
+                                        <li><a href="/ice/core-func-runner-service.html">Service</a></li>
+                                        <li><a href="/ice/core-func-runner-daemon.html">Daemon</a></li>
+                                        <li><a href="/ice/core-func-runner-embeded.html">Embeded</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="/ice/core-func-input-output.html">交互数据</a></li>
+                                <li><a href="/ice/core-func-resource.html">资源管理</a></li>
+                                <li><a href="/ice/core-func-filter.html">过滤器</a></li>
+                                <li><a href="/ice/core-func-feature.html">Feature机制</a></li>
+                                <li><a href="/ice/core-func-logger.html">日志处理</a></li>
+                                <li><a href="/ice/core-func-db.html">DB查询工具</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    规范
+                    <ul>
+                        <li><a href="/ice/specification-name.html">命名规范</a></li>
+                        <li><a href="/ice/specification-develop.html">开发规范</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="right">
 
 <h1>Feature组件</h1>
 
@@ -115,11 +148,7 @@ Feature的配置, 是可以限定URI的(/controller/action), 限定URI, 则仅�
 
 <p>在系统初始化阶段, 应用上统一的将客户端环境信息设置到ClientEnv中, 这样, 就拥有了一套基于客户端环境, 灵活的做差异性逻辑处理的Feature机制.</p>
 
-      </section>
-      <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
-    </div>
+      </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
 		
   </body>
