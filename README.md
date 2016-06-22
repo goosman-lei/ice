@@ -1,20 +1,20 @@
 #  文档TOC
 
-* [整体架构](https://github.com/goosman-lei/ice/blob/master/doc/markdown/arch.md)
+* [整体架构](http://goosman-lei.github.io/ice/arch.html)
 * 核心功能
-    * [运行方式](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-runner.md)
-        * [Web](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-runner-web.md)
-        * [Service](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-runner-service.md)
-        * [Daemon](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-runner-daemon.md)
-        * [Embeded](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-runner-embeded.md)
-    * [Filter](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-filter.md)
-    * [资源管理](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-resource.md)
-    * [输入输出](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-input-output.md)
-    * [DB查询工具](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-db.md)
-    * [Feature机制](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-feature.md)
-    * [日志处理](https://github.com/goosman-lei/ice/blob/master/doc/markdown/core-func-logger.md)
-* [命名规范](https://github.com/goosman-lei/ice/blob/master/doc/markdown/specification-name.md)
-* [开发规范](https://github.com/goosman-lei/ice/blob/master/doc/markdown/specification-develop.md)
+    * [运行方式](http://goosman-lei.github.io/ice/core-func-runner.html)
+        * [Web](http://goosman-lei.github.io/ice/core-func-runner-web.html)
+        * [Service](http://goosman-lei.github.io/ice/core-func-runner-service.html)
+        * [Daemon](http://goosman-lei.github.io/ice/core-func-runner-daemon.html)
+        * [Embeded](http://goosman-lei.github.io/ice/core-func-runner-embeded.html)
+    * [Filter](http://goosman-lei.github.io/ice/core-func-filter.html)
+    * [资源管理](http://goosman-lei.github.io/ice/core-func-resource.html)
+    * [输入输出](http://goosman-lei.github.io/ice/core-func-input-output.html)
+    * [DB查询工具](http://goosman-lei.github.io/ice/core-func-db.html)
+    * [Feature机制](http://goosman-lei.github.io/ice/core-func-feature.html)
+    * [日志处理](http://goosman-lei.github.io/ice/core-func-logger.html)
+* [命名规范](http://goosman-lei.github.io/ice/specification-name.html)
+* [开发规范](http://goosman-lei.github.io/ice/specification-develop.html)
 
 # 介绍
 
