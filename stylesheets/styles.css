@@ -77,3 +77,41 @@ table td, table th {
     border: 1px solid #E0E0E0;
     background-color: #F8F8F8;
 }
+
+/* Images */
+
+img {
+    position: relative;
+    margin: 0 auto;
+    max-width: 650px;
+    padding: 5px;
+    margin: 10px 0 32px 0;
+    border: 1px solid #ccc;
+}
+
+p img {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    text-align: center;
+    border: none;
+}
+
+/* Code blocks */
+
+code, pre {
+    font-family: "Courier New", Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+    color:#000;
+    font-size:14px;
+}
+
+pre {
+    padding: 4px 12px;
+    background: #FDFEFB;
+    border-radius:4px;
+    border:1px solid #D7D8C8;
+    overflow: auto;
+    overflow-y: hidden;
+    margin-bottom: 32px;
+}
