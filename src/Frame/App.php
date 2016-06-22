@@ -29,6 +29,15 @@ class App {
         return self::$apps[$cachedSn];
     }
 
+    public function getModel($name) {
+        $className = '\\' . $this->config->get('app.namespace') . '\\Model\\' . ucfirst($name);
+        if (class_exists($className)) {
+            return new $className();
+        } else {
+            return new \U_Stub();
+        }
+    }
+
     public function __construct($rootPath, $runType) {
         $this->rootPath = $rootPath;
         $this->runType = $runType;
