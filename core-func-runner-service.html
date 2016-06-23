@@ -195,26 +195,26 @@
 <span class="language-name">php</span>
 <code class="language-php">
 $pool = array(
-    'demo-local' => array(
-        'proxy'  => 'local',
-        'config' => array(
-            'project_group' => 'ice',
-            'project_name'  => 'demo_service',
+    'demo-local' =&gt; array(
+        'proxy'  =&gt; 'local',
+        'config' =&gt; array(
+            'project_group' =&gt; 'ice',
+            'project_name'  =&gt; 'demo_service',
         ),
     ),
-    'demo-remote' => array(
-        'proxy'  => 'remote',
-        'config' => array(
-            'resource' => 'curl://service',
+    'demo-remote' =&gt; array(
+        'proxy'  =&gt; 'remote',
+        'config' =&gt; array(
+            'resource' =&gt; 'curl://service',
         ),
     ),
 );
 
 Service调用有三种方式(下面代码是嘉定在action中调用/say/hi服务):
 
-$this->ice->mainApp->proxy_service->get('internal', 'Say')->hi();
-$this->ice->mainApp->proxy_service->get('demo-local', 'Say')->hi();
-$this->ice->mainApp->proxy_service->get('demo-remote', 'Say')->hi();
+$this-&gt;ice-&gt;mainApp-&gt;proxy_service-&gt;get('internal', 'Say')-&gt;hi();
+$this-&gt;ice-&gt;mainApp-&gt;proxy_service-&gt;get('demo-local', 'Say')-&gt;hi();
+$this-&gt;ice-&gt;mainApp-&gt;proxy_service-&gt;get('demo-remote', 'Say')-&gt;hi();
 
 
 其中:
@@ -223,27 +223,26 @@ internal是保留字, 表示调用当前app内部的service.
 另外两种方式(demo-local, demo-remote), 分别对应了src/conf/service.php中的两个配置
 
 demo-local:
-    'demo-local' => array(
-        'proxy'  => 'local',
-        'config' => array(
-            'project_group' => 'ice',
-            'project_name'  => 'demo_service',
+    'demo-local' =&gt; array(
+        'proxy'  =&gt; 'local',
+        'config' =&gt; array(
+            'project_group' =&gt; 'ice',
+            'project_name'  =&gt; 'demo_service',
         ),
     ),
 proxy = local 用来说明此项目是本地部署(composer依赖)
 config中指明了项目的GROUP和NAME, 框架会自动对应到vender/ice/demo_service去加载服务
 
 demo-remote:
-    'demo-remote' => array(
-        'proxy'  => 'remote',
-        'config' => array(
-            'resource' => 'curl://service',
+    'demo-remote' =&gt; array(
+        'proxy'  =&gt; 'remote',
+        'config' =&gt; array(
+            'resource' =&gt; 'curl://service',
         ),
     ),
 proxy = remote 用来说明此服务是远程部署, 通过HTTP WebService调用方式使用服务
 $config中指明了服务对应的资源(参考src/conf/resource.php). 框架会自动使用资源管理器, 获取对应资源并请求服务.
 </code></pre>
-
 
           </section>
 

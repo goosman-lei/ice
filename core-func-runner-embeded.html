@@ -141,84 +141,84 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $root_path = __DIR__;
 $var_path  = $root_path . '/../var';
 $options = array(
-    'client_ip'  => '0.0.0.0', # 客户端IP地址
-    'class'      => 'index',   # controller类, 无意义, 仅用作日志
-    'action'     => 'index',   # action方法, 无意义, 仅用作日志
-    'request_id' => '',        # 请求ID, 可选
+    'client_ip'  =&gt; '0.0.0.0', # 客户端IP地址
+    'class'      =&gt; 'index',   # controller类, 无意义, 仅用作日志
+    'action'     =&gt; 'index',   # action方法, 无意义, 仅用作日志
+    'request_id' =&gt; '',        # 请求ID, 可选
 );
 $logger_config = array(
-    'comm' => array(
-        'log_fmt' => array(
-            'fmt_time'            => '', # 默认Y-m-d H:i:s
-            'client_env.ip'       => '',
-            'server_env.hostname' => '',
-            'request.uri'         => '',
-            'request.originalUri' => '',
-            'request.class'       => '',
-            'request.action'      => '',
-            'request.id'          => '',
+    'comm' =&gt; array(
+        'log_fmt' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
         ),
-        'log_fmt_wf' => array(
-            'fmt_time'            => '', # 默认Y-m-d H:i:s
-            'client_env.ip'       => '',
-            'server_env.hostname' => '',
-            'request.uri'         => '',
-            'request.originalUri' => '',
-            'request.class'       => '',
-            'request.action'      => '',
-            'request.id'          => '',
-            'level'               => '',
-            'errno'               => '',
-            'trace'               => '',
+        'log_fmt_wf' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
+            'level'               =&gt; '',
+            'errno'               =&gt; '',
+            'trace'               =&gt; '',
         ),
-        'log_file' => 'web.log',
-        'log_path' => $var_path . '/logs',
-        'split'    => array(
-            'type' => 'file',
-            'fmt'  => 'Ymd',
+        'log_file' =&gt; 'web.log',
+        'log_path' =&gt; $var_path . '/logs',
+        'split'    =&gt; array(
+            'type' =&gt; 'file',
+            'fmt'  =&gt; 'Ymd',
         ),
     ),
-    'ws' => array(
-        'log_fmt' => array(
-            'fmt_time'            => '', # 默认Y-m-d H:i:s
-            'client_env.ip'       => '',
-            'server_env.hostname' => '',
-            'request.uri'         => '',
-            'request.originalUri' => '',
-            'request.class'       => '',
-            'request.action'      => '',
-            'request.id'          => '',
+    'ws' =&gt; array(
+        'log_fmt' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
         ),
-        'log_fmt_wf' => array(
-            'fmt_time'            => '', # 默认Y-m-d H:i:s
-            'client_env.ip'       => '',
-            'server_env.hostname' => '',
-            'request.uri'         => '',
-            'request.originalUri' => '',
-            'request.class'       => '',
-            'request.action'      => '',
-            'request.id'          => '',
-            'level'               => '',
-            'errno'               => '',
-            'trace'               => '',
+        'log_fmt_wf' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
+            'level'               =&gt; '',
+            'errno'               =&gt; '',
+            'trace'               =&gt; '',
         ),
-        'log_file' => 'web.ws.log',
-        'log_path' => $var_path . '/logs',
-        'split'    => array(
-            'type' => 'file',
-            'fmt'  => 'Ymd',
+        'log_file' =&gt; 'web.ws.log',
+        'log_path' =&gt; $var_path . '/logs',
+        'split'    =&gt; array(
+            'type' =&gt; 'file',
+            'fmt'  =&gt; 'Ymd',
         ),
     ),
 );
 $config = array(
-    'root_path' => $root_path,
-    'var_path'  => $root_path . '/../var',
-    'run_path'  => $var_path . '/run',
-    'log_path'  => $var_path . '/logs',
-    'conf_path' => $root_path . '/conf',
+    'root_path' =&gt; $root_path,
+    'var_path'  =&gt; $root_path . '/../var',
+    'run_path'  =&gt; $var_path . '/run',
+    'log_path'  =&gt; $var_path . '/logs',
+    'conf_path' =&gt; $root_path . '/conf',
 
-    'runner' => array(
-        'log' => $logger_config,
+    'runner' =&gt; array(
+        'log' =&gt; $logger_config,
     ),
 );
 
@@ -226,11 +226,10 @@ $config = array(
 # 注意, 这里配置中会多一个conf_path. 这个conf_path的路径下, 按照Ice的配置规范包含资源和服务等配置文件即可.
 \Ice\Frame\Runner\Embeded::embed($options, $config);
 
-$proxy = \F_Ice::$ins->mainApp->proxy_service->get('demo-remote', 'Say');
-$data  = $proxy->hello('Jack');
+$proxy = \F_Ice::$ins-&gt;mainApp-&gt;proxy_service-&gt;get('demo-remote', 'Say');
+$data  = $proxy-&gt;hello('Jack');
 var_dump($data);
 </code></pre>
-
 
           </section>
 

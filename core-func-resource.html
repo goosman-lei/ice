@@ -142,25 +142,23 @@
 <h2 id="ref-3">配置详解</h2>
 
 
-
-
 <pre class="line-numbers language-php" data-language="php">
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
 // scheme到自定义实现的映射. 用于扩展自己的资源处理器
 $mapping = array(
-    'connector' => array(
-        'redis' => '\\ice\\demo\\Lib\\RedisConnector',
+    'connector' =&gt; array(
+        'redis' =&gt; '\\ice\\demo\\Lib\\RedisConnector',
     ),
-    'handler'   => array(
-        'redis' => '\\ice\\demo\\Lib\\RedisHandler',
+    'handler'   =&gt; array(
+        'redis' =&gt; '\\ice\\demo\\Lib\\RedisHandler',
     ),
-    'strategy'  => array(),
+    'strategy'  =&gt; array(),
 );
 
 // 资源的获取语法为:
-// $proxy->get(<scheme> "://" <unitname> [ "/" <cluster> ] [ "?force_new=true&algo=random" ]
+// $proxy-&gt;get(&lt;scheme&gt; "://" &lt;unitname&gt; [ "/" &lt;cluster&gt; ] [ "?force_new=true&amp;algo=random" ]
 // scheme定义了资源类型
 // unitname定义了业务单元.
 // cluster定义了不同的集群. 比如mysql的主从
@@ -168,63 +166,56 @@ $mapping = array(
 //      algo=random: 用来指定调度策略. 内部仅实现了random
 //      force_new=true: 指定强制获取新的资源
 
-// 资源的配置结构, 是一个多层次结构: scheme > unitname > cluster > node
-// 最小单元就是节点(node). 下面例子中, 就是 array('host' => '127.0.0.1', 'port' => 3306)
+// 资源的配置结构, 是一个多层次结构: scheme &gt; unitname &gt; cluster &gt; node
+// 最小单元就是节点(node). 下面例子中, 就是 array('host' =&gt; '127.0.0.1', 'port' =&gt; 3306)
 //      (调度算法站额对的就是指定集群中, 多个节点的选择策略)
 // 配置结构中的options是多级继承的, 每一层都可以有options. 下层会自动继承merge上层的options
 $pool = array(
-    'mysqli' => array(
-        'options' => array(
-            'deny_empty_update_delete' => TRUE,
-            'warn_sql_length' => 51200,
-            'fatal_sql_length' => 2097152,
+    'mysqli' =&gt; array(
+        'options' =&gt; array(
+            'deny_empty_update_delete' =&gt; TRUE,
+            'warn_sql_length' =&gt; 51200,
+            'fatal_sql_length' =&gt; 2097152,
         ),
-        'demo' => array(
-            'master' => array(
-                array('host' => '127.0.0.1', 'port' => 3306),
+        'demo' =&gt; array(
+            'master' =&gt; array(
+                array('host' =&gt; '127.0.0.1', 'port' =&gt; 3306),
             ),
-            'slave' => array(
-                array('host' => '127.0.0.1', 'port' => 3306),
+            'slave' =&gt; array(
+                array('host' =&gt; '127.0.0.1', 'port' =&gt; 3306),
             ),
-            'options' => array(
-                'timeout' => 1,
-                'user'    => '',
-                'passwd'  => '',
+            'options' =&gt; array(
+                'timeout' =&gt; 1,
+                'user'    =&gt; '',
+                'passwd'  =&gt; '',
             ),
         ),
     ),
-    'curl' => array(
-        'service' => array(
-            'default' => array(
-                array('host' => 'service.host.com') // 修改为service的host
+    'curl' =&gt; array(
+        'service' =&gt; array(
+            'default' =&gt; array(
+                array('host' =&gt; 'service.host.com') // 修改为service的host
             ),
         ),
     ),
 );
-
 </code></pre>
 
-
-
-
 <h2 id="ref-4">应用示例</h2>
-
-
 
 
 <pre class="line-numbers language-php" data-language="php">
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
-$facebookCurl = \F_Ice::$ins->workApp->proxy_resource->get('curl://facebook-page');
-$wechatCurl   = \F_Ice::$ins->workApp->proxy_resource->get('curl://wechat');
-$userMysql    = \F_Ice::$ins->workApp->proxy_resource->get('mysqli://user/master');
+$facebookCurl = \F_Ice::$ins-&gt;workApp-&gt;proxy_resource-&gt;get('curl://facebook-page');
+$wechatCurl   = \F_Ice::$ins-&gt;workApp-&gt;proxy_resource-&gt;get('curl://wechat');
+$userMysql    = \F_Ice::$ins-&gt;workApp-&gt;proxy_resource-&gt;get('mysqli://user/master');
 
-$facebookCurl->get('/');
-$wechatCurl->get('/');
-$userMysql->query('SHOW TABLES');
+$facebookCurl-&gt;get('/');
+$wechatCurl-&gt;get('/');
+$userMysql-&gt;query('SHOW TABLES');
 </code></pre>
-
 
           </section>
 

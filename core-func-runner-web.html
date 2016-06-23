@@ -164,16 +164,13 @@
 <span class="language-name">php</span>
 <code class="language-php">
 $web_routes = array(
-    'default' => '\\Ice\\Frame\\Web\\Router\\RStatic',
-    'i= /say/helloworld' => array(  # 不区分大小写的/say/helloworld访问, 会被路由到src/action/Say/Helloworld.php
-        'class'  => 'Say',
-        'action' => 'Helloworld',
+    'default' =&gt; '\\Ice\\Frame\\Web\\Router\\RStatic',
+    'i= /say/helloworld' =&gt; array(  # 不区分大小写的/say/helloworld访问, 会被路由到src/action/Say/Helloworld.php
+        'class'  =&gt; 'Say',
+        'action' =&gt; 'Helloworld',
     )
 );
 </code></pre>
-
-
-
 
 <h2 id="ref-4">模板</h2>
 
@@ -197,41 +194,41 @@ $web_routes = array(
 <span class="language-name">php</span>
 <code class="language-php">
 $web_temp_engine = array(
-    'engines' => array(
-        'json' => array(
-            'adapter' => '\\Ice\\Frame\\Web\\TempEngine\\Json',
-            'adapter_config' => array(
-                'headers' => array('Content-Type: text/json;CHARSET=UTF-8'),
-                'json_encode_options' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
-                'error_tpl' => '',
+    'engines' =&gt; array(
+        'json' =&gt; array(
+            'adapter' =&gt; '\\Ice\\Frame\\Web\\TempEngine\\Json',
+            'adapter_config' =&gt; array(
+                'headers' =&gt; array('Content-Type: text/json;CHARSET=UTF-8'),
+                'json_encode_options' =&gt; JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
+                'error_tpl' =&gt; '',
             ),
         ),
-        'smarty-default' => array(
-            'adapter' => '\\Ice\\Frame\\Web\\TempEngine\\Smarty',
-            'adapter_config'  => array(
-                'headers'   => array('Content-Type: text/html;CHARSET=UTF-8'),
-                'error_tpl' => '_common/error',
-                'ext_name'  => '.tpl',
+        'smarty-default' =&gt; array(
+            'adapter' =&gt; '\\Ice\\Frame\\Web\\TempEngine\\Smarty',
+            'adapter_config'  =&gt; array(
+                'headers'   =&gt; array('Content-Type: text/html;CHARSET=UTF-8'),
+                'error_tpl' =&gt; '_common/error',
+                'ext_name'  =&gt; '.tpl',
             ),
-            'temp_engine_config' => array(
-                'cache_lifetime'        => 30 * 24 * 3600,
-                'caching'               => false,
-                'cache_dir'             => '',
-                'use_sub_dirs'          => TRUE,
-                'template_dir'          => $root_path . '/smarty-tpl',
-                'plugins_dir'           => array(),
-                'compile_dir'           => $run_path . '/smarty-compiled/' ,
-                'default_modifiers'     => array('escape:"html"'),
-                'left_delimiter'        => '{%',
-                'right_delimiter'       => '%}',
+            'temp_engine_config' =&gt; array(
+                'cache_lifetime'        =&gt; 30 * 24 * 3600,
+                'caching'               =&gt; false,
+                'cache_dir'             =&gt; '',
+                'use_sub_dirs'          =&gt; TRUE,
+                'template_dir'          =&gt; $root_path . '/smarty-tpl',
+                'plugins_dir'           =&gt; array(),
+                'compile_dir'           =&gt; $run_path . '/smarty-compiled/' ,
+                'default_modifiers'     =&gt; array('escape:"html"'),
+                'left_delimiter'        =&gt; '{%',
+                'right_delimiter'       =&gt; '%}',
             ),
         ),
     ),
-    'routes' => array(
-        '*' => 'json',
-        'say' => array(
-            '*' => 'smarty-default',
-            'hi' => 'json',
+    'routes' =&gt; array(
+        '*' =&gt; 'json',
+        'say' =&gt; array(
+            '*' =&gt; 'smarty-default',
+            'hi' =&gt; 'json',
         ),
     ),
 );
@@ -250,7 +247,6 @@ $web_temp_engine = array(
 整个routes部分的配置, 面向controller/action两层结构.
 '*'表示某层的默认引擎
 </code></pre>
-
 
           </section>
 

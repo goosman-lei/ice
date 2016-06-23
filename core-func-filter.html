@@ -138,8 +138,6 @@
 <h2 id="ref-3">语法定义</h2>
 
 
-
-
 <pre class="line-numbers " data-language="">
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name"></span>
@@ -168,15 +166,9 @@ OP_FILTER     := OP_NAME [ ":" OP_ARG_LIST ]
 FILTER_LIST := BLOCK_FILTER | EXTEND_FILTER | OP_FILTER | BLOCK_FILTER FILTER_LIST | ( EXTEND_FILTER | OP_FILTER ) [ "|" ] FILTER_LIST
 
 ROOT := FIELD_RULE_NONAME
-
 </code></pre>
 
-
-
-
 <h2 id="ref-4">应用示例</h2>
-
-
 
 
 <pre class="line-numbers language-php" data-language="php">
@@ -184,15 +176,15 @@ ROOT := FIELD_RULE_NONAME
 <span class="language-name">php</span>
 <code class="language-php">
 $data = array(
-    'code' => 0,
-    'data' => array(
-        'uid'     => 5012470,
-        'uname'   => 'goosman-lei',
-        'service' => array('code' => 1, 'data' => 'Hello Jack'),
-        'user'    => array('id' => '5012470', 'name' => 'goosman-lei', 'location' => '北京'),
+    'code' =&gt; 0,
+    'data' =&gt; array(
+        'uid'     =&gt; 5012470,
+        'uname'   =&gt; 'goosman-lei',
+        'service' =&gt; array('code' =&gt; 1, 'data' =&gt; 'Hello Jack'),
+        'user'    =&gt; array('id' =&gt; '5012470', 'name' =&gt; 'goosman-lei', 'location' =&gt; '北京'),
     ),
 );
-$filteredData = $this->ice->mainApp->proxy_filter->get('(map){
+$filteredData = $this-&gt;ice-&gt;mainApp-&gt;proxy_filter-&gt;get('(map){
     code(int);
     data(map){
         uid(int);
@@ -207,11 +199,8 @@ $filteredData = $this->ice->mainApp->proxy_filter->get('(map){
             location(str);
         }
     }
-}')->filter($data);
+}')-&gt;filter($data);
 </code></pre>
-
-
-
 
           </section>
 

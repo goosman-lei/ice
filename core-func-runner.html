@@ -193,24 +193,23 @@ $log_path  = $var_path . '/logs';
 
 // 组装整体的运行时配置. 启动器会根据自己的启动器类型自动选择对应配置
 $runner = array(
-    'web' => array(
-        'frame'       => $web_frame,
-        'routes'      => $web_routes,
-        'temp_engine' => $web_temp_engine,
-        'log'         => $web_logger,
-        'filter'      => $web_filter,
+    'web' =&gt; array(
+        'frame'       =&gt; $web_frame,
+        'routes'      =&gt; $web_routes,
+        'temp_engine' =&gt; $web_temp_engine,
+        'log'         =&gt; $web_logger,
+        'filter'      =&gt; $web_filter,
     ),  
-    'service' => array(
-        'log'    => $service_logger,
-        'filter' => $service_filter,
+    'service' =&gt; array(
+        'log'    =&gt; $service_logger,
+        'filter' =&gt; $service_filter,
     ),  
-    'daemon' => array(
-        'log'    => $daemon_logger,
-        'filter' => $daemon_filter,
+    'daemon' =&gt; array(
+        'log'    =&gt; $daemon_logger,
+        'filter' =&gt; $daemon_filter,
     ),  
 );
 </code></pre>
-
 
           </section>
 

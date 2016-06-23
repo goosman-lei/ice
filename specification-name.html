@@ -134,7 +134,6 @@ PROJECT_GROUP="ice"
 PROJECT_NAME="demo"
 </code></pre>
 
-
 <ul>
 <li>项目均需定义在唯一的名字空间下, 建议直接使用PROJECT_GROUP和PROJECT_NAME组合构成顶层的两级名字空间</li>
 </ul>
@@ -146,7 +145,6 @@ PROJECT_NAME="demo"
 <code class="">
 PROJECT_NAMESPACE="$PROJECT_GROUP\\$PROJECT_NAME"
 </code></pre>
-
 
 <ul>
 <li>入口代码名字规范</li>
@@ -187,11 +185,10 @@ namespace PROJECT_GROUP\PROJECT_NAME\Service;
 class Service extends \FS_Service {
     public function hi() {
         // 业务逻辑
-        return $this->succ();
+        return $this-&gt;succ();
     }
 }
 </code></pre>
-
 
 <ul>
 <li>model层</li>
@@ -209,12 +206,11 @@ namespace PROJECT_GROUP\PROJECT_NAME\Model;
 class User extends \DB_Query {
     protected $tableName; # 表名
     protected $mapping = array(
-        'field_name' => 'field_type',   # field_type = i(int), s(string), I([a-zA-Z0-9_]+), f(float)
+        'field_name' =&gt; 'field_type',   # field_type = i(int), s(string), I([a-zA-Z0-9_]+), f(float)
     );
     protected $dbResource; # 使用的数据库连接资源
 }
 </code></pre>
-
 
 <ul>
 <li>本地类库</li>
@@ -232,9 +228,6 @@ namespace PROJECT_GROUP\PROJECT_NAME\Lib;
 class Demo {
 }
 </code></pre>
-
-
-
 
           </section>
 

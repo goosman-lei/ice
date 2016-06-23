@@ -152,20 +152,19 @@
 <span class="language-name">php</span>
 <code class="language-php">
 $runner = array(
-    'web' => array(
-        'log' => array(
-            'comm' => array(...),
-            'ws'   => array(...),
+    'web' =&gt; array(
+        'log' =&gt; array(
+            'comm' =&gt; array(...),
+            'ws'   =&gt; array(...),
         )
     ),
 );
 
 则当应用以web方式运行时, 对应$app对象会自动注册成员
 
-$app->logger_comm
-$app->logger_ws
+$app-&gt;logger_comm
+$app-&gt;logger_ws
 </code></pre>
-
 
 <p>另外一点, 关于mainApp和workApp的差异.</p>
 
@@ -174,73 +173,71 @@ $app->logger_ws
 <h2 id="ref-4">Ice中的日志配置</h2>
 
 
-
-
 <pre class="line-numbers language-php" data-language="php">
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
 $web_logger = array(
-    'comm' => array(
-        'log_fmt' => array(
-            'fmt_time'            => '', # 默认-Y-m-d H:i:s
-            'client_env.ip'       => '',
-            'server_env.hostname' => '',
-            'request.uri'         => '',
-            'request.originalUri' => '',
-            'request.class'       => '',
-            'request.action'      => '',
-            'request.id'          => '',
+    'comm' =&gt; array(
+        'log_fmt' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认-Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
         ),
-        'log_fmt_wf' => array(
-            'fmt_time'            => '', # 默认-Y-m-d H:i:s
-            'client_env.ip'       => '',
-            'server_env.hostname' => '',
-            'request.uri'         => '',
-            'request.originalUri' => '',
-            'request.class'       => '',
-            'request.action'      => '',
-            'request.id'          => '',
-            'level'               => '',
-            'errno'               => '',
-            'trace'               => '',
+        'log_fmt_wf' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认-Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
+            'level'               =&gt; '',
+            'errno'               =&gt; '',
+            'trace'               =&gt; '',
         ),
-        'log_file' => 'web.log',
-        'log_path' => $var_path . '/logs',
-        'split'    => array(
-            'type' => 'file',
-            'fmt'  => 'Ymd',
+        'log_file' =&gt; 'web.log',
+        'log_path' =&gt; $var_path . '/logs',
+        'split'    =&gt; array(
+            'type' =&gt; 'file',
+            'fmt'  =&gt; 'Ymd',
         ),
     ),
-    'ws' => array(
-        'log_fmt' => array(
-            'fmt_time'            => '', # 默认Y-m-d H:i:s
-            'client_env.ip'       => '',
-            'server_env.hostname' => '',
-            'request.uri'         => '',
-            'request.originalUri' => '',
-            'request.class'       => '',
-            'request.action'      => '',
-            'request.id'          => '',
+    'ws' =&gt; array(
+        'log_fmt' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
         ),
-        'log_fmt_wf' => array(
-            'fmt_time'            => '', # 默认Y-m-d H:i:s
-            'client_env.ip'       => '',
-            'server_env.hostname' => '',
-            'request.uri'         => '',
-            'request.originalUri' => '',
-            'request.class'       => '',
-            'request.action'      => '',
-            'request.id'          => '',
-            'level'               => '',
-            'errno'               => '',
-            'trace'               => '',
+        'log_fmt_wf' =&gt; array(
+            'fmt_time'            =&gt; '', # 默认Y-m-d H:i:s
+            'client_env.ip'       =&gt; '',
+            'server_env.hostname' =&gt; '',
+            'request.uri'         =&gt; '',
+            'request.originalUri' =&gt; '',
+            'request.class'       =&gt; '',
+            'request.action'      =&gt; '',
+            'request.id'          =&gt; '',
+            'level'               =&gt; '',
+            'errno'               =&gt; '',
+            'trace'               =&gt; '',
         ),
-        'log_file' => 'web.ws.log',
-        'log_path' => $var_path . '/logs',
-        'split'    => array(
-            'type' => 'file',
-            'fmt'  => 'Ymd',
+        'log_file' =&gt; 'web.ws.log',
+        'log_path' =&gt; $var_path . '/logs',
+        'split'    =&gt; array(
+            'type' =&gt; 'file',
+            'fmt'  =&gt; 'Ymd',
         ),
     ),
 );
@@ -263,11 +260,10 @@ mem_used:       内存使用
 client_env.xxx  当前ClientEnv对象的xxx属性
 server_env.xxx  当前ServerEnv对象的xxx属性
 request.xxx     当前Request对象的xxx属性
-a.b.c           自定义日志项. 值为应用通过$logger->set('a.b.c', 'value')设置
+a.b.c           自定义日志项. 值为应用通过$logger-&gt;set('a.b.c', 'value')设置
 
 注: 日志均使用json处理, 不使用常规的行式日志
 </code></pre>
-
 
           </section>
 

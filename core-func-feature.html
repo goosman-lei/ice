@@ -153,7 +153,6 @@
 每一种宏, 代表了一种场景, 在符合场景要求时, 对应的代码才生效
 </code></pre>
 
-
 <p>Ice中的Feature就是借鉴这个思想而来的.</p>
 
 <h2 id="ref-3">Ice中的Feature应用</h2>
@@ -166,18 +165,15 @@
 <span class="language-name">php</span>
 <code class="language-php">
 // 如果是ios 9以上版本, 差异性逻辑
-if ($this->feature->isEnable('ge-ios-9')) {
+if ($this-&gt;feature-&gt;isEnable('ge-ios-9')) {
     // ...
 }
 
 // 如果是baidu渠道3.2以上版本, 差异性逻辑
-if ($this->feature->isEnable('baidu-ge-3.2')) {
+if ($this-&gt;feature-&gt;isEnable('baidu-ge-3.2')) {
     // ...
 }
 </code></pre>
-
-
-
 
 <h2 id="ref-4">Ice中Feature的配置</h2>
 
@@ -192,25 +188,24 @@ if ($this->feature->isEnable('baidu-ge-3.2')) {
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
-<?php
+&lt;?php
 $config = array(
-    '*' => array(
-        'ge-ios-9' => array(
+    '*' =&gt; array(
+        'ge-ios-9' =&gt; array(
             'osName eq ios',
-            'osVersion v>= 9.0',
+            'osVersion v&gt;= 9.0',
         ),
-        'baidu-ge-3.2' => array(
+        'baidu-ge-3.2' =&gt; array(
             'channel eq baidu',
             'osName eq android',
-            'appVersion v>= 3.2',
+            'appVersion v&gt;= 3.2',
         ),
     ),
-    '/say/hello' => array(),
+    '/say/hello' =&gt; array(),
 );
 
 Feature的配置, 是可以限定URI的(/controller/action), 限定URI, 则仅访问对应URI才会生效, 否则, 放在'*'下的, 对所有请求都生效.
 </code></pre>
-
 
 <p>Ok. 上面就是Feature的配置. 那配置中的osName, osVersion等是哪里来的呢?</p>
 
@@ -222,11 +217,10 @@ Feature的配置, 是可以限定URI的(/controller/action), 限定URI, 则仅�
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
-\F_Ice::$ins->runner->clientEnv->osName = \F_Ice::$ins->runner->request->getQuery('osn');
-\F_Ice::$ins->runner->clientEnv->osVersion = \F_Ice::$ins->runner->request->getQuery('osv');
+\F_Ice::$ins-&gt;runner-&gt;clientEnv-&gt;osName = \F_Ice::$ins-&gt;runner-&gt;request-&gt;getQuery('osn');
+\F_Ice::$ins-&gt;runner-&gt;clientEnv-&gt;osVersion = \F_Ice::$ins-&gt;runner-&gt;request-&gt;getQuery('osv');
 ...
 </code></pre>
-
 
 <p>在系统初始化阶段, 应用上统一的将客户端环境信息设置到ClientEnv中, 这样, 就拥有了一套基于客户端环境, 灵活的做差异性逻辑处理的Feature机制.</p>
 

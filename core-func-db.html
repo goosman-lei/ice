@@ -143,8 +143,6 @@
 <h3 id="ref-3">应用层实现</h3>
 
 
-
-
 <pre class="line-numbers language-sql" data-language="sql">
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">sql</span>
@@ -159,35 +157,27 @@ CREATE TABLE IF NOT EXISTS user (
 ) ENGINE Innodb DEFAULT CHARACTER SET UTF8;
 </code></pre>
 
-
-
-
 <pre class="line-numbers language-php" data-language="php">
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
 在model层实现, 继承\DB_Query
 
-<?php
-namespace <PROJECT_NAMESPACE>\Model;
+&lt;?php
+namespace &lt;PROJECT_NAMESPACE&gt;\Model;
 class User extends \DB_Query {
     protected $tableName = 'user';  // 表名
     protected $mapping   = array(   // 字段映射, 支持类型: i(int), s(字符串), f(浮点), I(标识符: 字母数字下划线)
-        'id'       => 'i',
-        'name'     => 's',
-        'passwd'   => 's',
-        'location' => 's',
+        'id'       =&gt; 'i',
+        'name'     =&gt; 's',
+        'passwd'   =&gt; 's',
+        'location' =&gt; 's',
     );
     protected $dbResource = 'demo'; // 使用的资源. 对应src/conf/resource中的配置
 }
 </code></pre>
 
-
-
-
 <h3 id="ref-4">查询多条记录</h3>
-
-
 
 
 <pre class="line-numbers language-php" data-language="php">
@@ -225,19 +215,19 @@ $where = array(
     )),
     array(':literal', 'uid = 100'),
 );
-$datas = $model->getRows($where, '*', 20, 5, 'score DESC');
+$datas = $model-&gt;getRows($where, '*', 20, 5, 'score DESC');
 
 对应SQL:
-SELECT * FROM <TABLE>
+SELECT * FROM &lt;TABLE&gt;
     WHERE (`score` = 80)
          AND (`pass` IN (1,0))
          AND (`score` != 80)
-         AND (`score` > 80)
-         AND (`score` >= 80)
-         AND (`score` <= 80)
-         AND (`score` < 80)
+         AND (`score` &gt; 80)
+         AND (`score` &gt;= 80)
+         AND (`score` &lt;= 80)
+         AND (`score` &lt; 80)
          AND (`score` BETWEEN 80 AND 100)
-         AND (`score` < 8)
+         AND (`score` &lt; 8)
          AND (`name` = 'Jack')
          AND (`name` LIKE 'Jack%')
          AND (`name` LIKE 'Jack%'%)
@@ -261,49 +251,39 @@ getRow(): 参数除$limit和$offset外, 和getRows()一致, 强制limit 0, 1
 count():  使用count()聚集函数获取行数
 </code></pre>
 
-
-
-
 <h3 id="ref-5">更新</h3>
-
-
 
 
 <pre class="line-numbers language-php" data-language="php">
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
-# UPDATE <TABLE> SET name = 'goosman-lei', id = 5012470, age = age + 1 WHERE id = 5012469
+# UPDATE &lt;TABLE&gt; SET name = 'goosman-lei', id = 5012470, age = age + 1 WHERE id = 5012469
 
-$model->update(array(
+$model-&gt;update(array(
     array('name', 'goosman-lei'),
     array('id', 5012470),
     array(':literal', 'age = age+1'),
 ), array(':eq', 'id', 5012469));
 </code></pre>
 
-
-
-
 <h3 id="ref-6">插入</h3>
-
-
 
 
 <pre class="line-numbers language-php" data-language="php">
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
-# INSERT INTO <TABLE>(id, name) VALUES(5012470, 'goosman-lei') ON DUPLICATE KEY UPDATE name = 'goosman-lei'
+# INSERT INTO &lt;TABLE&gt;(id, name) VALUES(5012470, 'goosman-lei') ON DUPLICATE KEY UPDATE name = 'goosman-lei'
 
-$model->insert(array(
+$model-&gt;insert(array(
     array('id', 5012470),
     array('name', 'goosman-lei'),
 ), array('name'));
 
-# INSERT INTO <table>(id, name) VALUES(5012470, 'goosman-lei'), (5012471, 'goosman.lei')
+# INSERT INTO &lt;table&gt;(id, name) VALUES(5012470, 'goosman-lei'), (5012471, 'goosman.lei')
 
-$model->multiInsert(array(
+$model-&gt;multiInsert(array(
     array(
         array('id', 5012470),
         array('name', 'goosman-lei'),
@@ -315,49 +295,34 @@ $model->multiInsert(array(
 ));
 </code></pre>
 
-
-
-
 <h3 id="ref-7">Replace</h3>
-
-
 
 
 <pre class="line-numbers language-php" data-language="php">
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
-# REPLACE INTO <table>(id, name) VALUES(5012470, 'goosman-lei')
+# REPLACE INTO &lt;table&gt;(id, name) VALUES(5012470, 'goosman-lei')
 
-$model->replace(array(
+$model-&gt;replace(array(
     array('id', 5012470),
     array('name', 'goosman-lei'),
 ));
 </code></pre>
 
-
-
-
 <h3 id="ref-8">删除</h3>
-
-
 
 
 <pre class="line-numbers language-php" data-language="php">
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
-# DELETE FROM <table> WHERE id >= 1000 limit 10
+# DELETE FROM &lt;table&gt; WHERE id &gt;= 1000 limit 10
 
-$model->delete(array(':ge', 'id', 1000), FALSE, 10)
+$model-&gt;delete(array(':ge', 'id', 1000), FALSE, 10)
 </code></pre>
 
-
-
-
 <h3 id="ref-9">原生接口</h3>
-
-
 
 
 <pre class="line-numbers language-php" data-language="php">
@@ -366,38 +331,32 @@ $model->delete(array(':ge', 'id', 1000), FALSE, 10)
 <code class="language-php">
 # SELECT * FROM user WHERE name = 'goosman-lei'
 # 返回关联数组
-$model->query('SELECT * FROM user WHERE name = ' . $model->escapeString('goosman-lei'), \DB_Query::RS_ARRAY);
+$model-&gt;query('SELECT * FROM user WHERE name = ' . $model-&gt;escapeString('goosman-lei'), \DB_Query::RS_ARRAY);
 
 # SELECT * FROM user WHERE name = 'goosman-lei'
 # 返回数字下标数组
-$model->query('SELECT * FROM user WHERE name = ' . $model->escapeString('goosman-lei'), \DB_Query::RS_NUM);
+$model-&gt;query('SELECT * FROM user WHERE name = ' . $model-&gt;escapeString('goosman-lei'), \DB_Query::RS_NUM);
 
 # SELECT * FROM user WHERE name LIKE 'goosman-lei'
-$model->query('SELECT * FROM user WHERE name LIKE ' . $model->escapeString('goosman-lei', TRUE));
+$model-&gt;query('SELECT * FROM user WHERE name LIKE ' . $model-&gt;escapeString('goosman-lei', TRUE));
 
 # SELECT * FROM user WHERE name LIKE '%goosman-lei%'
-$model->query("SELECT * FROM user WHERE name LIKE '%" . $model->escapeString('goosman-lei', TRUE, FALSE) . "%'");
+$model-&gt;query("SELECT * FROM user WHERE name LIKE '%" . $model-&gt;escapeString('goosman-lei', TRUE, FALSE) . "%'");
 
 # UPDATE user SET name = 'goosman-lei' WHERE id = 5012470
-$model->execute("UPDATE user SET name = 'goosman-lei' WHERE id = 5012470");
+$model-&gt;execute("UPDATE user SET name = 'goosman-lei' WHERE id = 5012470");
 </code></pre>
 
-
-
-
 <h3 id="ref-10">获取额外数据</h3>
-
-
 
 
 <pre class="line-numbers language-php" data-language="php">
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
-$model->affectedNum(): 获取上一条SQL的影响行数
-$model->lastId():      获取最后一次插入的自增ID值
+$model-&gt;affectedNum(): 获取上一条SQL的影响行数
+$model-&gt;lastId():      获取最后一次插入的自增ID值
 </code></pre>
-
 
           </section>
 
