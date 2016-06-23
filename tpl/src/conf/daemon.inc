@@ -25,7 +25,7 @@ $daemon_logger = array(
         'log_path' => $var_path . '/logs',
         'split'    => array(
             'type' => 'file',
-            'fmt'  => 'Ymd',
+            'fmt'  => '-Ymd',
         ),
     ),
 );
