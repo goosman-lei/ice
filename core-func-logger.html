@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <title>TheDocs - </title>
+
+    <!-- Styles -->
+    <link href="/static/css/theDocs.all.min.css" rel="stylesheet">
+    <link href="/static/css/theDocs.css" rel="stylesheet">
+    <link href="/static/css/custom.css" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Raleway:100,300,400,500%7CLato:300,400' rel='stylesheet' type='text/css'>
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+    <link rel="icon" href="/static/img/favicon.ico">
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <!-- Top navbar & branding -->
+      <nav class="navbar navbar-default">
+        <div class="container">
+
+          <!-- Toggle buttons and brand -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="true" aria-controls="navbar">
+              <span class="glyphicon glyphicon-option-vertical"></span>
+            </button>
+
+            <button type="button" class="navbar-toggle for-sidebar" data-toggle="offcanvas">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand" href="">Goosman.lei</a>
+          </div>
+          <!-- END Toggle buttons and brand -->
+
+          <!-- Top navbar -->
+          <div id="navbar" class="navbar-collapse collapse" aria-expanded="true" role="banner">
+            <ul class="nav navbar-nav navbar-right">
+                              <li class=" active"><a href="/ice">Ice</a></li>
+                              <li class=""><a href="">Blog</a></li>
+                              <li class="hero"><a href="mailto:goosman.lei@gmail.com">Contact</a></li>
+                          </ul>
+          </div>
+          <!-- END Top navbar -->
+
+        </div>
+      </nav>
+      <!-- END Top navbar & branding -->
+      
+    </header>
+
+
+    <main class="container">
+      <div class="row">
+
+        <!-- Sidebar -->
+        <aside class="col-md-3 col-sm-3 sidebar">
+
+<!-- TODO 解递归当场遍历出树结构菜单 -->
+<ul class="sidenav">
+  <li><a href="/ice">概览</a>
+  <li><a href="#">项目</a>
+  <ul>
+    <li><a href="https://github.com/goosman-lei/ice" target="_blank">Github主页</a>
+    <li><a href="https://github.com/goosman-lei/ice/zipball/master" target="_blank">zip包下载</a>
+    <li><a href="https://github.com/goosman-lei/ice/tarball/master" target="_blank">tar.gz包下载</a>
+  </ul></li>
+  <li><a href="">文档</a>
+  <ul>
+    <li><a href="/ice/arch.html">整体架构</a>
+    <li><a href="/ice/core-func-runner.html">运行方式</a>
+    <ul>
+      <li><a href="/ice/core-func-runner-web.html">Web</a>
+      <li><a href="/ice/core-func-runner-service.html">Service</a>
+      <li><a href="/ice/core-func-runner-daemon.html">Daemon</a>
+      <li><a href="/ice/core-func-runner-embeded.html">Embeded</a>
+    </ul></li>
+    <li><a href="/ice/core-func-input-output.html">交互数据</a>
+    <li><a href="/ice/core-func-resource.html">资源管理</a>
+    <li><a href="/ice/core-func-filter.html">过滤器</a>
+    <li><a href="/ice/core-func-feature.html">Feature机制</a>
+    <li><a href="/ice/core-func-logger.html" class="active">日志处理</a>
+    <li><a href="/ice/core-func-db.html">DB查询工具</a>
+  </ul></li>
+  <li><a href="">规范</a>
+  <ul>
+    <li><a href="/ice/specification-name.html" target="_blank">Github主页</a>
+    <li><a href="/ice/specification-develop.html" target="_blank">zip包下载</a>
+  </ul></li>
+</ul>
+        </aside>
+        <!-- END Sidebar -->
+
+
+        <!-- Main content -->
+        <article class="col-md-9 col-sm-9 main-content" role="main">
+          
+          <header>
+            <h1></h1>
+            <p></p>
+<ol class="toc">
+<li><a href="#ref-1">日志组件</a><ol><li>
+<a href="#ref-2">日志和系统关系的思考</a></li>
+<li><a href="#ref-3">Ice中的记录日志的方式(对象归属关系)</a></li>
+<li><a href="#ref-4">Ice中的日志配置</a></li></ol>
+
+          </header>
+
+          <section>
+<h1 id="ref-1">日志组件</h1>
+
+
+<p>日志是一个系统必不可少的部分.</p>
+
+<h2 id="ref-2">日志和系统关系的思考</h2>
+
+
+<p>日志的记录时机, 主要取决于编码时的业务设计.</p>
+
+<p>但是, 日志的记录方式(要不要记录日志, 记录在哪里, 什么格式), 则和运行时有很高的相关性.</p>
+
+<p>(比如, Nginx可以在配置中, 去自定义日志的位置和记录的字段)</p>
+
+<p>Ice中提供了4种运行方式(Runner), 日志的配置, 位于src/conf/app.php中, runner的部分.</p>
+
+<p>不同的运行方式, 可以设置不同的日志规则.</p>
+
+<h2 id="ref-3">Ice中的记录日志的方式(对象归属关系)</h2>
+
+
+<p>在Ice框架中, \F_Ice::$ins是整个框架的核心对象. 它通过mainApp和workApp两个成员, 产生了和应用描述对象App的关系.</p>
+
+<p>日志, 是应用相关的, 它作为App对象的logger_xxx成员, 供应用开发者调用.</p>
+
+<p>例如, 如下配置:</p>
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+$runner = array(
+    'web' => array(
+        'log' => array(
+            'comm' => array(...),
+            'ws'   => array(...),
+        )
+    ),
+);
+
+则当应用以web方式运行时, 对应$app对象会自动注册成员
+
+$app->logger_comm
+$app->logger_ws
+</code></pre>
+
+
+<p>另外一点, 关于mainApp和workApp的差异.</p>
+
+<p>mainApp就是指入口应用. workApp在应用启动时, 和mainApp相同, 只有当发生local类型的service调用时, workApp才会切换到被调用Service的App.</p>
+
+<h2 id="ref-4">Ice中的日志配置</h2>
+
+
+
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+$web_logger = array(
+    'comm' => array(
+        'log_fmt' => array(
+            'fmt_time'            => '', # 默认-Y-m-d H:i:s
+            'client_env.ip'       => '',
+            'server_env.hostname' => '',
+            'request.uri'         => '',
+            'request.originalUri' => '',
+            'request.class'       => '',
+            'request.action'      => '',
+            'request.id'          => '',
+        ),
+        'log_fmt_wf' => array(
+            'fmt_time'            => '', # 默认-Y-m-d H:i:s
+            'client_env.ip'       => '',
+            'server_env.hostname' => '',
+            'request.uri'         => '',
+            'request.originalUri' => '',
+            'request.class'       => '',
+            'request.action'      => '',
+            'request.id'          => '',
+            'level'               => '',
+            'errno'               => '',
+            'trace'               => '',
+        ),
+        'log_file' => 'web.log',
+        'log_path' => $var_path . '/logs',
+        'split'    => array(
+            'type' => 'file',
+            'fmt'  => 'Ymd',
+        ),
+    ),
+    'ws' => array(
+        'log_fmt' => array(
+            'fmt_time'            => '', # 默认Y-m-d H:i:s
+            'client_env.ip'       => '',
+            'server_env.hostname' => '',
+            'request.uri'         => '',
+            'request.originalUri' => '',
+            'request.class'       => '',
+            'request.action'      => '',
+            'request.id'          => '',
+        ),
+        'log_fmt_wf' => array(
+            'fmt_time'            => '', # 默认Y-m-d H:i:s
+            'client_env.ip'       => '',
+            'server_env.hostname' => '',
+            'request.uri'         => '',
+            'request.originalUri' => '',
+            'request.class'       => '',
+            'request.action'      => '',
+            'request.id'          => '',
+            'level'               => '',
+            'errno'               => '',
+            'trace'               => '',
+        ),
+        'log_file' => 'web.ws.log',
+        'log_path' => $var_path . '/logs',
+        'split'    => array(
+            'type' => 'file',
+            'fmt'  => 'Ymd',
+        ),
+    ),
+);
+
+各配置项含义为:
+log_fmt:    info级别的日志格式
+log_fmt_wf: warning和fatal级别的日志格式(warning/fatal和正常的info日志分开, 是为了报警方便)
+log_file:   日志文件名.
+log_path:   日志文件存放路径
+split:      日志切分规则
+split.type: 日志切分方式. 支持file(文件名增加时间区分), dir(目录名增加时间区分), none(不切分)
+split.fmt:  日志切分使用的时间格式串. 可用来控制切分粒度
+
+log_fmt和log_fmt_wf中支持的子项有:
+fmt_time:       格式化的时间戳(请求时间), 默认Y-m-m H:i:s, 可通过参数指定格式
+fmt_now:        格式化的时间戳(记录日志当时时间), 默认Y-m-m H:i:s, 可通过参数指定格式
+level:          日志级别(info, warn, fatal)
+trace:          堆栈回溯信息
+mem_used:       内存使用
+client_env.xxx  当前ClientEnv对象的xxx属性
+server_env.xxx  当前ServerEnv对象的xxx属性
+request.xxx     当前Request对象的xxx属性
+a.b.c           自定义日志项. 值为应用通过$logger->set('a.b.c', 'value')设置
+
+注: 日志均使用json处理, 不使用常规的行式日志
+</code></pre>
+
+
+          </section>
+
+          
+        </article>
+        <!-- END Main content -->
+      </div>
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container">
+        <a id="scroll-up" href="#"><i class="fa fa-angle-up"></i></a>
+
+        <div class="row">
+          <div class="col-md-6 col-sm-6">
+            <p>Copyright &copy; 2016. All right reserved</p>
+          </div>
+          <div class="col-md-6 col-sm-6"></div>
+        </div>
+      </div>
+    </footer>
+    <!-- END Footer -->
+
+    <!-- Scripts -->
+    <script src="/static/js/theDocs.all.min.js"></script>
+    <script src="/static/js/theDocs.js"></script>
+    <script src="/static/js/custom.js"></script>
+
+  </body>
+</html>

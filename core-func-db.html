@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <title>TheDocs - </title>
+
+    <!-- Styles -->
+    <link href="/static/css/theDocs.all.min.css" rel="stylesheet">
+    <link href="/static/css/theDocs.css" rel="stylesheet">
+    <link href="/static/css/custom.css" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Raleway:100,300,400,500%7CLato:300,400' rel='stylesheet' type='text/css'>
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+    <link rel="icon" href="/static/img/favicon.ico">
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <!-- Top navbar & branding -->
+      <nav class="navbar navbar-default">
+        <div class="container">
+
+          <!-- Toggle buttons and brand -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="true" aria-controls="navbar">
+              <span class="glyphicon glyphicon-option-vertical"></span>
+            </button>
+
+            <button type="button" class="navbar-toggle for-sidebar" data-toggle="offcanvas">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand" href="">Goosman.lei</a>
+          </div>
+          <!-- END Toggle buttons and brand -->
+
+          <!-- Top navbar -->
+          <div id="navbar" class="navbar-collapse collapse" aria-expanded="true" role="banner">
+            <ul class="nav navbar-nav navbar-right">
+                              <li class=" active"><a href="/ice">Ice</a></li>
+                              <li class=""><a href="">Blog</a></li>
+                              <li class="hero"><a href="mailto:goosman.lei@gmail.com">Contact</a></li>
+                          </ul>
+          </div>
+          <!-- END Top navbar -->
+
+        </div>
+      </nav>
+      <!-- END Top navbar & branding -->
+      
+    </header>
+
+
+    <main class="container">
+      <div class="row">
+
+        <!-- Sidebar -->
+        <aside class="col-md-3 col-sm-3 sidebar">
+
+<!-- TODO 解递归当场遍历出树结构菜单 -->
+<ul class="sidenav">
+  <li><a href="/ice">概览</a>
+  <li><a href="#">项目</a>
+  <ul>
+    <li><a href="https://github.com/goosman-lei/ice" target="_blank">Github主页</a>
+    <li><a href="https://github.com/goosman-lei/ice/zipball/master" target="_blank">zip包下载</a>
+    <li><a href="https://github.com/goosman-lei/ice/tarball/master" target="_blank">tar.gz包下载</a>
+  </ul></li>
+  <li><a href="">文档</a>
+  <ul>
+    <li><a href="/ice/arch.html">整体架构</a>
+    <li><a href="/ice/core-func-runner.html">运行方式</a>
+    <ul>
+      <li><a href="/ice/core-func-runner-web.html">Web</a>
+      <li><a href="/ice/core-func-runner-service.html">Service</a>
+      <li><a href="/ice/core-func-runner-daemon.html">Daemon</a>
+      <li><a href="/ice/core-func-runner-embeded.html">Embeded</a>
+    </ul></li>
+    <li><a href="/ice/core-func-input-output.html">交互数据</a>
+    <li><a href="/ice/core-func-resource.html">资源管理</a>
+    <li><a href="/ice/core-func-filter.html">过滤器</a>
+    <li><a href="/ice/core-func-feature.html">Feature机制</a>
+    <li><a href="/ice/core-func-logger.html">日志处理</a>
+    <li><a href="/ice/core-func-db.html" class="active">DB查询工具</a>
+  </ul></li>
+  <li><a href="">规范</a>
+  <ul>
+    <li><a href="/ice/specification-name.html" target="_blank">Github主页</a>
+    <li><a href="/ice/specification-develop.html" target="_blank">zip包下载</a>
+  </ul></li>
+</ul>
+        </aside>
+        <!-- END Sidebar -->
+
+
+        <!-- Main content -->
+        <article class="col-md-9 col-sm-9 main-content" role="main">
+          
+          <header>
+            <h1></h1>
+            <p></p>
+<ol class="toc">
+<li><a href="#ref-1">数据库访问</a><ol><li>
+<a href="#ref-2">数据库访问组件的应用示例</a><ol><li>
+<a href="#ref-3">应用层实现</a></li>
+<li><a href="#ref-4">查询多条记录</a></li>
+<li><a href="#ref-5">更新</a></li>
+<li><a href="#ref-6">插入</a></li>
+<li><a href="#ref-7">Replace</a></li>
+<li><a href="#ref-8">删除</a></li>
+<li><a href="#ref-9">原生接口</a></li>
+<li><a href="#ref-10">获取额外数据</a></li></ol>
+
+          </header>
+
+          <section>
+<h1 id="ref-1">数据库访问</h1>
+
+
+<p>Ice中的数据库访问, 是基于mysqli实现的. 上层封装了一层方法, 用来简化SQL查询及防止SQL注入问题.</p>
+
+<p>(不过, 直接的原生query()方法, 并没有做防SQL注入的处理, 因此, 要使用原生SQL, 请注意需要自己做防注入处理)</p>
+
+<p>这属于一个典型的工具性场景, 因此, 不再赘述, 直接上应用DEMO</p>
+
+<h2 id="ref-2">数据库访问组件的应用示例</h2>
+
+
+
+
+<h3 id="ref-3">应用层实现</h3>
+
+
+
+
+<pre class="line-numbers language-sql" data-language="sql">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">sql</span>
+<code class="language-sql">
+# 对应表结构
+
+CREATE TABLE IF NOT EXISTS user (
+   id INT NOT NULL PRIMARY KEY,
+   name VARCHAR(64) NOT NULL DEFAULT '',
+   passwd VARCHAR(64) NOT NULL DEFAULT '',
+   location VARCHAR(64) NOT NULL DEFAULT ''
+) ENGINE Innodb DEFAULT CHARACTER SET UTF8;
+</code></pre>
+
+
+
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+在model层实现, 继承\DB_Query
+
+<?php
+namespace <PROJECT_NAMESPACE>\Model;
+class User extends \DB_Query {
+    protected $tableName = 'user';  // 表名
+    protected $mapping   = array(   // 字段映射, 支持类型: i(int), s(字符串), f(浮点), I(标识符: 字母数字下划线)
+        'id'       => 'i',
+        'name'     => 's',
+        'passwd'   => 's',
+        'location' => 's',
+    );
+    protected $dbResource = 'demo'; // 使用的资源. 对应src/conf/resource中的配置
+}
+</code></pre>
+
+
+
+
+<h3 id="ref-4">查询多条记录</h3>
+
+
+
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+$where = array(
+    array('score', 80),   // :eq 操作符可忽略. 第二个元素是非数组, 默认:eq
+    array('pass', array(TRUE, FALSE)), // :in 操作符可忽略. 第二个元素是数组默认:in
+    array(':ne', 'score', 80),
+    array(':gt', 'score', 80),
+    array(':ge', 'score', 80),
+    array(':le', 'score', 80),
+    array(':lt', 'score', 80),
+    array(':between', 'score', 80, 100),
+    array(':lt', 'score', 8.3),
+    array(':eq', 'name', 'Jack'),
+    array(':like_literal', 'name', 'Jack%'),
+    array(':like_begin', 'name', 'Jack%'),
+    array(':like_end', 'name', 'Jack%'),
+    array(':like_entire', 'name', 'Jack%'),
+    array(':or', array(
+        array(':notlike_literal', 'name', 'Jack_'),
+        array(':notlike_begin', 'name', 'Jack_'),
+        array(':notlike_end', 'name', 'Jack_'),
+        array(':notlike_entire', 'name', 'Jack_'),
+        array(':in', 'sex', array('man', 'woman')),
+        array(':notin', 'color', array('blue', 'black')),
+    )),
+    array(':not', array(
+        array(':notnull', 'money'),
+    )),
+    array(':and', array(
+        array(':isnull', 'color'),
+    )),
+    array(':literal', 'uid = 100'),
+);
+$datas = $model->getRows($where, '*', 20, 5, 'score DESC');
+
+对应SQL:
+SELECT * FROM <TABLE>
+    WHERE (`score` = 80)
+         AND (`pass` IN (1,0))
+         AND (`score` != 80)
+         AND (`score` > 80)
+         AND (`score` >= 80)
+         AND (`score` <= 80)
+         AND (`score` < 80)
+         AND (`score` BETWEEN 80 AND 100)
+         AND (`score` < 8)
+         AND (`name` = 'Jack')
+         AND (`name` LIKE 'Jack%')
+         AND (`name` LIKE 'Jack%'%)
+         AND (`name` LIKE %'Jack%')
+         AND (`name` LIKE %'Jack%'%)
+         OR ((`name` NOT LIKE 'Jack_')
+             AND (`name` NOT LIKE 'Jack_'%)
+             AND (`name` NOT LIKE %'Jack_')
+             AND (`name` NOT LIKE %'Jack_'%)
+             AND (`sex` IN ('man','woman'))
+             AND (`color` NOT IN ('blue','black'))
+         )
+         AND NOT ((`money` IS NOT NULL))
+         AND ((`color` IS NULL))
+         AND (uid = 100)
+    ORDER BY score DESC
+    limit 5, 20
+
+
+getRow(): 参数除$limit和$offset外, 和getRows()一致, 强制limit 0, 1
+count():  使用count()聚集函数获取行数
+</code></pre>
+
+
+
+
+<h3 id="ref-5">更新</h3>
+
+
+
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+# UPDATE <TABLE> SET name = 'goosman-lei', id = 5012470, age = age + 1 WHERE id = 5012469
+
+$model->update(array(
+    array('name', 'goosman-lei'),
+    array('id', 5012470),
+    array(':literal', 'age = age+1'),
+), array(':eq', 'id', 5012469));
+</code></pre>
+
+
+
+
+<h3 id="ref-6">插入</h3>
+
+
+
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+# INSERT INTO <TABLE>(id, name) VALUES(5012470, 'goosman-lei') ON DUPLICATE KEY UPDATE name = 'goosman-lei'
+
+$model->insert(array(
+    array('id', 5012470),
+    array('name', 'goosman-lei'),
+), array('name'));
+
+# INSERT INTO <table>(id, name) VALUES(5012470, 'goosman-lei'), (5012471, 'goosman.lei')
+
+$model->multiInsert(array(
+    array(
+        array('id', 5012470),
+        array('name', 'goosman-lei'),
+    ),
+    array(
+        array('id', 5012471),
+        array('name', 'goosman.lei'),
+    ),
+));
+</code></pre>
+
+
+
+
+<h3 id="ref-7">Replace</h3>
+
+
+
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+# REPLACE INTO <table>(id, name) VALUES(5012470, 'goosman-lei')
+
+$model->replace(array(
+    array('id', 5012470),
+    array('name', 'goosman-lei'),
+));
+</code></pre>
+
+
+
+
+<h3 id="ref-8">删除</h3>
+
+
+
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+# DELETE FROM <table> WHERE id >= 1000 limit 10
+
+$model->delete(array(':ge', 'id', 1000), FALSE, 10)
+</code></pre>
+
+
+
+
+<h3 id="ref-9">原生接口</h3>
+
+
+
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+# SELECT * FROM user WHERE name = 'goosman-lei'
+# 返回关联数组
+$model->query('SELECT * FROM user WHERE name = ' . $model->escapeString('goosman-lei'), \DB_Query::RS_ARRAY);
+
+# SELECT * FROM user WHERE name = 'goosman-lei'
+# 返回数字下标数组
+$model->query('SELECT * FROM user WHERE name = ' . $model->escapeString('goosman-lei'), \DB_Query::RS_NUM);
+
+# SELECT * FROM user WHERE name LIKE 'goosman-lei'
+$model->query('SELECT * FROM user WHERE name LIKE ' . $model->escapeString('goosman-lei', TRUE));
+
+# SELECT * FROM user WHERE name LIKE '%goosman-lei%'
+$model->query("SELECT * FROM user WHERE name LIKE '%" . $model->escapeString('goosman-lei', TRUE, FALSE) . "%'");
+
+# UPDATE user SET name = 'goosman-lei' WHERE id = 5012470
+$model->execute("UPDATE user SET name = 'goosman-lei' WHERE id = 5012470");
+</code></pre>
+
+
+
+
+<h3 id="ref-10">获取额外数据</h3>
+
+
+
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+$model->affectedNum(): 获取上一条SQL的影响行数
+$model->lastId():      获取最后一次插入的自增ID值
+</code></pre>
+
+
+          </section>
+
+          
+        </article>
+        <!-- END Main content -->
+      </div>
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container">
+        <a id="scroll-up" href="#"><i class="fa fa-angle-up"></i></a>
+
+        <div class="row">
+          <div class="col-md-6 col-sm-6">
+            <p>Copyright &copy; 2016. All right reserved</p>
+          </div>
+          <div class="col-md-6 col-sm-6"></div>
+        </div>
+      </div>
+    </footer>
+    <!-- END Footer -->
+
+    <!-- Scripts -->
+    <script src="/static/js/theDocs.all.min.js"></script>
+    <script src="/static/js/theDocs.js"></script>
+    <script src="/static/js/custom.js"></script>
+
+  </body>
+</html>

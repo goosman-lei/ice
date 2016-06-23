@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <title>TheDocs - </title>
+
+    <!-- Styles -->
+    <link href="/static/css/theDocs.all.min.css" rel="stylesheet">
+    <link href="/static/css/theDocs.css" rel="stylesheet">
+    <link href="/static/css/custom.css" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Raleway:100,300,400,500%7CLato:300,400' rel='stylesheet' type='text/css'>
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+    <link rel="icon" href="/static/img/favicon.ico">
+  </head>
+
+  <body>
+
+    <header class="site-header">
+
+      <!-- Top navbar & branding -->
+      <nav class="navbar navbar-default">
+        <div class="container">
+
+          <!-- Toggle buttons and brand -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="true" aria-controls="navbar">
+              <span class="glyphicon glyphicon-option-vertical"></span>
+            </button>
+
+            <button type="button" class="navbar-toggle for-sidebar" data-toggle="offcanvas">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand" href="">Goosman.lei</a>
+          </div>
+          <!-- END Toggle buttons and brand -->
+
+          <!-- Top navbar -->
+          <div id="navbar" class="navbar-collapse collapse" aria-expanded="true" role="banner">
+            <ul class="nav navbar-nav navbar-right">
+                              <li class=" active"><a href="/ice">Ice</a></li>
+                              <li class=""><a href="">Blog</a></li>
+                              <li class="hero"><a href="mailto:goosman.lei@gmail.com">Contact</a></li>
+                          </ul>
+          </div>
+          <!-- END Top navbar -->
+
+        </div>
+      </nav>
+      <!-- END Top navbar & branding -->
+      
+    </header>
+
+
+    <main class="container">
+      <div class="row">
+
+        <!-- Sidebar -->
+        <aside class="col-md-3 col-sm-3 sidebar">
+
+<!-- TODO 解递归当场遍历出树结构菜单 -->
+<ul class="sidenav">
+  <li><a href="/ice">概览</a>
+  <li><a href="#">项目</a>
+  <ul>
+    <li><a href="https://github.com/goosman-lei/ice" target="_blank">Github主页</a>
+    <li><a href="https://github.com/goosman-lei/ice/zipball/master" target="_blank">zip包下载</a>
+    <li><a href="https://github.com/goosman-lei/ice/tarball/master" target="_blank">tar.gz包下载</a>
+  </ul></li>
+  <li><a href="">文档</a>
+  <ul>
+    <li><a href="/ice/arch.html">整体架构</a>
+    <li><a href="/ice/core-func-runner.html">运行方式</a>
+    <ul>
+      <li><a href="/ice/core-func-runner-web.html">Web</a>
+      <li><a href="/ice/core-func-runner-service.html">Service</a>
+      <li><a href="/ice/core-func-runner-daemon.html">Daemon</a>
+      <li><a href="/ice/core-func-runner-embeded.html">Embeded</a>
+    </ul></li>
+    <li><a href="/ice/core-func-input-output.html">交互数据</a>
+    <li><a href="/ice/core-func-resource.html">资源管理</a>
+    <li><a href="/ice/core-func-filter.html">过滤器</a>
+    <li><a href="/ice/core-func-feature.html" class="active">Feature机制</a>
+    <li><a href="/ice/core-func-logger.html">日志处理</a>
+    <li><a href="/ice/core-func-db.html">DB查询工具</a>
+  </ul></li>
+  <li><a href="">规范</a>
+  <ul>
+    <li><a href="/ice/specification-name.html" target="_blank">Github主页</a>
+    <li><a href="/ice/specification-develop.html" target="_blank">zip包下载</a>
+  </ul></li>
+</ul>
+        </aside>
+        <!-- END Sidebar -->
+
+
+        <!-- Main content -->
+        <article class="col-md-9 col-sm-9 main-content" role="main">
+          
+          <header>
+            <h1></h1>
+            <p></p>
+<ol class="toc">
+<li><a href="#ref-1">Feature组件</a><ol><li>
+<a href="#ref-2">Feature组件的设计思路</a></li>
+<li><a href="#ref-3">Ice中的Feature应用</a></li>
+<li><a href="#ref-4">Ice中Feature的配置</a></li></ol>
+
+          </header>
+
+          <section>
+<h1 id="ref-1">Feature组件</h1>
+
+
+<p>Feature组件是一个实现简单, 应用简单, 但在App的API开发中, 针对版本差异性开发, 非常有用的工具.</p>
+
+<h2 id="ref-2">Feature组件的设计思路</h2>
+
+
+<p>Feature组件的设计思路, 源自C语言预编译中的宏设计.</p>
+
+<p>在C语言中, 很多时候, 需要基于一些宏的限定条件, 执行响应的逻辑</p>
+
+<p>比如, 下面代码摘自PHP内核中php_request_startup()函数的实现:</p>
+
+<pre class="line-numbers language-c" data-language="c">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">c</span>
+<code class="language-c">
+#ifdef HAVE_DTRACE
+    DTRACE_REQUEST_STARTUP(SAFE_FILENAME(SG(request_info).path_translated), SAFE_FILENAME(SG(request_info).request_uri), (char *)SAFE_FILENAME(SG(request_info).request_method));
+#endif /* HAVE_DTRACE */
+
+#ifdef PHP_WIN32
+    PG(com_initialized) = 0; 
+#endif
+
+#if PHP_SIGCHILD
+    signal(SIGCHLD, sigchld_handler);
+#endif
+
+每一种宏, 代表了一种场景, 在符合场景要求时, 对应的代码才生效
+</code></pre>
+
+
+<p>Ice中的Feature就是借鉴这个思想而来的.</p>
+
+<h2 id="ref-3">Ice中的Feature应用</h2>
+
+
+<p>和C语言中的宏的使用非常相似.</p>
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+// 如果是ios 9以上版本, 差异性逻辑
+if ($this->feature->isEnable('ge-ios-9')) {
+    // ...
+}
+
+// 如果是baidu渠道3.2以上版本, 差异性逻辑
+if ($this->feature->isEnable('baidu-ge-3.2')) {
+    // ...
+}
+</code></pre>
+
+
+
+
+<h2 id="ref-4">Ice中Feature的配置</h2>
+
+
+<p>上面给出了Feature在应用逻辑编写时候的示例.</p>
+
+<p>那ge-ios-9, baidu-ge-3.2这些名字(feature)是哪来的呢?</p>
+
+<p>只需要在src/conf/feature.php中增加配置即可.</p>
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+<?php
+$config = array(
+    '*' => array(
+        'ge-ios-9' => array(
+            'osName eq ios',
+            'osVersion v>= 9.0',
+        ),
+        'baidu-ge-3.2' => array(
+            'channel eq baidu',
+            'osName eq android',
+            'appVersion v>= 3.2',
+        ),
+    ),
+    '/say/hello' => array(),
+);
+
+Feature的配置, 是可以限定URI的(/controller/action), 限定URI, 则仅访问对应URI才会生效, 否则, 放在'*'下的, 对所有请求都生效.
+</code></pre>
+
+
+<p>Ok. 上面就是Feature的配置. 那配置中的osName, osVersion等是哪里来的呢?</p>
+
+<p>Ice中将输入输出数据抽象为四种: ClientEnv, ServerEnv, Request, Response. 其中, ClientEnv就代表了客户端的环境.</p>
+
+<p>而ClientEnv的实现是开放的, 你可以随时往ClientEnv上添加数据.</p>
+
+<pre class="line-numbers language-php" data-language="php">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name">php</span>
+<code class="language-php">
+\F_Ice::$ins->runner->clientEnv->osName = \F_Ice::$ins->runner->request->getQuery('osn');
+\F_Ice::$ins->runner->clientEnv->osVersion = \F_Ice::$ins->runner->request->getQuery('osv');
+...
+</code></pre>
+
+
+<p>在系统初始化阶段, 应用上统一的将客户端环境信息设置到ClientEnv中, 这样, 就拥有了一套基于客户端环境, 灵活的做差异性逻辑处理的Feature机制.</p>
+
+          </section>
+
+          
+        </article>
+        <!-- END Main content -->
+      </div>
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container">
+        <a id="scroll-up" href="#"><i class="fa fa-angle-up"></i></a>
+
+        <div class="row">
+          <div class="col-md-6 col-sm-6">
+            <p>Copyright &copy; 2016. All right reserved</p>
+          </div>
+          <div class="col-md-6 col-sm-6"></div>
+        </div>
+      </div>
+    </footer>
+    <!-- END Footer -->
+
+    <!-- Scripts -->
+    <script src="/static/js/theDocs.all.min.js"></script>
+    <script src="/static/js/theDocs.js"></script>
+    <script src="/static/js/custom.js"></script>
+
+  </body>
+</html>
