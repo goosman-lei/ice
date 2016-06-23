@@ -145,6 +145,7 @@
 
 <pre class="line-numbers language-sql" data-language="sql">
 <span class="language-name">sql</span>
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <code class="language-sql">
 # 对应表结构
 
@@ -158,6 +159,7 @@ CREATE TABLE IF NOT EXISTS user (
 
 <pre class="line-numbers language-php" data-language="php">
 <span class="language-name">php</span>
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <code class="language-php">
 在model层实现, 继承\DB_Query
 
@@ -180,6 +182,7 @@ class User extends \DB_Query {
 
 <pre class="line-numbers language-php" data-language="php">
 <span class="language-name">php</span>
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <code class="language-php">
 $where = array(
     array('score', 80),   // :eq 操作符可忽略. 第二个元素是非数组, 默认:eq
@@ -253,6 +256,7 @@ count():  使用count()聚集函数获取行数
 
 <pre class="line-numbers language-php" data-language="php">
 <span class="language-name">php</span>
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <code class="language-php">
 # UPDATE &lt;TABLE&gt; SET name = 'goosman-lei', id = 5012470, age = age + 1 WHERE id = 5012469
 
@@ -268,6 +272,7 @@ $model-&gt;update(array(
 
 <pre class="line-numbers language-php" data-language="php">
 <span class="language-name">php</span>
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <code class="language-php">
 # INSERT INTO &lt;TABLE&gt;(id, name) VALUES(5012470, 'goosman-lei') ON DUPLICATE KEY UPDATE name = 'goosman-lei'
 
@@ -295,6 +300,7 @@ $model-&gt;multiInsert(array(
 
 <pre class="line-numbers language-php" data-language="php">
 <span class="language-name">php</span>
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <code class="language-php">
 # REPLACE INTO &lt;table&gt;(id, name) VALUES(5012470, 'goosman-lei')
 
@@ -309,6 +315,7 @@ $model-&gt;replace(array(
 
 <pre class="line-numbers language-php" data-language="php">
 <span class="language-name">php</span>
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <code class="language-php">
 # DELETE FROM &lt;table&gt; WHERE id &gt;= 1000 limit 10
 
@@ -320,6 +327,7 @@ $model-&gt;delete(array(':ge', 'id', 1000), FALSE, 10)
 
 <pre class="line-numbers language-php" data-language="php">
 <span class="language-name">php</span>
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <code class="language-php">
 # SELECT * FROM user WHERE name = 'goosman-lei'
 # 返回关联数组
@@ -344,6 +352,7 @@ $model-&gt;execute("UPDATE user SET name = 'goosman-lei' WHERE id = 5012470");
 
 <pre class="line-numbers language-php" data-language="php">
 <span class="language-name">php</span>
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <code class="language-php">
 $model-&gt;affectedNum(): 获取上一条SQL的影响行数
 $model-&gt;lastId():      获取最后一次插入的自增ID值
