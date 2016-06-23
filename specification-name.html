@@ -97,7 +97,7 @@
   </ul></li>
   <li><a href="">规范</a>
   <ul>
-    <li><a href="/ice/specification-name.html" target="_blank">Github主页</a>
+    <li><a href="/ice/specification-name.html" class="active" target="_blank">Github主页</a>
     <li><a href="/ice/specification-develop.html" target="_blank">zip包下载</a>
   </ul></li>
 </ul>
@@ -111,18 +111,130 @@
           <header>
             <h1></h1>
             <p></p>
-
-Notice: Undefined index: page in /home/ldap/leiguoguo/goosman-lei.github.io/output/doc-smarty-template-compile/53ec15699c73cbf26cdf8685c80f16292492b225_0.file.main-layout.tpl.php on line 171
-
-Notice: Trying to get property of non-object in /home/ldap/leiguoguo/goosman-lei.github.io/output/doc-smarty-template-compile/53ec15699c73cbf26cdf8685c80f16292492b225_0.file.main-layout.tpl.php on line 171
+<ol class="toc">
+<li><a href="#ref-1">命名规范</a></li></ol>
 
           </header>
 
           <section>
+<h1 id="ref-1">命名规范</h1>
 
-Notice: Undefined index: page in /home/ldap/leiguoguo/goosman-lei.github.io/output/doc-smarty-template-compile/53ec15699c73cbf26cdf8685c80f16292492b225_0.file.main-layout.tpl.php on line 176
 
-Notice: Trying to get property of non-object in /home/ldap/leiguoguo/goosman-lei.github.io/output/doc-smarty-template-compile/53ec15699c73cbf26cdf8685c80f16292492b225_0.file.main-layout.tpl.php on line 176
+<ul>
+<li><p>所有类均遵循PSR4命名规范</p></li>
+<li><p>PROJECT_GROUP和PROJECT_NAME共同作用, 唯一定义一个项目.(composer.json中的项目名与此保持一致)</p></li>
+</ul>
+
+
+<pre class="line-numbers " data-language="">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name"></span>
+<code class="">
+PROJECT_GROUP="ice"
+PROJECT_NAME="demo"
+</code></pre>
+
+
+<ul>
+<li>项目均需定义在唯一的名字空间下, 建议直接使用PROJECT_GROUP和PROJECT_NAME组合构成顶层的两级名字空间</li>
+</ul>
+
+
+<pre class="line-numbers " data-language="">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name"></span>
+<code class="">
+PROJECT_NAMESPACE="$PROJECT_GROUP\\$PROJECT_NAME"
+</code></pre>
+
+
+<ul>
+<li>入口代码名字规范</li>
+</ul>
+
+
+<pre class="line-numbers " data-language="">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name"></span>
+<code class="">
+# web runner
+# Action为入口, 代码位于src/action/Class/Action.php
+# 名字空间: PROJECT_GROUP\PROJECT_NAME\Action
+
+namespace PROJECT_GROUP\PROJECT_NAME\Action\Class;
+class Action extends \FW_Action {
+    public function execute() {
+        // 业务逻辑
+    }
+}
+
+# daemon runner
+# Daemon为入口, 代码位于src/daemon/Class/Daemon.php
+# 名字空间: PROJECT_GROUP\PROJECT_NAME\Daemon
+
+namespace PROJECT_GROUP\PROJECT_NAME\Daemon\Class;
+class Daemon extends \FD_Daemon {
+    public function execute() {
+        // 业务逻辑
+    }
+}
+
+# service runner
+# Service为入口, 代码位于src/service/Service.php
+# 名字空间: PROJECT_GROUP\PROJECT_NAME\Service
+
+namespace PROJECT_GROUP\PROJECT_NAME\Service;
+class Service extends \FS_Service {
+    public function hi() {
+        // 业务逻辑
+        return $this->succ();
+    }
+}
+</code></pre>
+
+
+<ul>
+<li>model层</li>
+</ul>
+
+
+<pre class="line-numbers " data-language="">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name"></span>
+<code class="">
+# 代码位于src/model
+# 名字空间: PROJECT_GROUP\PROJECT_NAME\Model
+
+namespace PROJECT_GROUP\PROJECT_NAME\Model;
+class User extends \DB_Query {
+    protected $tableName; # 表名
+    protected $mapping = array(
+        'field_name' => 'field_type',   # field_type = i(int), s(string), I([a-zA-Z0-9_]+), f(float)
+    );
+    protected $dbResource; # 使用的数据库连接资源
+}
+</code></pre>
+
+
+<ul>
+<li>本地类库</li>
+</ul>
+
+
+<pre class="line-numbers " data-language="">
+<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
+<span class="language-name"></span>
+<code class="">
+# 代码位于src/lib
+# 名字空间PROJECT_GROUP\PROJECT_NAME\Lib
+
+namespace PROJECT_GROUP\PROJECT_NAME\Lib;
+class Demo {
+}
+</code></pre>
+
+
+
 
           </section>
 
