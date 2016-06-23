@@ -116,8 +116,6 @@
 <a href="#ref-2">Service</a></li>
 <li><a href="#ref-3">设计思路</a></li>
 <li><a href="#ref-4">实现方式</a><ol><li>
-<ol><li>
-<ol><li>
 <a href="#ref-5">第一点, 隔离的上下文, 得益于php的名字空间.</a></li>
 <li><a href="#ref-6">第二点, 远程调用和本地调用的透明切换, 是通过一个proxy层来屏蔽细节的.</a></li></ol>
 
@@ -158,7 +156,7 @@
 
 
 
-<h5 id="ref-5">第一点, 隔离的上下文, 得益于php的名字空间.</h5>
+<h3 id="ref-5">第一点, 隔离的上下文, 得益于php的名字空间.</h3>
 
 
 <ul>
@@ -179,7 +177,7 @@
 </ul>
 
 
-<h5 id="ref-6">第二点, 远程调用和本地调用的透明切换, 是通过一个proxy层来屏蔽细节的.</h5>
+<h3 id="ref-6">第二点, 远程调用和本地调用的透明切换, 是通过一个proxy层来屏蔽细节的.</h3>
 
 
 <p>业务上需要使用其他服务时, 都是通过proxy_service的get方法, 得到服务的代理对象.</p>
@@ -191,7 +189,6 @@
 <p>配置文件路径: src/conf/service.php</p>
 
 <pre class="line-numbers language-php" data-language="php">
-<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
 $pool = array(

@@ -135,7 +135,6 @@
 <p>比如, 下面代码摘自PHP内核中php_request_startup()函数的实现:</p>
 
 <pre class="line-numbers language-c" data-language="c">
-<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">c</span>
 <code class="language-c">
 #ifdef HAVE_DTRACE
@@ -161,7 +160,6 @@
 <p>和C语言中的宏的使用非常相似.</p>
 
 <pre class="line-numbers language-php" data-language="php">
-<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
 // 如果是ios 9以上版本, 差异性逻辑
@@ -185,7 +183,6 @@ if ($this-&gt;feature-&gt;isEnable('baidu-ge-3.2')) {
 <p>只需要在src/conf/feature.php中增加配置即可.</p>
 
 <pre class="line-numbers language-php" data-language="php">
-<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
 &lt;?php
@@ -214,7 +211,6 @@ Feature的配置, 是可以限定URI的(/controller/action), 限定URI, 则仅�
 <p>而ClientEnv的实现是开放的, 你可以随时往ClientEnv上添加数据.</p>
 
 <pre class="line-numbers language-php" data-language="php">
-<a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <span class="language-name">php</span>
 <code class="language-php">
 \F_Ice::$ins-&gt;runner-&gt;clientEnv-&gt;osName = \F_Ice::$ins-&gt;runner-&gt;request-&gt;getQuery('osn');
