@@ -33,5 +33,5 @@ $daemon_logger = array(
 $daemon_filter = array(
     'compile_path' => $run_path . '/filter',
     'base_filter'  => '\\Ice\\Filter\\Filter',
-    'extend_path'  => $root_path . '/filter',
+    'ref_path'  => $root_path . '/filter',
 );
