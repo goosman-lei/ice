@@ -13,6 +13,7 @@ class_alias('\\Ice\\Frame\\Service\\Service',   'FS_Service');
 class_alias('\\Ice\\Frame\\Daemon\\Daemon',     'FD_Daemon');
 
 class_alias('\\Ice\\DB\\Query',                 'DB_Query');
+class_alias('\\Ice\\DB\\ShardQuery',            'DB_SQuery');
 
 class_alias('\\Ice\\Message\\Factory',          'MSG_Factory');
 class_alias('\\Ice\\Message\\Abs',              'MSG_Abs');
