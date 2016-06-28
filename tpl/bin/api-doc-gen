@@ -1,0 +1,6 @@
+#!/bin/bash
+SCRIPT_DIR=$( cd $( dirname ${BASH_SOURCE[0]} ) && pwd )
+
+ROOT_PATH=$( cd $( dirname $SCRIPT_DIR ) && pwd )
+
+php -ddisplay_errors=on /usr/bin/phpdoc -d ${ROOT_PATH}/src/service -t ${ROOT_PATH}/output/api-doc --template=responsive
