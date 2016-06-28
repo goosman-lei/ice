@@ -4,8 +4,6 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 class Hello extends \FW_UT {
     /**
      * @test
-     * @preserveGlobalState disabled
-     * @runTestsInSeparateProcesses
      */
     public function demo() {
         $proxy = \F_Ice::$ins->workApp->proxy_service->get('internal', 'Say');
