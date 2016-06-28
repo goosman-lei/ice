@@ -25,7 +25,7 @@ class Daemon {
         $this->mainAppConf['runner'] = $this->mainAppConf['runner']['daemon'];
     }
 
-    public function run() {
+    public function run($mode = 'normal') {
         $this->initIce();
 
         $this->setupEnv();
@@ -34,9 +34,11 @@ class Daemon {
 
         $this->setupIce($this);
 
-        $this->route();
+        if ($mode == 'normal') {
+            $this->route();
 
-        $this->dispatch();
+            $this->dispatch();
+        }
     }
 
     protected function setupEnv() {
@@ -115,14 +117,7 @@ class Daemon {
                 ));
             }
 
-            $actionObj = new $className();
-            $actionObj->setIce($this->ice);
-            $actionObj->setRequest($this->request);
-            $actionObj->setResponse($this->response);
-            $actionObj->setServerEnv($this->serverEnv);
-            $actionObj->setClientEnv($this->clientEnv);
-
-            $actionObj->execute(); 
+            $this->callDaemon($this->request->class, $this->request->action);
         } catch (\Exception $e) {
             \F_Ice::$ins->mainApp->logger_comm->fatal(array(
                 'exception' => get_class($e),
@@ -133,5 +128,18 @@ class Daemon {
             ), \F_ECode::PHP_ERROR);
             $this->response->error(\F_ECode::PHP_ERROR);
         }
+    }
+
+    public function callDaemon($class, $action) {
+        $className = "\\{$this->mainAppConf['namespace']}\\Daemon\\{$class}\\{$action}";
+
+        $actionObj = new $className();
+        $actionObj->setIce($this->ice);
+        $actionObj->setRequest($this->request);
+        $actionObj->setResponse($this->response);
+        $actionObj->setServerEnv($this->serverEnv);
+        $actionObj->setClientEnv($this->clientEnv);
+
+        return $actionObj->execute();
     }
 }
