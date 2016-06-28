@@ -89,12 +89,12 @@
       <li><a href="/ice/core-func-runner-embeded.html">Embeded</a>
     </ul></li>
     <li><a href="/ice/core-func-input-output.html">交互数据</a>
-    <li><a href="/ice/core-func-resource.html" class="active">资源管理</a>
+    <li><a href="/ice/core-func-resource.html">资源管理</a>
     <li><a href="/ice/core-func-filter.html">过滤器</a>
     <li><a href="/ice/core-func-feature.html">Feature机制</a>
     <li><a href="/ice/core-func-logger.html">日志处理</a>
     <li><a href="/ice/core-func-db.html">DB查询工具</a>
-    <li><a href="/ice/core-func-ut.html">单元测试</a>
+    <li><a href="/ice/core-func-ut.html" class="active">单元测试</a>
   </ul></li>
   <li><a href="">规范</a>
   <ul>
@@ -113,110 +113,79 @@
             <h1></h1>
             <p></p>
 <ol class="toc">
-<li><a href="#ref-1">资源管理</a><ol><li>
-<a href="#ref-2">设计思路</a></li>
-<li><a href="#ref-3">配置详解</a></li>
-<li><a href="#ref-4">应用示例</a></li></ol>
+<li><a href="#ref-1">单元测试</a><ol><li>
+<a href="#ref-2">Service层单元测试</a></li>
+<li><a href="#ref-3">Action层单元测试</a></li>
+<li><a href="#ref-4">单元测试的运行</a></li></ol>
 
           </header>
 
           <section>
-<h1 id="ref-1">资源管理</h1>
+<h1 id="ref-1">单元测试</h1>
 
 
-<p><img src="https://goosman-lei.github.io/static/post-img/0007.ice-core-func-resource.png" alt="资源管理模块设计图" /></p>
-
-<h2 id="ref-2">设计思路</h2>
 
 
-<p>设计思路, 主要基于下面的思考</p>
-
-<ul>
-<li><p>任何面向连接的资源访问, 均可抽象两个步骤组成: 连接(含授权), 命令.(忽略关闭连接, 语言层面已经解决)</p></li>
-<li><p>对资源的管理, 比如熔断, 降级等, 是通用策略, 并且通常是应用在连接层面. (某些场景命令层面可提供数据)</p></li>
-<li><p>基于此, Ice将一个资源拆分为Connector和Handler两部分. 并在外层增加一个proxy调度层, 用作对资源的调度管理.</p></li>
-</ul>
-
-
-<p>Ice中的资源管理, 其价值主要在于分离了资源获取和资源使用两块, 在资源获取阶段, 通过调度层, 可以方便的进行调度管理.</p>
-
-<h2 id="ref-3">配置详解</h2>
+<h2 id="ref-2">Service层单元测试</h2>
 
 
 <pre class="line-numbers language-php" data-language="php">
 <span class="language-name">php</span>
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <code class="language-php">
-// scheme到自定义实现的映射. 用于扩展自己的资源处理器
-$mapping = array(
-    'connector' =&gt; array(
-        'redis' =&gt; '\\ice\\demo\\Lib\\RedisConnector',
-    ),
-    'handler'   =&gt; array(
-        'redis' =&gt; '\\ice\\demo\\Lib\\RedisHandler',
-    ),
-    'strategy'  =&gt; array(),
-);
+# Service层的单元测试, 编写在test/Service/&lt;ClassName&gt;/&lt;MethodName&gt;.php
 
-// 资源的获取语法为:
-// $proxy-&gt;get(&lt;scheme&gt; "://" &lt;unitname&gt; [ "/" &lt;cluster&gt; ] [ "?force_new=true&amp;algo=random" ]
-// scheme定义了资源类型
-// unitname定义了业务单元.
-// cluster定义了不同的集群. 比如mysql的主从
-// QueryString中定义了两个选项:
-//      algo=random: 用来指定调度策略. 内部仅实现了random
-//      force_new=true: 指定强制获取新的资源
+# 名字空间
+namespace &lt;PROJECT_GROUP&gt;/&lt;PROJECT_NAME&gt;/UT/Service/&lt;ClassName&gt;;
+# 类名. 继承
+classname &lt;MethodName&gt; extends \FW_UT {
+    # 注解声明这个方法是一个Case
+    /**
+     * @test
+     */
+    public function scene_1() {
+        # 静态方式获取服务代理对象, 调用
+        $proxy = \F_Ice::$ins-&gt;workApp-&gt;proxy_service-&gt;get('internal', 'Say');
+        $data  = $proxy-&gt;hello('Jack');
 
-// 资源的配置结构, 是一个多层次结构: scheme &gt; unitname &gt; cluster &gt; node
-// 最小单元就是节点(node). 下面例子中, 就是 array('host' =&gt; '127.0.0.1', 'port' =&gt; 3306)
-//      (调度算法站额对的就是指定集群中, 多个节点的选择策略)
-// 配置结构中的options是多级继承的, 每一层都可以有options. 下层会自动继承merge上层的options
-$pool = array(
-    'mysqli' =&gt; array(
-        'options' =&gt; array(
-            'deny_empty_update_delete' =&gt; TRUE,
-            'warn_sql_length' =&gt; 51200,
-            'fatal_sql_length' =&gt; 2097152,
-        ),
-        'demo' =&gt; array(
-            'master' =&gt; array(
-                array('host' =&gt; '127.0.0.1', 'port' =&gt; 3306),
-            ),
-            'slave' =&gt; array(
-                array('host' =&gt; '127.0.0.1', 'port' =&gt; 3306),
-            ),
-            'options' =&gt; array(
-                'timeout' =&gt; 1,
-                'user'    =&gt; '',
-                'passwd'  =&gt; '',
-            ),
-        ),
-    ),
-    'curl' =&gt; array(
-        'service' =&gt; array(
-            'default' =&gt; array(
-                array('host' =&gt; 'service.host.com') // 修改为service的host
-            ),
-        ),
-    ),
-);
+        $this-&gt;assertEquals(0, $data['code']);
+    }
+}
 </code></pre>
 
-<h2 id="ref-4">应用示例</h2>
+<h2 id="ref-3">Action层单元测试</h2>
 
 
 <pre class="line-numbers language-php" data-language="php">
 <span class="language-name">php</span>
 <a class="btn btn-sm btn-purple clipboard-copy" data-original-title="Copied!">Copy</a>
 <code class="language-php">
-$facebookCurl = \F_Ice::$ins-&gt;workApp-&gt;proxy_resource-&gt;get('curl://facebook-page');
-$wechatCurl   = \F_Ice::$ins-&gt;workApp-&gt;proxy_resource-&gt;get('curl://wechat');
-$userMysql    = \F_Ice::$ins-&gt;workApp-&gt;proxy_resource-&gt;get('mysqli://user/master');
+# Action层的单元测试, 编写在test/Action/&lt;ClassName&gt;/&lt;MethodName&gt;.php
 
-$facebookCurl-&gt;get('/');
-$wechatCurl-&gt;get('/');
-$userMysql-&gt;query('SHOW TABLES');
+# 名字空间
+namespace &lt;PROJECT_GROUP&gt;/&lt;PROJECT_NAME&gt;/UT/Action/&lt;ClassName&gt;;
+# 类名. 继承
+classname &lt;MethodName&gt; extends \FW_UT {
+    # 注解声明这个方法是一个Case
+    /**
+     * @test
+     */
+    public function scene_1() {
+        # 如果要MOCK输入数据. 直接修改runner-&gt;request等对象
+        \F_Ice::$ins-&gt;runner-&gt;request = xxx;
+
+        # 通过便利方法直接调用
+        $data  = $this-&gt;callAction('Say', 'Helloworld');
+
+        $this-&gt;assertEquals(0, $data['code']);
+    }
+}
 </code></pre>
+
+<h2 id="ref-4">单元测试的运行</h2>
+
+
+<p>参考bin/ut的示例工具命令</p>
 
           </section>
 
