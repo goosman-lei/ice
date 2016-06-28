@@ -21,4 +21,8 @@ abstract class UnitTest extends \PHPUnit_Framework_TestCase {
     protected function callAction($class, $action) {
         return \F_Ice::$ins->runner->callAction($class, $action);
     }
+
+    protected function setUp() {
+        echo '[Testing in WebRunner] ' . get_called_class() . ':' . $this->getName() . "\n";
+    }
 }
