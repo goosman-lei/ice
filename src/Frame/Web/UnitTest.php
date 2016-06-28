@@ -23,6 +23,6 @@ abstract class UnitTest extends \PHPUnit_Framework_TestCase {
     }
 
     protected function setUp() {
-        echo '[Testing in WebRunner] ' . get_called_class() . ':' . $this->getName() . "\n";
+        echo '[Testing in WebRunner][pid:' . posix_getpid() . '] ' . get_called_class() . ':' . $this->getName() . "\n";
     }
 }

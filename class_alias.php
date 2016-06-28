@@ -12,7 +12,6 @@ class_alias('\\Ice\\Frame\\Web\\UnitTest',      'FW_UT');
 class_alias('\\Ice\\Frame\\Service\\Service',   'FS_Service');
 
 class_alias('\\Ice\\Frame\\Daemon\\Daemon',     'FD_Daemon');
-class_alias('\\Ice\\Frame\\Daemon\\UnitTest',   'FD_UT');
 
 class_alias('\\Ice\\DB\\Query',                 'DB_Query');
 class_alias('\\Ice\\DB\\ShardQuery',            'DB_SQuery');

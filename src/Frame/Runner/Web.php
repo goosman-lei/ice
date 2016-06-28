@@ -216,6 +216,8 @@ class Web {
 
     public function callAction($class, $action) {
         $className = "\\{$this->mainAppConf['namespace']}\\Action\\{$class}\\{$action}";
+        $this->request->class  = $class;
+        $this->request->action = $action;
 
         $actionObj = new $className();
         $actionObj->setIce($this->ice);
