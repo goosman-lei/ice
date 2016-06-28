@@ -6,7 +6,7 @@ class Helloworld extends \FW_UT {
      * @test
      */
     public function demo() {
-        $data = $this->callAction('Say', 'helloworld');
+        $data = $this->callAction('Say', 'Helloworld');
         $this->assertArrayHasKey('code', $data);
     }
 }

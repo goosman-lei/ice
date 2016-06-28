@@ -1,6 +1,6 @@
 <?php
 namespace Ice\Frame\Web;
-class UnitTest extends \PHPUnit_Framework_TestCase {
+abstract class UnitTest extends \PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass() {
         // 初始化Runner
