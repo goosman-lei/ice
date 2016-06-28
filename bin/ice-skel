@@ -10,7 +10,7 @@ PROJECT_SRC_DIR="$PROJECT_ROOT_DIR/src"
 read -r -d '' FILE_MAPPING <<EOL
 #公用
 $TPL_DIR/composer.json:$PROJECT_ROOT_DIR/composer.json
-$TPL_DIR/test/Action/Say/Helloworld.php:$PROJECT_ROOT_DIR/test/Action/Say/Helloworld.php
+$TPL_DIR/test/Action/Say/HelloworldTest.php:$PROJECT_ROOT_DIR/test/Action/Say/HelloworldTest.php
 $TPL_DIR/src/conf/app.php:$PROJECT_SRC_DIR/conf/app.php
 $TPL_DIR/src/conf/resource.php:$PROJECT_SRC_DIR/conf/resource.php
 $TPL_DIR/src/conf/service.php:$PROJECT_SRC_DIR/conf/service.php

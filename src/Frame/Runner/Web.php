@@ -37,13 +37,14 @@ class Web {
 
         // 单元测试模式, 不进行路由分发
         if ($mode == 'normal') {
-
             $this->route();
+        }
 
-            $this->initFeature();
+        $this->initFeature();
 
+        // 单元测试模式, 不进行路由分发
+        if ($mode == 'normal') {
             $this->dispatch();
-
         }
     }
 

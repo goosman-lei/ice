@@ -7,9 +7,9 @@ class UnitTest extends \PHPUnit_Framework_TestCase {
         if (!isset(\F_Ice::$ins)) {
             $calledClassIns = new \ReflectionClass(get_called_class());
             $calledClassFpath = $calledClassIns->getFileName();
-            $pathPosition     = strrpos($calledClassFpath, '/src/test/');
+            $pathPosition     = strrpos($calledClassFpath, '/test/');
             $projectRootPath  = substr($calledClassFpath, 0, $pathPosition);
-            $runner = new \Ice\Frame\Runner\Web($projectRootPath . '/conf/app.php');
+            $runner = new \Ice\Frame\Runner\Web($projectRootPath . '/src/conf/app.php');
             $runner->run('ut');
         }
 
