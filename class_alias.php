@@ -7,6 +7,7 @@ class_alias('\\Ice\\Frame\\Logger',             'F_Logger');
 class_alias('\\Ice\\Frame\\Error\\Code',        'F_ECode');
 
 class_alias('\\Ice\\Frame\\Web\\Action',        'FW_Action');
+class_alias('\\Ice\\Frame\\Web\\UnitTest',      'FW_UT');
 
 class_alias('\\Ice\\Frame\\Service\\Service',   'FS_Service');
 

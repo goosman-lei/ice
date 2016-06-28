@@ -26,7 +26,7 @@ class Web {
         $this->mainAppConf['runner'] = $this->mainAppConf['runner']['web'];
     }
 
-    public function run() {
+    public function run($mode = 'normal') {
         $this->initIce();
 
         $this->setupEnv();
@@ -35,11 +35,16 @@ class Web {
 
         $this->setupIce($this);
 
-        $this->route();
+        // 单元测试模式, 不进行路由分发
+        if ($mode == 'normal') {
 
-        $this->initFeature();
+            $this->route();
 
-        $this->dispatch();
+            $this->initFeature();
+
+            $this->dispatch();
+
+        }
     }
 
     protected function setupEnv() {
@@ -192,17 +197,7 @@ class Web {
                 ));
             }
 
-            $actionObj = new $className();
-            $actionObj->setIce($this->ice);
-            $actionObj->setRequest($this->request);
-            $actionObj->setResponse($this->response);
-            $actionObj->setServerEnv($this->serverEnv);
-            $actionObj->setClientEnv($this->clientEnv);
-            $actionObj->setFeature($this->feature);
-
-            $actionObj->prevExecute();
-            $tplData = $actionObj->execute(); 
-            $actionObj->postExecute();
+            $tplData = $this->callAction($this->request->class, $this->request->action);
 
             $this->response->addTplData($tplData);
             $this->response->output();
@@ -216,5 +211,25 @@ class Web {
             ), \F_ECode::PHP_ERROR);
             $this->response->error(\F_ECode::PHP_ERROR);
         }
+    }
+
+    public function callAction($class, $action) {
+        $className = "\\{$this->mainAppConf['namespace']}\\Action\\{$class}\\{$action}";
+        $this->request->class  = $class;
+        $this->request->action = $action;
+
+        $actionObj = new $className();
+        $actionObj->setIce($this->ice);
+        $actionObj->setRequest($this->request);
+        $actionObj->setResponse($this->response);
+        $actionObj->setServerEnv($this->serverEnv);
+        $actionObj->setClientEnv($this->clientEnv);
+        $actionObj->setFeature($this->feature);
+
+        $actionObj->prevExecute();
+        $tplData = $actionObj->execute(); 
+        $actionObj->postExecute();
+
+        return $tplData;
     }
 }
