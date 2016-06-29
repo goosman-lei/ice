@@ -1,6 +1,153 @@
-#!/bin/bash
-SCRIPT_DIR=$( cd $( dirname ${BASH_SOURCE[0]} ) && pwd )
+#!/usr/bin/env php
+<?php
+$root_path = __DIR__ . '/..';
+require_once $root_path . '/vendor/autoload.php';
 
-ROOT_PATH=$( cd $( dirname $SCRIPT_DIR ) && pwd )
+$docs = parse_service();
+echo json_encode($docs);
 
-php -ddisplay_errors=on /usr/bin/phpdoc -d ${ROOT_PATH}/src/service -t ${ROOT_PATH}/output/api-doc --template=responsive
+function parse_service() {
+    $docs  = array();
+    $dpath = $GLOBALS['root_path'] . '/src/service';
+    $dp    = opendir($dpath);
+    $namespace = get_namespace();
+    while ($fname = readdir($dp)) {
+        if (substr($fname, -4) != '.php') {
+            continue;
+        }
+        $fnameBase = substr($fname, 0, -4);
+        $className = "\\$namespace\\Service\\$fnameBase";
+        $docs[] = parse_class($className);
+    }
+    return $docs;
+}
+
+function parse_class($className) {
+    $classIns = new \ReflectionClass($className);
+    $methods  = $classIns->getMethods(\ReflectionMethod::IS_PUBLIC);
+
+    $classDoc = parse_class_doc($classIns, $classIns->getDocComment());
+
+    $classDoc['methods'] = array();
+    foreach ($methods as $method) {
+        if ($method->getDeclaringClass()->getName() != $classIns->getName()) {
+            continue;
+        }
+        $classDoc['methods'][] = parse_method_doc($method, $method->getDocComment());
+    }
+    return $classDoc;
+}
+
+function parse_class_doc($class, $doc) {
+    $doc = preg_replace(';^\s*/\*\*\s*\n|\n\s*\*/\s*$;', '', trim($doc));
+    $doc = trim(preg_replace(';^\s*\* ;m', '', $doc));
+    $docEles = explode("\n", $doc);
+    $inDesc  = TRUE;
+
+    $tagPattern   = ';^\s*@(?P<tag>\w+)(?P<desc>.*)$;';
+
+    $desc = '';
+    $tags = array();
+
+    foreach ($docEles as $docEle) {
+        $isNewTag = preg_match($tagPattern, $docEle, $match);
+
+        if (!$isNewTag && $inDesc) {
+            $desc .= ($desc ? "\n" : "") . $docEle;
+        } else if (!$isNewTag && !$inDesc) {
+            $tags[count($tags) - 1]['desc'] .= "\n" . $docEle;
+        } else if ($isNewTag) {
+            $inDesc = FALSE;
+            $tag = array('tag' => (string)$match['tag']);
+            switch (strtolower($tag['tag'])) {
+                case 'author':
+                case 'copyright':
+                default:
+                    $tag['desc'] = $match['desc'];
+                    break;
+            }
+            array_push($tags, $tag);
+        }
+    }
+
+    foreach ($tags as $idx => $tag) {
+        if (!in_array($tag['tag'], array('author', 'copyright'))) {
+            unset($tags[$idx]);
+        }
+    }
+    $tags = array_values($tags);
+
+    return array(
+        'name' => $class->getName(),
+        'desc' => $desc,
+        'tags' => $tags,
+    );
+}
+
+function parse_method_doc($method, $doc) {
+    $doc = preg_replace(';^\s*/\*\*\s*\n|\n\s*\*/\s*$;', '', trim($doc));
+    $doc = trim(preg_replace(';^\s*\* ;m', '', $doc));
+    $docEles = explode("\n", $doc);
+    $inDesc  = TRUE;
+
+    $tagPattern   = ';^\s*@(?P<tag>\w+)(?P<desc>.*)$;';
+    $paramPattern = ';^\s*(?P<type>[-\w]+)\s+(?P<name>\$\w+)(?:\s+(?P<desc>.*))?$;';
+    $returnPattern = ';^\s*(?P<type>[-\w]+)(?:\s+(?P<desc>.*))?$;';
+    $errorPattern = ';^\s*(?P<errno>[-\w]+)(?:\s+(?P<desc>.*))?$;';
+
+    $desc = '';
+    $tags = array();
+
+    foreach ($docEles as $docEle) {
+        $isNewTag = preg_match($tagPattern, $docEle, $match);
+
+        if (!$isNewTag && $inDesc) {
+            $desc .= ($desc ? "\n" : "") . $docEle;
+        } else if (!$isNewTag && !$inDesc) {
+            $tags[count($tags) - 1]['desc'] .= "\n" . $docEle;
+        } else if ($isNewTag) {
+            $inDesc = FALSE;
+            $tag = array('tag' => (string)$match['tag']);
+            switch (strtolower($tag['tag'])) {
+                case 'error':
+                    preg_match($errorPattern, $match['desc'], $errorMatch);
+                    $tag['errno'] = isset($errorMatch['errno']) ? $errorMatch['errno'] : 'unknown';
+                    $tag['desc'] = isset($errorMatch['desc']) ? $paramMatch['desc'] : '';
+                    break;
+                case 'param':
+                    preg_match($paramPattern, $match['desc'], $paramMatch);
+                    $tag['type'] = isset($paramMatch['type']) ? $paramMatch['type'] : 'unknown';
+                    $tag['name'] = isset($paramMatch['name']) ? $paramMatch['name'] : '$unknown';
+                    $tag['desc'] = isset($paramMatch['desc']) ? $paramMatch['desc'] : '';
+                    break;
+                case 'return':
+                    preg_match($returnPattern, $match['desc'], $returnMatch);
+                    $tag['type'] = isset($returnMatch['type']) ? $returnMatch['type'] : 'unknown';
+                    $tag['desc'] = isset($returnMatch['desc']) ? $returnMatch['desc'] : '';
+                    break;
+                default:
+                    $tag['desc'] = $match['desc'];
+            }
+            array_push($tags, $tag);
+        }
+    }
+
+    foreach ($tags as $idx => $tag) {
+        if (!in_array($tag['tag'], array('error', 'param', 'return'))) {
+            unset($tags[$idx]);
+        }
+    }
+    $tags = array_values($tags);
+
+    return array(
+        'name' => $method->getName(),
+        'desc' => $desc,
+        'tags' => $tags,
+    );
+}
+
+function get_namespace() {
+    include $GLOBALS['root_path'] . '/src/conf/app.php';
+    return $namespace;
+}
+
