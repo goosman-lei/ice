@@ -2,7 +2,7 @@
 namespace ${PROJECT_NAMESPACE}\Action\Say;
 class Helloworld extends \FW_Action {
     public function execute() {
-        $userModel = new \${PROJECT_NAMESPACE}\Model\User();
+        $userModel = $this->ice->workApp->getModel('user');
         $uinfo = $userModel->getRow(array('id', '1'), 'id, name, location');
         $client = $this->ice->mainApp->proxy_service->get('demo-local', 'Say');
         return $this->ice->mainApp->proxy_filter->get('(map){
@@ -18,7 +18,8 @@ class Helloworld extends \FW_Action {
                     id(int);
                     name(str);
                     location(str);
-                }
+                };
+                is_local(str)
             }
         }')->filter(array(
             'code' => 0,
@@ -27,6 +28,7 @@ class Helloworld extends \FW_Action {
                 'uname' => 'goosman-lei',
                 'service' => $client->hello('Jack'),
                 'user'    => $uinfo,
+                'is_local' => $this->ice->runner->feature->isEnable('is_local_access') ? 'yes' : 'no',
             ),
         ));
     }

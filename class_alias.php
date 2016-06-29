@@ -7,12 +7,17 @@ class_alias('\\Ice\\Frame\\Logger',             'F_Logger');
 class_alias('\\Ice\\Frame\\Error\\Code',        'F_ECode');
 
 class_alias('\\Ice\\Frame\\Web\\Action',        'FW_Action');
+class_alias('\\Ice\\Frame\\Web\\UnitTest',      'FW_UT');
 
 class_alias('\\Ice\\Frame\\Service\\Service',   'FS_Service');
 
 class_alias('\\Ice\\Frame\\Daemon\\Daemon',     'FD_Daemon');
 
 class_alias('\\Ice\\DB\\Query',                 'DB_Query');
+class_alias('\\Ice\\DB\\ShardQuery',            'DB_SQuery');
+
+class_alias('\\Ice\\Message\\Factory',          'MSG_Factory');
+class_alias('\\Ice\\Message\\Abs',              'MSG_Abs');
 
 class_alias('\\Ice\\Util\\Time',                'U_Time');
 class_alias('\\Ice\\Util\\Env',                 'U_Env');

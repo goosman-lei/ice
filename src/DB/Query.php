@@ -57,11 +57,17 @@ class Query {
         if ($onReturn !== self::RS_NONE && is_object($rs) && ($rs instanceof \Mysqli_Result)) {
             switch ($onReturn) {
                 case self::RS_NUM:
-                    $rows = $rs->fetch_all(\MYSQLI_NUM);
+                    $rows = array();
+                    while ($row = $rs->fetch_row()) {
+                        $rows[] = $row;
+                    }
                     break;
                 case self::RS_ARRAY:
                 default:
-                    $rows = $rs->fetch_all(\MYSQLI_ASSOC);
+                    $rows = array();
+                    while ($row = $rs->fetch_assoc()) {
+                        $rows[] = $row;
+                    }
                     break;
             }
             return is_array($rows) ? $rows : FALSE;
@@ -817,25 +823,25 @@ class Query {
                     $exprStr = $this->escapeFieldName($cond[0]) . ' LIKE ' . $this->escapeFieldValue($cond[0], $cond[1]);
                     break;
                 case 'like_begin':
-                    $exprStr = $this->escapeFieldName($cond[0]) . ' LIKE ' . $this->escapeFieldValue($cond[0], $cond[1], TRUE) . '%';
+                    $exprStr = $this->escapeFieldName($cond[0]) . " LIKE '" . $this->escapeFieldValue($cond[0], $cond[1], TRUE, FALSE) . "%'";
                     break;
                 case 'like_end':
-                    $exprStr = $this->escapeFieldName($cond[0]) . ' LIKE %' . $this->escapeFieldValue($cond[0], $cond[1], TRUE);
+                    $exprStr = $this->escapeFieldName($cond[0]) . " LIKE '%" . $this->escapeFieldValue($cond[0], $cond[1], TRUE, FALSE) . "'";
                     break;
                 case 'like_entire':
-                    $exprStr = $this->escapeFieldName($cond[0]) . ' LIKE %' . $this->escapeFieldValue($cond[0], $cond[1], TRUE) . '%';
+                    $exprStr = $this->escapeFieldName($cond[0]) . " LIKE '%" . $this->escapeFieldValue($cond[0], $cond[1], TRUE, FALSE) . "%'";
                     break;
                 case 'notlike_literal':
-                    $exprStr = $this->escapeFieldName($cond[0]) . ' NOT LIKE ' . $this->escapeFieldValue($cond[0], $cond[1]);
+                    $exprStr = $this->escapeFieldName($cond[0]) . " NOT LIKE " . $this->escapeFieldValue($cond[0], $cond[1]);
                     break;
                 case 'notlike_begin':
-                    $exprStr = $this->escapeFieldName($cond[0]) . ' NOT LIKE ' . $this->escapeFieldValue($cond[0], $cond[1], TRUE) . '%';
+                    $exprStr = $this->escapeFieldName($cond[0]) . " NOT LIKE '" . $this->escapeFieldValue($cond[0], $cond[1], TRUE, FALSE) . "%'";
                     break;
                 case 'notlike_end':
-                    $exprStr = $this->escapeFieldName($cond[0]) . ' NOT LIKE %' . $this->escapeFieldValue($cond[0], $cond[1], TRUE);
+                    $exprStr = $this->escapeFieldName($cond[0]) . " NOT LIKE '%" . $this->escapeFieldValue($cond[0], $cond[1], TRUE, FALSE) . "'";
                     break;
                 case 'notlike_entire':
-                    $exprStr = $this->escapeFieldName($cond[0]) . ' NOT LIKE %' . $this->escapeFieldValue($cond[0], $cond[1], TRUE) . '%';
+                    $exprStr = $this->escapeFieldName($cond[0]) . " NOT LIKE '%" . $this->escapeFieldValue($cond[0], $cond[1], TRUE, FALSE) . "%'";
                     break;
                 /* 三目运算 */
                 case 'between':
@@ -884,15 +890,16 @@ class Query {
         }
     }
 
-    public function escapeFieldValue($fieldName, $fieldValue, $usedForLike = FALSE) {
+    public function escapeFieldValue($fieldName, $fieldValue, $usedForLike = FALSE, $addBoundary = TRUE) {
         if (!isset($this->mapping[$fieldName])) {
             \F_Ice::$ins->mainApp->logger_common->warn(array(
                 'error'         => 'no mapping field',
                 'field_name'    => $fieldName,
                 'field_value'   => $fieldValue,
                 'used_for_like' => $usedForLike,
+                'add_boundary'  => $addBoundary,
             ), \F_ECode::QUERY_ESCAPE_FIELD_VALUE_FAILED);
-            return $this->escapeString($fieldValue);
+            return $this->escapeString($fieldValue, $usedForLike, $addBoundary);
         }
         switch ($this->mapping[$fieldName]) {
             case 'i': // 整型
@@ -900,30 +907,33 @@ class Query {
             case 'f': // 浮点
                 return $this->escapeFloat($fieldValue);
             case 's': // 普通字符串
-                return $this->escapeString($fieldValue);
+                return $this->escapeString($fieldValue, $usedForLike, $addBoundary);
             case 'I': // 标识符字符串
-                return $this->escapeId($fieldValue);
+                return $this->escapeId($fieldValue, $addBoundary);
             default:
                 \F_Ice::$ins->mainApp->logger_common->warn(array(
                     'error'         => 'unknown field type',
                     'field_name'    => $fieldName,
                     'field_value'   => $fieldValue,
                     'used_for_like' => $usedForLike,
+                    'add_boundary'  => $addBoundary,
                 ), \F_ECode::QUERY_ESCAPE_FIELD_VALUE_FAILED);
-                return $this->escapeString($fieldValue);
+                return $this->escapeString($fieldValue, $usedForLike, $addBoundary);
         }
     }
 
-    public function escapeString($value, $usedForLike = FALSE) {
+    public function escapeString($value, $usedForLike = FALSE, $addBoundary = TRUE) {
+        $boundary = $addBoundary ? "'" : '';
         if ($usedForLike) {
-            return "'" . addcslashes((string)$value, "\\\"'\0%_") . "'"; # add slashes for ('), ("), (\), (NULL byte), (%), (_)
+            return $boundary . addcslashes((string)$value, "\\\"'\0%_") . $boundary; # add slashes for ('), ("), (\), (NULL byte), (%), (_)
         } else {
-            return "'" . addslashes((string)$value) . "'"; # add slashes for ('), ("), (\), (NULL byte)
+            return $boundary . addslashes((string)$value) . $boundary; # add slashes for ('), ("), (\), (NULL byte)
         }
     }
 
-    public function escapeId($value) {
-        return "'" . preg_replace(';\W++;', '', strval($value)) . "'";
+    public function escapeId($value, $addBoundary = TRUE) {
+        $boundary = $addBoundary ? "'" : '';
+        return $boundary . preg_replace(';\W++;', '', strval($value)) . $boundary;
     }
 
     public function escapeInt($value) {

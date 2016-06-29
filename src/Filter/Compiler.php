@@ -43,7 +43,7 @@ REQ_OR_DEFAULT := "__opt" | "__req" | LITERAL_STRING | LITERAL_ID | LITERAL_NUME
 TYPE        := "(" TYPE_NAME [ ":" REQ_OR_DEFAULT ] ")"
 OP_ARG_LIST := OP_ARG | OP_ARG "," OP_ARG_LIST
 
-FIELD_RULE_NONAME := TYPE FILTER_LIST
+FIELD_RULE_NONAME := [ TYPE ] FILTER_LIST
 FIELD_RULE        := FIELD_NAME FIELD_RULE_NONAME
 FIELD_RULE_LIST   := FIELD_RULE [ ";" ] | FIELD_RULE ";" FIELD_RULE_LIST
 
@@ -102,30 +102,32 @@ class {$proxyClassName} extends {$baseFilterClassName} {
     }
 
     protected function recursiveCompile($dataLiteral, $expectDataLiteral, $indent = 0, $isRoot = FALSE) {
+        $mustArray = FALSE;
         // 类型解析
-        $this->readToken(Token::BRACKET_START);
-        $tokenType = $this->readToken(Token::LITERAL_ID);
-        $lcTypeName = strtolower($tokenType->literal);
-        $ucTypeName = ucfirst($lcTypeName);
-        if ($isRoot) {
-            $this->appendCode("if (is_null(\$expectData)) {\n", $indent);
-            $this->appendCode("{$expectDataLiteral} = \$this->default{$ucTypeName};\n", $indent + 1);
-            $this->appendCode("}\n", $indent);
-        } else {
-            $this->appendCode("{$expectDataLiteral} = \$this->default{$ucTypeName};\n", $indent);
-        }
+        if ($this->readToken(Token::BRACKET_START, FALSE)) {
+            $tokenType = $this->readToken(Token::LITERAL_ID);
+            $lcTypeName = strtolower($tokenType->literal);
+            $ucTypeName = ucfirst($lcTypeName);
+            if ($isRoot) {
+                $this->appendCode("if (is_null(\$expectData)) {\n", $indent);
+                $this->appendCode("{$expectDataLiteral} = \$this->default{$ucTypeName};\n", $indent + 1);
+                $this->appendCode("}\n", $indent);
+            } else {
+                $this->appendCode("{$expectDataLiteral} = \$this->default{$ucTypeName};\n", $indent);
+            }
 
-        // 类型默认值处理
-        $token = $this->readToken(Token::COLON | Token::BRACKET_END);
-        if ($token->isValid(Token::COLON)) {
-            $tokenDefault = $this->readToken(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
-            $token = $this->readToken(Token::BRACKET_END);
-            $typeArg = $tokenDefault->isValid(Token::LITERAL_ID) && !$tokenDefault->isValid(Token::KEYWORD) ? "'{$tokenDefault->literal}'" : $tokenDefault->literal;
-            $this->appendCode("\$this->type_{$lcTypeName}({$dataLiteral}, {$typeArg});\n", $indent);
-        } else {
-            $this->appendCode("\$this->type_{$lcTypeName}({$dataLiteral});\n", $indent);
+            // 类型默认值处理
+            $token = $this->readToken(Token::COLON | Token::BRACKET_END);
+            if ($token->isValid(Token::COLON)) {
+                $tokenDefault = $this->readToken(Token::LITERAL_ID | Token::LITERAL_STRING | Token::LITERAL_NUMERIC);
+                $token = $this->readToken(Token::BRACKET_END);
+                $typeArg = $tokenDefault->isValid(Token::LITERAL_ID) && !$tokenDefault->isValid(Token::KEYWORD) ? "'{$tokenDefault->literal}'" : $tokenDefault->literal;
+                $this->appendCode("\$this->type_{$lcTypeName}({$dataLiteral}, {$typeArg});\n", $indent);
+            } else {
+                $this->appendCode("\$this->type_{$lcTypeName}({$dataLiteral});\n", $indent);
+            }
+            $mustArray = in_array($lcTypeName, array('map', 'arr'));
         }
-        $mustArray = in_array($lcTypeName, array('map', 'arr'));
 
         // OP, 继承, 块数据列表
         do {

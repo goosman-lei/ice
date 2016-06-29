@@ -120,7 +120,7 @@ class Logger {
                 // 需要特殊处理的信息
                 switch ($field) {
                     case 'fmt_time':
-                        $fmt = empty($arg) ? '-Y-m-d H:i:s' : $arg;
+                        $fmt = empty($arg) ? 'Y-m-d H:i:s' : $arg;
                         $logValue = date($fmt, \F_Ice::$ins->runner->request->requestTime);
                         break;
                     case 'fmt_now':

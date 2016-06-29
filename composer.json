@@ -4,7 +4,9 @@
     "version": "0.0.1-dev",
     "type": "library",
     "require": {
-        "smarty/smarty": "3.1.28"
+        "smarty/smarty": "3.1.28",
+        "phpunit/phpunit": "4.8",
+        "php-amqplib/php-amqplib": "2.6.2"
     },
     "autoload": {
         "psr-4": {
@@ -12,7 +14,8 @@
             "Ice\\Resource\\": "src/Resource",
             "Ice\\Filter\\": "src/Filter",
             "Ice\\DB\\": "src/DB",
-            "Ice\\Util\\": "src/Util"
+            "Ice\\Util\\": "src/Util",
+            "Ice\\Message\\": "src/Message"
         },
         "files": ["class_alias.php"]
     },
@@ -22,7 +25,7 @@
         },
         {
             "type": "composer",
-            "url": "http://packagist.phpcomposer.com"
+            "url": "https://packagist.phpcomposer.com"
         }
     ]
 }

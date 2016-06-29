@@ -53,6 +53,8 @@ class Local {
         $serviceObj = new $serviceClass();
         $serviceObj->setIce(\F_Ice::$ins);
 
+        $serviceObj->message = \Ice\Message\Factory::factory($class, $action, $params);
+
         $beginCallTime = microtime(TRUE);
         $result = call_user_func_array(array($serviceObj, $action), $params);
         $endCallTime   = microtime(TRUE);
