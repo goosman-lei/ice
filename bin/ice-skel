@@ -2,6 +2,16 @@
 SCRIPT_DIR=$( cd $( dirname ${BASH_SOURCE[0]} ) && pwd )
 TPL_DIR="$SCRIPT_DIR/../tpl"
 
+################### 环境检测 #########################
+type composer >/dev/null 2>/dev/null
+if [ $? -ne 0 ] ;
+then
+    echo "请先安装composer"
+    exit 1
+fi
+################### 环境检测 #########################
+
+
 source $TPL_DIR/build.conf
 
 PROJECT_ROOT_DIR="$OUTPUT_DIR"
@@ -74,11 +84,11 @@ function ui_cp_files() {
 
 function ui_replace_info() {
     PENDING_REPLACED_FILES=$(echo "$FILE_MAPPING" | awk -F':' 'NF==2&&substr($0,1,1)!="#"{printf "%s ", $2;}')
-    sed -i "s;\${PROJECT_GROUP};${PROJECT_GROUP};g" $PENDING_REPLACED_FILES
-    sed -i "s;\${PROJECT_NAME};${PROJECT_NAME};g" $PENDING_REPLACED_FILES
-    sed -i "s;\${PROJECT_NAMESPACE};${PROJECT_NAMESPACE};g" $PENDING_REPLACED_FILES
-    sed -i "s;\${PROJECT_NAMESPACE_ESCAPE};${PROJECT_NAMESPACE_ESCAPE};g" $PENDING_REPLACED_FILES
-    sed -i "s;\${PROJECT_ROOT_DIR};${PROJECT_ROOT_DIR};g" $PENDING_REPLACED_FILES
+    sed -i "" "s;\${PROJECT_GROUP};${PROJECT_GROUP};g" $PENDING_REPLACED_FILES
+    sed -i "" "s;\${PROJECT_NAME};${PROJECT_NAME};g" $PENDING_REPLACED_FILES
+    sed -i "" "s;\${PROJECT_NAMESPACE};${PROJECT_NAMESPACE};g" $PENDING_REPLACED_FILES
+    sed -i "" "s;\${PROJECT_NAMESPACE_ESCAPE};${PROJECT_NAMESPACE_ESCAPE};g" $PENDING_REPLACED_FILES
+    sed -i "" "s;\${PROJECT_ROOT_DIR};${PROJECT_ROOT_DIR};g" $PENDING_REPLACED_FILES
 }
 
 function ui_composer_init() {
