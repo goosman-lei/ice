@@ -83,7 +83,7 @@ class Request extends \Ice\Frame\Abs\Request {
     }
 
     protected function initBaseUri() {
-        $requestUri     = $_SERVER['REQUEST_URI'];
+        $requestUri     = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
         $this->originalUri = $requestUri;
 
         // strip repeat "/"

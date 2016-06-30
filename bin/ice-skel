@@ -2,6 +2,16 @@
 SCRIPT_DIR=$( cd $( dirname ${BASH_SOURCE[0]} ) && pwd )
 TPL_DIR="$SCRIPT_DIR/../tpl"
 
+################### 环境检测 #########################
+type composer >/dev/null 2>/dev/null
+if [ $? -ne 0 ] ;
+then
+    echo "请先安装composer"
+    exit 1
+fi
+################### 环境检测 #########################
+
+
 source $TPL_DIR/build.conf
 
 PROJECT_ROOT_DIR="$OUTPUT_DIR"
@@ -10,6 +20,10 @@ PROJECT_SRC_DIR="$PROJECT_ROOT_DIR/src"
 read -r -d '' FILE_MAPPING <<EOL
 #公用
 $TPL_DIR/composer.json:$PROJECT_ROOT_DIR/composer.json
+$TPL_DIR/bin/ut:$PROJECT_ROOT_DIR/bin/ut
+$TPL_DIR/bin/api-doc-gen:$PROJECT_ROOT_DIR/bin/api-doc-gen
+$TPL_DIR/test/Action/Say/HelloworldTest.php:$PROJECT_ROOT_DIR/test/Action/Say/HelloworldTest.php
+$TPL_DIR/test/Service/Say/HelloTest.php:$PROJECT_ROOT_DIR/test/Service/Say/HelloTest.php
 $TPL_DIR/src/conf/app.php:$PROJECT_SRC_DIR/conf/app.php
 $TPL_DIR/src/conf/resource.php:$PROJECT_SRC_DIR/conf/resource.php
 $TPL_DIR/src/conf/service.php:$PROJECT_SRC_DIR/conf/service.php
@@ -43,6 +57,11 @@ function ui_make_dir_tree() {
     mkdir -p "$PROJECT_ROOT_DIR/var"
     chmod 777 "$PROJECT_ROOT_DIR/var"
 
+    mkdir -p "$PROJECT_ROOT_DIR/bin"
+
+    mkdir -p "$PROJECT_ROOT_DIR/test/Action/Say"
+    mkdir -p "$PROJECT_ROOT_DIR/test/Service/Say"
+
     mkdir -p "$PROJECT_SRC_DIR/webroot"
     mkdir -p "$PROJECT_SRC_DIR/action"
     mkdir -p "$PROJECT_SRC_DIR/service"
@@ -65,11 +84,12 @@ function ui_cp_files() {
 
 function ui_replace_info() {
     PENDING_REPLACED_FILES=$(echo "$FILE_MAPPING" | awk -F':' 'NF==2&&substr($0,1,1)!="#"{printf "%s ", $2;}')
-    sed -i "s;\${PROJECT_GROUP};${PROJECT_GROUP};g" $PENDING_REPLACED_FILES
-    sed -i "s;\${PROJECT_NAME};${PROJECT_NAME};g" $PENDING_REPLACED_FILES
-    sed -i "s;\${PROJECT_NAMESPACE};${PROJECT_NAMESPACE};g" $PENDING_REPLACED_FILES
-    sed -i "s;\${PROJECT_NAMESPACE_ESCAPE};${PROJECT_NAMESPACE_ESCAPE};g" $PENDING_REPLACED_FILES
-    sed -i "s;\${PROJECT_ROOT_DIR};${PROJECT_ROOT_DIR};g" $PENDING_REPLACED_FILES
+    sed -i.icesedbak "s;\${PROJECT_GROUP};${PROJECT_GROUP};g" $PENDING_REPLACED_FILES
+    sed -i.icesedbak "s;\${PROJECT_NAME};${PROJECT_NAME};g" $PENDING_REPLACED_FILES
+    sed -i.icesedbak "s;\${PROJECT_NAMESPACE};${PROJECT_NAMESPACE};g" $PENDING_REPLACED_FILES
+    sed -i.icesedbak "s;\${PROJECT_NAMESPACE_ESCAPE};${PROJECT_NAMESPACE_ESCAPE};g" $PENDING_REPLACED_FILES
+    sed -i.icesedbak "s;\${PROJECT_ROOT_DIR};${PROJECT_ROOT_DIR};g" $PENDING_REPLACED_FILES
+    find ${OUTPUT_DIR} -name *.icesedbak | xargs rm -rf
 }
 
 function ui_composer_init() {
