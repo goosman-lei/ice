@@ -3,8 +3,147 @@
 $root_path = __DIR__ . '/..';
 require_once $root_path . '/vendor/autoload.php';
 
-$docs = parse_service();
-echo json_encode($docs);
+
+output_doc_html();
+function output_doc_html(){
+    $docs = parse_service();
+    //检测文件目录
+    $doc_dir =  $GLOBALS['root_path']."/doc_html/";
+    mkdir_path($doc_dir);
+    if(!empty($docs)){  
+        foreach($docs as $item){
+           $namePath = explode('\\',$item['name']);
+           $path = $doc_dir."/".$namePath[2].'/'.$namePath['3'];
+           mkdir_path($path);
+           //生成Html页面文件
+           $str=  <<<EOF
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$item['desc']}</title>
+</head>
+<link rel="stylesheet" type="text/css" href="http://www.oneniceapp.com/js/lib/bootstrap-3.3/css/bootstrap.min.css"/>
+<script type="text/javascript" src='http://www.oneniceapp.com/js/lib/jquery-1.11.1.min.js'></script>
+<script type="text/javascript" src='http://www.oneniceapp.com/js/lib/bootstrap-3.3/js/bootstrap.min.js'></script>
+<style type="text/css">
+    body {
+        position: relative;
+    }
+    .method_box{
+        padding:10px;
+        border:1px solid #eee;
+    }
+    .version_info{
+        text-align: right;
+    }
+    #navbar-example2{
+        overflow:auto;
+        height:620px;
+        width:14%;
+    }
+</style>
+<body>
+    <div class="container bs-docs-container">
+        <div>
+            <h1>{$item['name']}</h1>
+            <p>{$item['desc']}</p>
+            <div class='version_info'>
+EOF;
+            foreach($item['tags'] as $tag){
+                 $str .=<<<EOF
+                 <span>{$tag['tag']}</span>
+                 <span>{$tag['desc']}</span>
+EOF;
+            }
+           $str .=<<<EOF
+            </div>
+        </div>
+EOF;
+            $str .=<<<EOF
+        <div class="row">
+            <div class="col-md-2">
+                <nav id='navbar-example2' class="bs-docs-sidebarhidden-print hidden-xs hidden-sm affix">
+                    <ul class="nav bs-docs-sidenav">
+EOF;
+            foreach( $item['methods'] as $method){
+                 $str .="<li><a href='#".$method['name']."'>".$method['name']."</a></li>";
+                 $str .="<ul>";
+                        $str .="<li><a href='#".$method['name']."_param'>参数</a></li>";
+                        $str .="<li><a href='#".$method['name']."_return'>错误号</a></li>";
+                        $str .="<li><a href='#".$method['name']."_error'>返回值</a></li>";                
+                 $str .="</ul>";
+            }
+            $str .=<<<EOF
+                     </ul>
+                </nav>
+            </div>
+            <div class="col-md-10">
+            <div  data-spy="scroll" data-target="#navbar-example2">
+EOF;
+            
+            foreach( $item['methods'] as $method ){
+                $str .='<div class="bs-docs-section">';
+                    $str .="<h2 id='".$method['name']."'>".$method['name']."</h2>";
+                    $str .="<p>".$method['desc']."</p>";
+                    //参数
+                    $str .="<div class='method_box'>";
+                    $str .="<h3 id ='".$method['name']."_param'>参数</h2>";
+                    $str .="<div class='highlight'><pre>";
+                        foreach($method['tags']  as $param){
+                            if($param['tag'] =='param'){
+                                $str .="<div>type:".$param['type']."</div>";
+                                $str .="<div>name:".$param['name']."</div>";
+                                $str .="<div>desc:".$param['desc']."</div>";
+                            }
+                        }
+                    $str .="</pre></div>";
+                    //错误号
+                    $str .="<h3 id='".$method['name']."_error'>ERROR</h2>";
+                    $str .="<div class='highlight'><pre>";
+                        foreach($method['tags']  as $param){
+                            if($param['tag'] =='error'){
+                                $str .="<div>name:".$param['error']."</div>";
+                                $str .="<div>desc:".$param['desc']."</div>";
+                            }
+                        }
+                    $str .="</pre></div>";
+                    //返回值
+                    $str .="<h3 id='".$method['name']."_return'>返回值</h2>";
+                    $str .="<div class='highlight'><pre>";
+                        foreach($method['tags']  as $param){
+                            if($param['tag'] =='return'){
+                                $str .="<div>type:".$param['type']."</div>";
+                                $str .="<div>desc:".$param['desc']."</div>";
+                            }
+                        }
+                    $str .="</pre></div>";
+                    $str .='</div>';
+                $str .="</div>";
+            }
+            $str .=<<<EOF
+            </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+EOF;
+            $file_name = $path."/".implode("_", $namePath).".html";
+            $re = file_put_contents($file_name, $str);
+            if($re){
+                echo "文档生成成功";
+            }else{
+                echo "生成失败，请查看权限是否OK";
+            }
+        }
+    }
+    
+}
+function mkdir_path($path){
+    if(!is_dir($path)){
+        mkdir($path,0777,true);
+    }  
+}
 
 function parse_service() {
     $docs  = array();
