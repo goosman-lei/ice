@@ -1,135 +1,42 @@
 #!/usr/bin/env php
 <?php
-$root_path = __DIR__ . '/..';
-require_once $root_path . '/vendor/autoload.php';
-
-
+define('ROOT_PATH', __DIR__ . '/..');
+require_once ROOT_PATH . '/vendor/autoload.php';
+define('HTML_PATH', ROOT_PATH . '/doc-html');
+define('TPL_COMPILER_PATH', ROOT_PATH. '/doc-smarty-template-compile');
 output_doc_html();
+function get_smarty() {
+    static $smarty;
+    if (!isset($smarty)) {
+        $smarty = new \SmartyBC();
+        $smarty->setTemplateDir(ROOT_PATH);
+        $smarty->setCompileDir(TPL_COMPILER_PATH);
+        $smarty->left_delimiter = '{%';
+        $smarty->right_delimiter = '%}';
+    }
+    return $smarty;
+}
+
+function render_main_layout($render_data,$target_file) {
+    $smarty = get_smarty();
+    $smarty->assign('render',$render_data);
+    if (!is_dir(dirname($target_file))) {
+        mkdir(dirname($target_file), 0777, TRUE);
+    }
+    return file_put_contents($target_file, $smarty->fetch('doc.tpl'));
+}
+
 function output_doc_html(){
     $docs = parse_service();
     //检测文件目录
-    $doc_dir =  $GLOBALS['root_path']."/doc_html/";
-    mkdir_path($doc_dir);
+    mkdir_path(HTML_PATH);
     if(!empty($docs)){  
         foreach($docs as $item){
-           $namePath = explode('\\',$item['name']);
-           $path = $doc_dir."/".$namePath[2].'/'.$namePath['3'];
-           mkdir_path($path);
-           //生成Html页面文件
-           $str=  <<<EOF
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{$item['desc']}</title>
-</head>
-<link rel="stylesheet" type="text/css" href="http://www.oneniceapp.com/js/lib/bootstrap-3.3/css/bootstrap.min.css"/>
-<script type="text/javascript" src='http://www.oneniceapp.com/js/lib/jquery-1.11.1.min.js'></script>
-<script type="text/javascript" src='http://www.oneniceapp.com/js/lib/bootstrap-3.3/js/bootstrap.min.js'></script>
-<style type="text/css">
-    body {
-        position: relative;
-    }
-    .method_box{
-        padding:10px;
-        border:1px solid #eee;
-    }
-    .version_info{
-        text-align: right;
-    }
-    #navbar-example2{
-        overflow:auto;
-        height:620px;
-        width:14%;
-    }
-</style>
-<body>
-    <div class="container bs-docs-container">
-        <div>
-            <h1>{$item['name']}</h1>
-            <p>{$item['desc']}</p>
-            <div class='version_info'>
-EOF;
-            foreach($item['tags'] as $tag){
-                 $str .=<<<EOF
-                 <span>{$tag['tag']}</span>
-                 <span>{$tag['desc']}</span>
-EOF;
-            }
-           $str .=<<<EOF
-            </div>
-        </div>
-EOF;
-            $str .=<<<EOF
-        <div class="row">
-            <div class="col-md-2">
-                <nav id='navbar-example2' class="bs-docs-sidebarhidden-print hidden-xs hidden-sm affix">
-                    <ul class="nav bs-docs-sidenav">
-EOF;
-            foreach( $item['methods'] as $method){
-                 $str .="<li><a href='#".$method['name']."'>".$method['name']."</a></li>";
-                 $str .="<ul>";
-                        $str .="<li><a href='#".$method['name']."_param'>参数</a></li>";
-                        $str .="<li><a href='#".$method['name']."_return'>错误号</a></li>";
-                        $str .="<li><a href='#".$method['name']."_error'>返回值</a></li>";                
-                 $str .="</ul>";
-            }
-            $str .=<<<EOF
-                     </ul>
-                </nav>
-            </div>
-            <div class="col-md-10">
-            <div  data-spy="scroll" data-target="#navbar-example2">
-EOF;
-            
-            foreach( $item['methods'] as $method ){
-                $str .='<div class="bs-docs-section">';
-                    $str .="<h2 id='".$method['name']."'>".$method['name']."</h2>";
-                    $str .="<p>".$method['desc']."</p>";
-                    //参数
-                    $str .="<div class='method_box'>";
-                    $str .="<h3 id ='".$method['name']."_param'>参数</h2>";
-                    $str .="<div class='highlight'><pre>";
-                        foreach($method['tags']  as $param){
-                            if($param['tag'] =='param'){
-                                $str .="<div>type:".$param['type']."</div>";
-                                $str .="<div>name:".$param['name']."</div>";
-                                $str .="<div>desc:".$param['desc']."</div>";
-                            }
-                        }
-                    $str .="</pre></div>";
-                    //错误号
-                    $str .="<h3 id='".$method['name']."_error'>ERROR</h2>";
-                    $str .="<div class='highlight'><pre>";
-                        foreach($method['tags']  as $param){
-                            if($param['tag'] =='error'){
-                                $str .="<div>name:".$param['error']."</div>";
-                                $str .="<div>desc:".$param['desc']."</div>";
-                            }
-                        }
-                    $str .="</pre></div>";
-                    //返回值
-                    $str .="<h3 id='".$method['name']."_return'>返回值</h2>";
-                    $str .="<div class='highlight'><pre>";
-                        foreach($method['tags']  as $param){
-                            if($param['tag'] =='return'){
-                                $str .="<div>type:".$param['type']."</div>";
-                                $str .="<div>desc:".$param['desc']."</div>";
-                            }
-                        }
-                    $str .="</pre></div>";
-                    $str .='</div>';
-                $str .="</div>";
-            }
-            $str .=<<<EOF
-            </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-EOF;
+            $namePath = explode('\\',$item['name']);
+            $path = HTML_PATH."/".$namePath[2].'/'.$namePath['3'];
+            mkdir_path($path);
             $file_name = $path."/".implode("_", $namePath).".html";
-            $re = file_put_contents($file_name, $str);
+            $re = render_main_layout($item,$file_name);
             if($re){
                 echo "文档生成成功";
             }else{
@@ -137,7 +44,6 @@ EOF;
             }
         }
     }
-    
 }
 function mkdir_path($path){
     if(!is_dir($path)){
@@ -147,7 +53,7 @@ function mkdir_path($path){
 
 function parse_service() {
     $docs  = array();
-    $dpath = $GLOBALS['root_path'] . '/src/service';
+    $dpath = ROOT_PATH. '/src/service';
     $dp    = opendir($dpath);
     $namespace = get_namespace();
     while ($fname = readdir($dp)) {
@@ -286,7 +192,7 @@ function parse_method_doc($method, $doc) {
 }
 
 function get_namespace() {
-    include $GLOBALS['root_path'] . '/src/conf/app.php';
+    include ROOT_PATH . '/src/conf/app.php';
     return $namespace;
 }
 
