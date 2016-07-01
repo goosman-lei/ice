@@ -1,14 +1,59 @@
 #!/usr/bin/env php
 <?php
-$root_path = __DIR__ . '/..';
-require_once $root_path . '/vendor/autoload.php';
+define('ROOT_PATH', __DIR__ . '/..');
+require_once ROOT_PATH . '/vendor/autoload.php';
+define('HTML_PATH', ROOT_PATH . '/doc-html');
+define('TPL_COMPILER_PATH', ROOT_PATH. '/doc-smarty-template-compile');
+output_doc_html();
+function get_smarty() {
+    static $smarty;
+    if (!isset($smarty)) {
+        $smarty = new \SmartyBC();
+        $smarty->setTemplateDir(ROOT_PATH);
+        $smarty->setCompileDir(TPL_COMPILER_PATH);
+        $smarty->left_delimiter = '{%';
+        $smarty->right_delimiter = '%}';
+    }
+    return $smarty;
+}
 
-$docs = parse_service();
-echo json_encode($docs);
+function render_main_layout($render_data,$target_file) {
+    $smarty = get_smarty();
+    $smarty->assign('render',$render_data);
+    if (!is_dir(dirname($target_file))) {
+        mkdir(dirname($target_file), 0777, TRUE);
+    }
+    return file_put_contents($target_file, $smarty->fetch('doc.tpl'));
+}
+
+function output_doc_html(){
+    $docs = parse_service();
+    //检测文件目录
+    mkdir_path(HTML_PATH);
+    if(!empty($docs)){  
+        foreach($docs as $item){
+            $namePath = explode('\\',$item['name']);
+            $path = HTML_PATH."/".$namePath[2].'/'.$namePath['3'];
+            mkdir_path($path);
+            $file_name = $path."/".implode("_", $namePath).".html";
+            $re = render_main_layout($item,$file_name);
+            if($re){
+                echo "文档生成成功";
+            }else{
+                echo "生成失败，请查看权限是否OK";
+            }
+        }
+    }
+}
+function mkdir_path($path){
+    if(!is_dir($path)){
+        mkdir($path,0777,true);
+    }  
+}
 
 function parse_service() {
     $docs  = array();
-    $dpath = $GLOBALS['root_path'] . '/src/service';
+    $dpath = ROOT_PATH. '/src/service';
     $dp    = opendir($dpath);
     $namespace = get_namespace();
     while ($fname = readdir($dp)) {
@@ -147,7 +192,7 @@ function parse_method_doc($method, $doc) {
 }
 
 function get_namespace() {
-    include $GLOBALS['root_path'] . '/src/conf/app.php';
+    include ROOT_PATH . '/src/conf/app.php';
     return $namespace;
 }
 
