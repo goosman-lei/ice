@@ -26,17 +26,23 @@
     pre{ overflow: hidden; }
 </style>
 <body>
-    <div class="container bs-docs-container">
-        <div>
-            <h1>{%$render.name%}</h1>
-            <p>{%$render.desc%}</p>
-            <div class='version_info'>
-            {%foreach from = $render.tags  key=tkey item =tag %}        
-                 <span>{%$tag.tag%}</span>
-                 <span>{%$tag.desc%}</span>
-            {%/foreach%}
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <h1>{%$render.name%}</h1>
             </div>
-        </div>    
+            <div class="navbar-collapse collapse" style="text-align:right">
+                <p>{%$render.desc%}</p>
+                <ul class='nav navbar-nav flowrig' style="float:right">
+                    {%foreach from = $render.tags  key=tkey item =tag %}        
+                         <li>{%$tag.tag%}</li>
+                         <li>{%$tag.desc%}</li>
+                    {%/foreach%}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container bs-docs-container" style="margin-top:75px">
         <div class="row">
             <div class="col-md-2">
                 <nav id='navbar-example2' class="bs-docs-sidebarhidden-print hidden-xs hidden-sm affix">
@@ -52,47 +58,46 @@
                     </ul>
                 </nav>
             </div>
-            <div class="col-md-10">
+            <div class="col-md-10" style="border-left:3px solid #eee; ">
                 <div  data-spy="scroll" data-target="#navbar-example2">
                     {%foreach from= $render.methods  key=mkey item= method%}
                         <div class="bs-docs-section">
                             <h2 id='{%$method.name%}'>{%$method.name%}</h2>
                             <div class='method_box'>
-                                <h3 id ='{%$method.name%}_param'>参数</h2>
-                                <div class='highlight'>
-                                    <pre>
-                                        {%foreach from=$method.tags key=key item=mtag%}
-                                            {%if $mtag.tag =='param' %}
-                                                <div>type:{%$mtag.type%}</div>
-                                                <div>name:{%$mtag.name%}</div>
-                                                <div>desc:{%$mtag.desc%}</div>
-                                            {%/if%} 
+                                <table class="table table-condensed table-bordered">
+                                    <tr>
+                                        <td style="text-align:right"><a name ='{%$method.name%}_param'>参数</a></td>
+                                        <td>
+                                            {%foreach from=$method.tags key=key item=mtag%}
+                                                {%if $mtag.tag =='param' %}
+                                                    <div>{%$mtag.type%} {%$mtag.name%} {%$mtag.desc%}</div>
+                                                {%/if%} 
+                                            {%/foreach%}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:right"><a name ='{%$method.name%}_error'>错误号</a></td>
+                                        <td>
+                                            {%foreach from=$method.tags key=key item=mtag%}
+                                                {%if $mtag.tag =='error' %}
+                                                    <div>{%$mtag.errno%}  {%$mtag.desc%}</div>
+                                                {%/if%} 
                                         {%/foreach%}
-                                    </pre>
-                                </div>
-                                <h3 id ='{%$method.name%}_return'>返回值</h2>
-                                <div class='highlight'>
-                                    <pre>
-                                        {%foreach from=$method.tags key=key item=mtag%}
-                                            {%if $mtag.tag =='return' %}
-                                                <div>type:{%$mtag.type%}</div>
-                                                <div>name:{%$mtag.name%}</div>
-                                                <div>desc:{%$mtag.desc%}</div>
-                                            {%/if%} 
-                                        {%/foreach%}
-                                    </pre>
-                                </div>
-                                <h3 id ='{%$method.name%}_error'>错误号</h2>
-                                <div class='highlight'>
-                                    <pre>
-                                        {%foreach from=$method.tags key=key item=mtag%}
-                                            {%if $mtag.tag =='error' %}
-                                                <div>name:{%$mtag.errno%}</div>
-                                                <div>desc:{%$mtag.desc%}</div>
-                                            {%/if%} 
-                                        {%/foreach%}
-                                    </pre>
-                                </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:right"><a name ='{%$method.name%}_return'>返回值</a></td>
+                                        <td>
+                                            {%foreach from=$method.tags key=key item=mtag%}
+                                                {%if $mtag.tag =='return' %}
+                                                    <div>返回类型：{%$mtag.type%}</div>
+                                                    <div>返回值：</div>
+                                                    <pre>{%$mtag.desc%}</pre>
+                                                {%/if%} 
+                                            {%/foreach%}
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     {%/foreach %}
