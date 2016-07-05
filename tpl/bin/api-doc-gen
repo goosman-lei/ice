@@ -2,14 +2,19 @@
 <?php
 define('ROOT_PATH', __DIR__ . '/..');
 require_once ROOT_PATH . '/vendor/autoload.php';
-define('HTML_PATH', ROOT_PATH . '/doc-html');
-define('TPL_COMPILER_PATH', ROOT_PATH. '/doc-smarty-template-compile');
+
+if(isset($argv[1]) && !empty($argv[1]) ){
+    define('HTML_PATH',$argv[1]);
+}else{
+     define('HTML_PATH','/home/nice/ice-doc/');
+}
+define('TPL_COMPILER_PATH','/var/run/doc-smarty-template-compile');
 output_doc_html();
 function get_smarty() {
     static $smarty;
     if (!isset($smarty)) {
         $smarty = new \SmartyBC();
-        $smarty->setTemplateDir(ROOT_PATH);
+        $smarty->setTemplateDir(ROOT_PATH."/tpl");
         $smarty->setCompileDir(TPL_COMPILER_PATH);
         $smarty->left_delimiter = '{%';
         $smarty->right_delimiter = '%}';
@@ -33,9 +38,11 @@ function output_doc_html(){
     if(!empty($docs)){  
         foreach($docs as $item){
             $namePath = explode('\\',$item['name']);
-            $path = HTML_PATH."/".$namePath[2].'/'.$namePath['3'];
+            //去掉最后一个
+            array_pop($namePath);
+            $path = HTML_PATH."/".implode("/",$namePath);
             mkdir_path($path);
-            $file_name = $path."/".implode("_", $namePath).".html";
+            $file_name = $path."/".implode("-", $namePath).".html";
             $re = render_main_layout($item,$file_name);
             if($re){
                 echo "文档生成成功";
