@@ -6,7 +6,7 @@
     "require": {
         "smarty/smarty": "3.1.28",
         "phpunit/phpunit": "4.8",
-        "lancerhe/phpunit-mock": "dev-master",
+        "lancerhe/phpunit-mock": "1.0.1",
         "php-amqplib/php-amqplib": "2.6.2"
     },
     "autoload": {
@@ -26,7 +26,7 @@
         },
         {
             "type": "vcs",
-            "url": "git@github.com:goosman-lei/phpunit-mock.git"
+            "url": "git@github.com:lancerhe/phpunit-mock.git"
         },
         {
             "type": "composer",
