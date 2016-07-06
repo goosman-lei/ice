@@ -37,7 +37,7 @@ function output_doc_html(){
     mkdir_path(HTML_PATH);
     //生成Index文件
     if(!file_exists(HTML_PATH."/index.php")){
-        copy(ROOT_PATH."/tpl/index.php",HTML_PATH);
+      $r =  copy(ROOT_PATH."/tpl/index.php",HTML_PATH."/index.php");
     }    
     if(!empty($docs)){  
         foreach($docs as $item){
