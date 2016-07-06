@@ -25,6 +25,10 @@
             "packagist": false
         },
         {
+            "type": "vcs",
+            "url": "git@github.com:goosman-lei/phpunit-mock.git"
+        },
+        {
             "type": "composer",
             "url": "https://packagist.phpcomposer.com"
         }
