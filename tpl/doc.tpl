@@ -90,6 +90,7 @@
                 {%foreach from= $render.methods  key=mkey item= method%}
                     <div class="bs-docs-section">
                         <h2 id='{%$method.name%}'>{%$method.name%}</h2>
+                        <p>描述:{%$method.desc%}</p>
                         <div class='method_box'>
                             <table class="table table-condensed table-bordered">
                                 <tr>
