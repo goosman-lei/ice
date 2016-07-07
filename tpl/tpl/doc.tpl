@@ -50,7 +50,13 @@
         $('.right_pos').css({
             'width':curentWidth,
             'height': curentHeight
-        })
+        });
+        $(".filter").keyup(function(){
+              $(".bs-docs-sidenav li")
+                .hide()
+                .filter(":contains('"+( $(this).val() )+"')")
+                .show();
+        }).keyup();
     });
 </script>
 <body>
@@ -74,6 +80,7 @@
     </div>
     <div class="container bs-docs-container" style="margin-top:70px">
         <div class="left_pos">
+            <div style="padding: 10px 0px;">搜索：<input type="text" class="form-control filter" style="width:80%;display:inline-block"></div>
             <nav id='navbar-example2' style="width:100%">
                 <ul class="nav bs-docs-sidenav">
                 {%foreach from=$render.methods key=mkey  item =method %}
