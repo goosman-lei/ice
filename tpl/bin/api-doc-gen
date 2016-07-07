@@ -35,11 +35,26 @@ function output_doc_html(){
     $docs = parse_service();
     //检测文件目录
     mkdir_path(HTML_PATH);
+    //生成Index文件
+    if(!file_exists(HTML_PATH."/index.php")){
+      $r =  copy(ROOT_PATH."/tpl/index.php",HTML_PATH."/index.php");
+    }    
     if(!empty($docs)){  
         foreach($docs as $item){
             $namePath = explode('\\',$item['name']);
             //去掉最后一个
             array_pop($namePath);
+            if(isset($item['tags']) && !empty($item['tags'])){
+                foreach($item['tags'] as &$tag){
+                    if($tag['tag']=='author'){
+                        $tmpArr = explode("<",$tag['desc']);
+                        $tmpArr = explode(">",$tmpArr[1]);
+                        $tag['mail'] = $tmpArr[0];
+                        $tag['desc'] = str_replace('<','&lt;',$tag['desc']);
+                        $tag['desc'] = str_replace('>','&gt;',$tag['desc']);
+                    }
+                }
+            }
             $path = HTML_PATH."/".implode("/",$namePath);
             mkdir_path($path);
             $file_name = $path."/".implode("-", $namePath).".html";

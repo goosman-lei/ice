@@ -60,11 +60,13 @@
                 <h1>{%$render.name%}</h1>
             </div>
             <div class="navbar-collapse collapse" style="text-align:right">
-                <p>{%$render.desc%}</p>
+                <p style='padding:0px;color:#563d7c;padding-top:15px'>{%$render.desc%}</p>
                 <ul class='nav navbar-nav flowrig' style="float:right">
                     {%foreach from = $render.tags  key=tkey item =tag %}        
-                         <li>{%$tag.tag%}&nbsp;</li>
-                         <li>{%$tag.desc%}&nbsp;</li>
+                         {%if $tag.tag =='author' %}
+                             <li>{%$tag.tag%}:</li>
+                             <li><a style='color:#428bca;padding:0px;' href='mailto:{%$tag.mail%}'>{%$tag.desc%}</a></li>
+                         {%/if%}
                     {%/foreach%}
                 </ul>
             </div>
@@ -90,7 +92,7 @@
                 {%foreach from= $render.methods  key=mkey item= method%}
                     <div class="bs-docs-section">
                         <h2 id='{%$method.name%}'>{%$method.name%}</h2>
-                        <p>描述:{%$method.desc%}</p>
+                        <div class='alert alert-info' style='margin-bottom:0px; padding:7px'>描述:{%$method.desc%}</div>
                         <div class='method_box'>
                             <table class="table table-condensed table-bordered">
                                 <tr>
