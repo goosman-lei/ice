@@ -179,7 +179,7 @@ function parse_method_doc($method, $doc) {
                 case 'error':
                     preg_match($errorPattern, $match['desc'], $errorMatch);
                     $tag['errno'] = isset($errorMatch['errno']) ? $errorMatch['errno'] : 'unknown';
-                    $tag['desc'] = isset($errorMatch['desc']) ? $paramMatch['desc'] : '';
+                    $tag['desc'] = isset($errorMatch['desc']) ? $errorMatch['desc'] : '';
                     break;
                 case 'param':
                     preg_match($paramPattern, $match['desc'], $paramMatch);
