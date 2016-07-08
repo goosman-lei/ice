@@ -1,14 +1,81 @@
 #!/usr/bin/env php
 <?php
-$root_path = __DIR__ . '/..';
-require_once $root_path . '/vendor/autoload.php';
+define('ROOT_PATH', __DIR__ . '/..');
+require_once ROOT_PATH . '/vendor/autoload.php';
 
-$docs = parse_service();
-echo json_encode($docs);
+if(isset($argv[1]) && !empty($argv[1]) ){
+    define('HTML_PATH',$argv[1]);
+}else{
+     define('HTML_PATH','/home/nice/ice-doc/');
+}
+define('TPL_COMPILER_PATH','/var/run/doc-smarty-template-compile');
+output_doc_html();
+function get_smarty() {
+    static $smarty;
+    if (!isset($smarty)) {
+        $smarty = new \SmartyBC();
+        $smarty->setTemplateDir(ROOT_PATH."/tpl");
+        $smarty->setCompileDir(TPL_COMPILER_PATH);
+        $smarty->left_delimiter = '{%';
+        $smarty->right_delimiter = '%}';
+    }
+    return $smarty;
+}
+
+function render_main_layout($render_data,$target_file) {
+    $smarty = get_smarty();
+    $smarty->assign('render',$render_data);
+    if (!is_dir(dirname($target_file))) {
+        mkdir(dirname($target_file), 0777, TRUE);
+    }
+    return file_put_contents($target_file, $smarty->fetch('doc.tpl'));
+}
+
+function output_doc_html(){
+    $docs = parse_service();
+    //检测文件目录
+    mkdir_path(HTML_PATH);
+    //生成Index文件
+    if(!file_exists(HTML_PATH."/index.php")){
+      $r =  copy(ROOT_PATH."/tpl/index.php",HTML_PATH."/index.php");
+    }    
+    if(!empty($docs)){  
+        foreach($docs as $item){
+            $namePath = explode('\\',$item['name']);
+            //去掉最后一个
+            array_pop($namePath);
+            if(isset($item['tags']) && !empty($item['tags'])){
+                foreach($item['tags'] as &$tag){
+                    if($tag['tag']=='author'){
+                        $tmpArr = explode("<",$tag['desc']);
+                        $tmpArr = explode(">",$tmpArr[1]);
+                        $tag['mail'] = $tmpArr[0];
+                        $tag['desc'] = str_replace('<','&lt;',$tag['desc']);
+                        $tag['desc'] = str_replace('>','&gt;',$tag['desc']);
+                    }
+                }
+            }
+            $path = HTML_PATH."/".implode("/",$namePath);
+            mkdir_path($path);
+            $file_name = $path."/".implode("-", $namePath).".html";
+            $re = render_main_layout($item,$file_name);
+            if($re){
+                echo "文档生成成功";
+            }else{
+                echo "生成失败，请查看权限是否OK";
+            }
+        }
+    }
+}
+function mkdir_path($path){
+    if(!is_dir($path)){
+        mkdir($path,0777,true);
+    }  
+}
 
 function parse_service() {
     $docs  = array();
-    $dpath = $GLOBALS['root_path'] . '/src/service';
+    $dpath = ROOT_PATH. '/src/service';
     $dp    = opendir($dpath);
     $namespace = get_namespace();
     while ($fname = readdir($dp)) {
@@ -112,7 +179,7 @@ function parse_method_doc($method, $doc) {
                 case 'error':
                     preg_match($errorPattern, $match['desc'], $errorMatch);
                     $tag['errno'] = isset($errorMatch['errno']) ? $errorMatch['errno'] : 'unknown';
-                    $tag['desc'] = isset($errorMatch['desc']) ? $paramMatch['desc'] : '';
+                    $tag['desc'] = isset($errorMatch['desc']) ? $errorMatch['desc'] : '';
                     break;
                 case 'param':
                     preg_match($paramPattern, $match['desc'], $paramMatch);
@@ -147,7 +214,7 @@ function parse_method_doc($method, $doc) {
 }
 
 function get_namespace() {
-    include $GLOBALS['root_path'] . '/src/conf/app.php';
+    include ROOT_PATH . '/src/conf/app.php';
     return $namespace;
 }
 

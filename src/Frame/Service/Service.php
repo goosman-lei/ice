@@ -21,4 +21,8 @@ class Service {
     public function setIce($ice) {
         $this->ice = $ice;
     }
+
+    public static function isSucc($data) {
+        return $data['code'] == 0;
+    }
 }
