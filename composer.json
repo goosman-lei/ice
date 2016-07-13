@@ -3,6 +3,7 @@
     "description": "PHP web application develop framework.",
     "version": "0.0.1-dev",
     "type": "library",
+    "minimum-stability": "dev",
     "require": {
         "smarty/smarty": "3.1.28",
         "phpunit/phpunit": "4.8",
