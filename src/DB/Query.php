@@ -11,6 +11,10 @@ class Query {
 
     protected $affectedNum = 0;
     protected $lastId = 0;
+    const MASTER = 'master';
+    const SLAVE  = 'slave';
+    const AUTO  = 'auto';
+    private static $cluster = 'auto';
 
     /**
      * affectedNum
@@ -31,9 +35,24 @@ class Query {
     public function lastId() {
         return $this->lastId;
     }
+    
+    public static function switchCluster($cluster) {
+        if (!in_array($cluster, array(self::MASTER, self::SLAVE, self::AUTO))) {
+            return false;
+        }
+        $preCluster = self::$cluster;
+        self::$cluster = $cluster;
+        return $preCluster;
+    }
 
     public function query($sql, $onReturn = self::RS_ARRAY) {
-        $cluster = $this->isMasterSql($sql) ? 'master' : 'slave';
+        if (self::$cluster == self::MASTER) {
+            $cluster = self::MASTER;
+        } else if (self::$cluster == self::SLAVE) {
+            $cluster = self::SLAVE;
+        } else {
+            $cluster = $this->isMasterSql($sql) ? self::MASTER : self::SLAVE;
+        }
         $dsn     = 'mysqli://' . $this->dbResource . '/' . $cluster;
         $handler = \F_Ice::$ins->workApp->proxy_resource->get($dsn);
         if (!$handler) {
