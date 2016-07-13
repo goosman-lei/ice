@@ -13,7 +13,8 @@ class Query {
     protected $lastId = 0;
     const MASTER = 'master';
     const SLAVE  = 'slave';
-    private static $cluster = 'slave';
+    const AUTO  = 'auto';
+    private static $cluster = 'auto';
 
     /**
      * affectedNum
@@ -36,19 +37,19 @@ class Query {
     }
     
     public static function switchCluster($cluster) {
-        if (!in_array($cluster, array(self::MASTER, self::SLAVE))) {
+        if (!in_array($cluster, array(self::MASTER, self::SLAVE, self::AUTO))) {
             return false;
         }
-        if ($cluster == self::MASTER) {
-            self::$cluster = self::MASTER;
-        } else {
-            self::$cluster = self::SLAVE;
-        }
+        $preCluster = self::$cluster;
+        self::$cluster = $cluster;
+        return $preCluster;
     }
 
     public function query($sql, $onReturn = self::RS_ARRAY) {
         if (self::$cluster == self::MASTER) {
             $cluster = self::MASTER;
+        } else if (self::$cluster == self::SLAVE) {
+            $cluster = self::SLAVE;
         } else {
             $cluster = $this->isMasterSql($sql) ? self::MASTER : self::SLAVE;
         }
