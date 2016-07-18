@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS user (
    location VARCHAR(64) NOT NULL DEFAULT ''
 ) ENGINE Innodb DEFAULT CHARACTER SET UTF8;
  */
-class User extends \DB_Query {
+class User extends \Ice_DB_Query {
     protected $tableName = 'user';
     protected $mapping   = array(
         'id'       => 'i',

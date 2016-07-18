@@ -1,6 +1,6 @@
 <?php
 namespace Ice\DB;
-class ShardQuery extends \DB_Query {
+class ShardQuery extends \Ice_DB_Query {
 
     protected $shardColumn;
     protected $shardKey;
