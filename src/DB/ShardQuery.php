@@ -50,16 +50,15 @@ class ShardQuery extends \Ice_DB_Query {
     }
 
     public function insert($setValues, $onDup = FALSE) {
-         foreach ($setValues as $idx => $val) {
-            if (isset($val[0]) && $val[0] != ':shard') {
+         foreach ($setValues as $key => $val) {
+            if ($this->shardColumn != $key) {
                 continue;
             }
 
-            $shardValue = $val[1];
+            $shardValue = $val;
             break;
         }
 
-        $setValues[$idx] = array($this->shardColumn, $shardValue);
         $shardKey = $this->getShardKey($shardValue);
         $this->setShardKey($shardKey);
 
@@ -70,15 +69,14 @@ class ShardQuery extends \Ice_DB_Query {
         $shardMapping = array();
         foreach ($setValues as $idx => $val) {
             foreach ($val as $k => $v) {
-                if (isset($val[0]) && $val[0] != ':shard') {
+                if ($this->shardColumn != $k) {
                     continue;
                 }
 
-                $shardValue = $val[1];
+                $shardValue = $v;
                 break;
             }
 
-            $val[$k] = array($this->shardColumn, $shardValue);
             $shardKey = $this->getShardKey($shardValue);
             $shardMapping[$shardKey][] = $val;
         }
@@ -92,12 +90,12 @@ class ShardQuery extends \Ice_DB_Query {
     }
 
     public function replace($setValues) {
-         foreach ($setValues as $idx => $val) {
-            if (isset($val[0]) && $val[0] != ':shard') {
+        foreach ($setValues as $key => $val) {
+            if ($this->shardColumn != $key) {
                 continue;
             }
 
-            $shardValue = $val[1];
+            $shardValue = $val;
             break;
         }
 
@@ -140,6 +138,10 @@ class ShardQuery extends \Ice_DB_Query {
 
     public function getShardKey($value) {
         return '';
+    }
+    public function setShardKey($shardKey) {
+        $this->shardKey = $shardKey;
+        return true;
     }
 
     public function getTableName() {
