@@ -144,7 +144,7 @@ class ShardQuery extends \Ice_DB_Query {
         return true;
     }
 
-    public function getTableName() {
+    public function getTableName($where = array()) {
         return $this->tableName . '_' . $this->shardKey;
     }
 }
