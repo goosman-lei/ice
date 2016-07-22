@@ -5,7 +5,7 @@
     "type": "library",
     "minimum-stability": "dev",
     "require": {
-        "smarty/smarty": "3.1.28",
+        "smarty/smarty": "3.1.18",
         "phpunit/phpunit": "4.8",
         "lancerhe/phpunit-mock": "1.0.1",
         "php-amqplib/php-amqplib": "2.6.2"
