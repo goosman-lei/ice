@@ -287,7 +287,7 @@ class Query {
      * @return 成功 影响行数
      */
     public function replace($setValues) {
-        $valClause   = $this->buildSet($setValues);
+        $valClause   = $this->buildValues($setValues);
         if (!$valClause) {
             return FALSE;
         }
