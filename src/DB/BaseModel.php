@@ -10,6 +10,38 @@ class BaseModel extends \Ice_DB_Query {
     protected $tableName = '';
     protected $dbResource = '';
     protected $mapping = [];
+    
+    
+    /**
+     * 根据运行时赋值字段处理字段
+     * @param array $data 要处理的数据
+     * @param enum $runtime add|update
+     */
+    protected function assignAutoField(&$data, $runtime){
+        $autoAssignMap = [
+            'add'   => [$this->autoAddTimeField, $this->autoUpdteTimeField],
+            'update' => [$this->autoUpdteTimeField],
+        ];
+        
+        if($data && is_array($data) && isset($autoAssignMap[$runtime])){
+            if(isset($data[0]) && count($data[0]) >=2){
+                //已拼为setValues的data
+                $keys = array_column($data, 0);
+                foreach($autoAssignMap[$runtime] as $field){
+                    if($field && isset($this->mapping[$field]) && !in_array($field, $keys)){
+                        $data[] = [$field, time()];
+                    }
+                }
+            }else{
+                //键值对data
+                foreach($autoAssignMap[$runtime] as $field){
+                    if($field && isset($this->mapping[$field]) && !isset($data[$field])){
+                        $data[$field] = time();
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * 添加数据
@@ -20,6 +52,7 @@ class BaseModel extends \Ice_DB_Query {
         $returnValue = false;
 
         if ($data && is_array($data)) {
+            $this->assignAutoField($data, 'add');
             $insertData = [];
             foreach ($data as $k => $v) {
                 if (isset($this->mapping[$k])) {
@@ -27,17 +60,6 @@ class BaseModel extends \Ice_DB_Query {
                 }
             }
             if ($insertData) {
-
-                $addTimeKey = $this->autoAddTimeField;
-                if ($addTimeKey && isset($this->mapping[$addTimeKey]) && !isset($data[$addTimeKey])) {
-                    $insertData[$addTimeKey] = time();
-                }
-
-                $updateTimeKey = $this->autoUpdteTimeField;
-                if ($updateTimeKey && isset($this->mapping[$updateTimeKey]) && !isset($data[$updateTimeKey])) {
-                    $insertData[$updateTimeKey] = time();
-                }
-
                 $returnValue = $this->insert($insertData);
             }
         }
@@ -130,6 +152,7 @@ class BaseModel extends \Ice_DB_Query {
         $returnValue = false;
 
         if ($data && $assoc && is_array($data) && is_array($assoc)) {
+            $this->assignAutoField($data, 'update');
             $updateData = [];
             foreach ($data as $k => $v) {
                 if (isset($this->mapping[$k])) {
@@ -143,12 +166,6 @@ class BaseModel extends \Ice_DB_Query {
                     if (isset($this->mapping[$k])) {
                         $where[] = [$k, $v];
                     }
-                }
-
-                //自动处理更新时间字段
-                $updateTimeKey = $this->autoUpdteTimeField;
-                if ($updateTimeKey && isset($this->mapping[$updateTimeKey]) && !isset($data[$updateTimeKey])) {
-                    $updateData[] = [$updateTimeKey, time()];
                 }
 
                 $returnValue = $this->update($updateData, $where);
