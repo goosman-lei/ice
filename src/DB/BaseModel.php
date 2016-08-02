@@ -240,12 +240,7 @@ class BaseModel extends \Ice_DB_Query {
             $where = [
                 [$this->pk, $pk],
             ];
-
-            //自动处理更新时间字段
-            $updateTimeKey = $this->autoUpdteTimeField;
-            if ($updateTimeKey && isset($this->mapping[$updateTimeKey]) && $field != $updateTimeKey) {
-                $updateData[] = [$updateTimeKey, time()];
-            }
+            $this->assignAutoField($updateData, 'update');
             $returnValue = $this->update($updateData, $where);
         }
         return $returnValue;
