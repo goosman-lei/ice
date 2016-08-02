@@ -10,32 +10,31 @@ class BaseModel extends \Ice_DB_Query {
     protected $tableName = '';
     protected $dbResource = '';
     protected $mapping = [];
-    
-    
+
     /**
      * 根据运行时赋值字段处理字段
      * @param array $data 要处理的数据
      * @param enum $runtime add|update
      */
-    protected function assignAutoField(&$data, $runtime){
+    protected function assignAutoField(&$data, $runtime) {
         $autoAssignMap = [
-            'add'   => [$this->autoAddTimeField, $this->autoUpdteTimeField],
+            'add'    => [$this->autoAddTimeField, $this->autoUpdteTimeField],
             'update' => [$this->autoUpdteTimeField],
         ];
-        
-        if($data && is_array($data) && isset($autoAssignMap[$runtime])){
-            if(isset($data[0]) && count($data[0]) >=2){
+
+        if ($data && is_array($data) && isset($autoAssignMap[$runtime])) {
+            if (isset($data[0]) && count($data[0]) >= 2) {
                 //已拼为setValues的data
                 $keys = array_column($data, 0);
-                foreach($autoAssignMap[$runtime] as $field){
-                    if($field && isset($this->mapping[$field]) && !in_array($field, $keys)){
+                foreach ($autoAssignMap[$runtime] as $field) {
+                    if ($field && isset($this->mapping[$field]) && !in_array($field, $keys)) {
                         $data[] = [$field, time()];
                     }
                 }
-            }else{
+            } else {
                 //键值对data
-                foreach($autoAssignMap[$runtime] as $field){
-                    if($field && isset($this->mapping[$field]) && !isset($data[$field])){
+                foreach ($autoAssignMap[$runtime] as $field) {
+                    if ($field && isset($this->mapping[$field]) && !isset($data[$field])) {
                         $data[$field] = time();
                     }
                 }
