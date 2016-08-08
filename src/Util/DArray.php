@@ -71,6 +71,9 @@ class DArray {
             case 'strvalues':
                 $val = implode(',',array_values($val));
                 break;
+            case 'lz4_compress':
+                $val = lz4_compress($val);
+                break;
             default:
                 break;
         }
