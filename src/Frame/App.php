@@ -42,14 +42,9 @@ class App {
         $this->rootPath = $rootPath;
         $this->runType = $runType;
 
-        $globalConfPath = null;
-        if(is_dir($this->rootPath . '/conf_global')){
-            $globalConfPath = $this->rootPath . '/conf_global';
-        }
-        
-        $this->config = \F_Config::buildForApp($this, $globalConfPath);
+        $this->config = \F_Config::buildForApp($this);
     }
-
+        
     public function _init() {
         $logConfigs = $this->config->get('app.runner.log');
         if (isset($logConfigs) && is_array($logConfigs)) {
