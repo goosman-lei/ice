@@ -44,7 +44,7 @@ class App {
 
         $this->config = \F_Config::buildForApp($this);
     }
-
+        
     public function _init() {
         $logConfigs = $this->config->get('app.runner.log');
         if (isset($logConfigs) && is_array($logConfigs)) {
