@@ -8,7 +8,7 @@ class Config {
         $this->confArr = self::loadConfig($rootPath, $globalConfPath);
     }
 
-    public static function buildForApp($app, $globalConfPath = null) {ini_set("display_errors",1); 
+    public static function buildForApp($app, $globalConfPath = null) {
         if ($app->runType === 'embeded') {
             $config = new self(@\F_Ice::$ins->runner->mainAppConf['conf_path'], $globalConfPath);
             $config->confArr['app'] = \F_Ice::$ins->runner->mainAppConf;
