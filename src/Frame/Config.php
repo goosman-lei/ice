@@ -4,16 +4,16 @@ class Config {
 
     protected $confArr;
 
-    public function __construct($rootPath) {
-        $this->confArr = self::loadConfig($rootPath);
+    public function __construct($rootPath, $globalConfPath = null) {
+        $this->confArr = self::loadConfig($rootPath, $globalConfPath);
     }
 
-    public static function buildForApp($app) {
+    public static function buildForApp($app, $globalConfPath = null) {ini_set("display_errors",1); 
         if ($app->runType === 'embeded') {
-            $config = new self(@\F_Ice::$ins->runner->mainAppConf['conf_path']);
+            $config = new self(@\F_Ice::$ins->runner->mainAppConf['conf_path'], $globalConfPath);
             $config->confArr['app'] = \F_Ice::$ins->runner->mainAppConf;
         } else {
-            $config = new self($app->rootPath . '/conf');
+            $config = new self($app->rootPath . '/conf', $globalConfPath);
             $config->confArr['app']['runner'] = $config->confArr['app']['runner'][$app->runType];
         }
         return $config;
@@ -66,10 +66,15 @@ class Config {
         return array_diff_key($__postInclude, $__preInclude);
     }
 
-    protected static function loadConfig($rootPath) {
+    protected static function loadConfig($rootPath, $globalConfPath = null) {
+        $globalConfArr = array();
+        if($globalConfPath){
+            self::refreshConfigRecursive($globalConfPath, $globalConfArr);
+        }
+        
         $confArr = array();
         self::refreshConfigRecursive($rootPath, $confArr);
-        return $confArr;
+        return array_merge($globalConfArr, $confArr);
     }
 
     protected static function refreshConfigRecursive($rootPath, &$confArr) {

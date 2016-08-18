@@ -42,7 +42,12 @@ class App {
         $this->rootPath = $rootPath;
         $this->runType = $runType;
 
-        $this->config = \F_Config::buildForApp($this);
+        $globalConfPath = null;
+        if(is_dir($this->rootPath . '/conf_global')){
+            $globalConfPath = $this->rootPath . '/conf_global';
+        }
+        
+        $this->config = \F_Config::buildForApp($this, $globalConfPath);
     }
 
     public function _init() {
