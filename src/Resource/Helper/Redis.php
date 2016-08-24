@@ -12,6 +12,9 @@ class Redis {
     const CLUSTER_MASTER  = 'master';
     const CLUSTER_SLAVE   = 'slave';
     
+    protected $handlers = [];
+
+
     public function __construct($resource) {
         $this->resource = $resource;
     }
@@ -25,18 +28,24 @@ class Redis {
         
         //判断命令读写区分cluster
         $cluster = $this->allow_cmds[$method];
-        
-        $dns = 'redis://' . $this->resource . '/' . $cluster;
-        $handler = \F_Ice::$ins->workApp->proxy_resource->get($dns);
 
         try {
-            $resp = call_user_func_array(array($handler, $method), $parameters);
+            $this->initHandler($cluster);
+            $resp = call_user_func_array(array($this->handlers[$cluster], $method), $parameters);
         } catch (\RedisException $e) {
             $resp = FALSE;
         }
         return $resp;
     }
     
+    protected function initHandler($cluster){
+        if(!isset($this->handlers[$cluster])){
+            $dsn = 'redis://' . $this->resource . '/' . $cluster;
+            $this->handlers[$cluster] = \F_Ice::$ins->workApp->proxy_resource->get($dsn);
+        }
+    }
+
+
     /**
      * allow_cmds
      * 允许执行的redis命令及执行集群
