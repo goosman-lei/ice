@@ -19,8 +19,8 @@ class Redis extends Abs {
         $method = strtolower($method);
         if (!isset($this->allow_cmds[$method])) {
             \F_Ice::$ins->mainApp->logger_comm->fatal(array(
-                'host'    => $config['host'],
-                'port'    => $config['port'],
+                'host'    => $this->nodeConfig['host'],
+                'port'    => $this->nodeConfig['port'],
                 'command' => $method,
             ), \F_ECode::REDIS_FOBIDDEN_COMMAND);
             return FALSE;
@@ -30,8 +30,8 @@ class Redis extends Abs {
             $resp = call_user_func_array(array($this->conn, $method), $parameters);
         } catch (\RedisException $e) {
             \F_Ice::$ins->mainApp->logger_comm->fatal(array(
-                'host'    => $config['host'],
-                'port'    => $config['port'],
+                'host'    => $this->nodeConfig['host'],
+                'port'    => $this->nodeConfig['port'],
                 'command' => $method,
             ), \F_ECode::REDIS_COMMAND_ERROR);
             $resp = FALSE;
