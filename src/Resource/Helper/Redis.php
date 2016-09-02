@@ -208,6 +208,19 @@ class Redis {
         'orevrange'             => self::CLUSTER_SLAVE, 	//orevrange
         'orangebymember'        => self::CLUSTER_SLAVE, 	//orangebymember
         'orevrangebymember'     => self::CLUSTER_SLAVE, 	//orevrangebymember
+        
+        /* 自定义方法 */
+        'setJson'               => self::CLUSTER_MASTER,
+        'msetJson'              => self::CLUSTER_MASTER,
+        'setLZ4Json'            => self::CLUSTER_MASTER,
+        'msetLZ4Json'           => self::CLUSTER_MASTER,
+        'getJson'               => self::CLUSTER_SLAVE,
+        'mgetJson'              => self::CLUSTER_SLAVE,
+        'getLZ4Json'            => self::CLUSTER_SLAVE,
+        'mgetLZ4Json'           => self::CLUSTER_SLAVE,
+        'rpushJson'             => self::CLUSTER_MASTER,
+        'lpushJson'             => self::CLUSTER_MASTER,
+        'lrangeJson'            => self::CLUSTER_SLAVE,
     );
 
 }
