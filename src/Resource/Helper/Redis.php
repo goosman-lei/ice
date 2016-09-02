@@ -22,12 +22,9 @@ class Redis {
     public function __call($method, $parameters) {
         // 命令合法性检查
         $method = strtolower($method);
-        if (!isset($this->allow_cmds[$method])) {
-            return FALSE;
-        }
         
         //判断命令读写区分cluster
-        $cluster = $this->allow_cmds[$method];
+        $cluster = isset($this->clusterMapping[$method]) ? $this->clusterMapping[$method] : self::CLUSTER_MASTER;
 
         try {
             $this->initHandler($cluster);
@@ -47,12 +44,12 @@ class Redis {
 
 
     /**
-     * allow_cmds
-     * 允许执行的redis命令及执行集群
+     * $clusterMapping
+     * redis命令主从映射
      * @var array
      * @access private
      */
-    private $allow_cmds = array(
+    private $clusterMapping = array(
         /* keys command */
         'del'                   => self::CLUSTER_MASTER, 	//DEL key [key …]
         'dump'                  => self::CLUSTER_MASTER, 	//DUMP key
@@ -208,19 +205,6 @@ class Redis {
         'orevrange'             => self::CLUSTER_SLAVE, 	//orevrange
         'orangebymember'        => self::CLUSTER_SLAVE, 	//orangebymember
         'orevrangebymember'     => self::CLUSTER_SLAVE, 	//orevrangebymember
-        
-        /* 自定义方法 */
-        'setJson'               => self::CLUSTER_MASTER,
-        'msetJson'              => self::CLUSTER_MASTER,
-        'setLZ4Json'            => self::CLUSTER_MASTER,
-        'msetLZ4Json'           => self::CLUSTER_MASTER,
-        'getJson'               => self::CLUSTER_SLAVE,
-        'mgetJson'              => self::CLUSTER_SLAVE,
-        'getLZ4Json'            => self::CLUSTER_SLAVE,
-        'mgetLZ4Json'           => self::CLUSTER_SLAVE,
-        'rpushJson'             => self::CLUSTER_MASTER,
-        'lpushJson'             => self::CLUSTER_MASTER,
-        'lrangeJson'            => self::CLUSTER_SLAVE,
     );
 
 }
