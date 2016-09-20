@@ -73,7 +73,7 @@ class Curl extends Abs {
     public function curlGetJson($path, $datas = array(), $opts = array(), &$respInfo = array(), $params = array()) {
         $path .= '?' . http_build_query($params);
         $result = $this->get($path, $datas, $opts, $respInfo);
-        $return @json_decode($result, TRUE);
+        return @json_decode($result, TRUE);
     }
 
     public function setOpt($k, $v) {
