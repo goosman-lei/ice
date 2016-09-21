@@ -163,7 +163,11 @@ class BaseModel extends \Ice_DB_Query {
                 $where = [];
                 foreach ($assoc as $k => $v) {
                     if (isset($this->mapping[$k])) {
-                        $where[] = [$k, $v];
+                        if(is_array($v)){
+                            $where[] = [':in', $k, $v];
+                        }else{
+                            $where[] = [$k, $v];
+                        }
                     }
                 }
 
