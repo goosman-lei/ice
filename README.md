@@ -8,7 +8,7 @@ PHP-Web开发框架.
 
 ## 基于Ice的项目开发过程
 
-![项目开发过程](http://static-cdn.tec-inf.com/post-img/0009.ice-core-development-progress.png)
+<img src="http://static-cdn.tec-inf.com/post-img/0009.ice-core-development-progress.png" />
 
 ##  应用示例
 
