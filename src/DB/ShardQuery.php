@@ -31,6 +31,14 @@ class ShardQuery extends \Ice_DB_Query {
 
 
     /**
+     * 该方法的使用场景为数据表的分表方式具有严格的时间序,
+     * 某些使用场景下要求在某些特定时间范围内的进行查找,
+     * 可以通过时间先确定分表范围在进行查询。
+     * 通过起止时间来确定分表范围。
+     * rang_start_index 与 rang_end_index 没有严格的大小关系
+     * 当返回的数据需要按照时间正序排列时, range_start_index 小于等于 range_end_index
+     * 反之,range_start_index 大于等于 range_end_index
+     * max_table_index为当前最大分表index,必需,防止index递增时越界
      *  $range = array(
      *      'range_start_index' => $start_index,    // 开始查询的index
      *      'range_end_index'   => $end_index,      // 结束查询的index
