@@ -783,7 +783,7 @@ class Query {
             }
 
             if (!$op) {
-                \F_Ice::$ins->mainApp->logger_common->warn(array(
+                \F_Ice::$ins->mainApp->logger_comm->warn(array(
                     'error' => 'have no op',
                     'cond'  => $cond,
                 ), \F_ECode::QUERY_BUILD_EXPR_ERROR, 2);
@@ -888,7 +888,7 @@ class Query {
                     $exprStr = $this->escapeFieldName($cond[0]) . ' NOT IN (' . implode(',', $cond[1]) . ')';
                     break;
                 default:
-                    \F_Ice::$ins->mainApp->logger_common->warn(array(
+                    \F_Ice::$ins->mainApp->logger_comm->warn(array(
                         'error' => 'unknown op',
                         'op'    => $op,
                         'cond'  => $cond,
@@ -911,7 +911,7 @@ class Query {
 
     public function escapeFieldValue($fieldName, $fieldValue, $usedForLike = FALSE, $addBoundary = TRUE) {
         if (!isset($this->mapping[$fieldName])) {
-            \F_Ice::$ins->mainApp->logger_common->warn(array(
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'error'         => 'no mapping field',
                 'field_name'    => $fieldName,
                 'field_value'   => $fieldValue,
@@ -930,7 +930,7 @@ class Query {
             case 'I': // 标识符字符串
                 return $this->escapeId($fieldValue, $addBoundary);
             default:
-                \F_Ice::$ins->mainApp->logger_common->warn(array(
+                \F_Ice::$ins->mainApp->logger_comm->warn(array(
                     'error'         => 'unknown field type',
                     'field_name'    => $fieldName,
                     'field_value'   => $fieldValue,
