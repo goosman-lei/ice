@@ -649,7 +649,7 @@ class Query {
         $setExprArr = array();
         foreach ($vals as $val) {
             @list($fieldName, $fieldValue) = $val;
-            if ($fieldName[0] === ':literal') {
+            if ($fieldName === ':literal') {
                 $setExprArr[] = $fieldValue;
             } else {
                 $setExprArr[] = $this->escapeFieldName($fieldName) . ' = ' . $this->escapeFieldValue($fieldName, $fieldValue);

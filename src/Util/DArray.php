@@ -534,18 +534,4 @@ class DArray {
         }
         return $res;
     }
-
-    /**
-     * 过滤参数中不合法的id并去重,过滤规则为id不为数值或id值小于0
-     * @param $ids
-     * @return array
-     */
-    public function filterIds($ids){
-        $ids = array_values($ids);
-        $ids = array_filter($ids, function ($id) {
-            return is_numeric($id) && $id > 0;
-        });
-        $ids = array_unique($ids);
-        return $ids;
-    }
 }
