@@ -69,7 +69,7 @@ class BaseModel extends \Ice_DB_Query {
      * 根据一个关联数组条件获取单条数据（将关联数组拼为 k1=v1 AND k2=v2 格式条件）
      * @param array $data 条件
      */
-    public function getInfoByAssoc($data) {
+    public function getInfoByAssoc($data, $cols = '*') {
         $returnData = false;
 
         if ($data && is_array($data)) {
@@ -80,7 +80,7 @@ class BaseModel extends \Ice_DB_Query {
                 }
             }
             if ($where) {
-                $returnData = $this->getRow($where);
+                $returnData = $this->getRow($where, $cols);
             }
         }
 
@@ -118,7 +118,7 @@ class BaseModel extends \Ice_DB_Query {
      * 根据一个关联数组条件获取列表数据（将关联数组拼为 k1=v1 AND k2=v2 格式条件）
      * @param array $data 条件
      */
-    public function getListByAssoc($data, $limit = FALSE, $offset = 0, $orderBy = FALSE) {
+    public function getListByAssoc($data, $limit = FALSE, $offset = 0, $orderBy = FALSE, $cols = '*') {
         $returnData = [];
 
         if ($data && is_array($data)) {
@@ -134,7 +134,7 @@ class BaseModel extends \Ice_DB_Query {
                 }
             }
             if ($where) {
-                $returnData = $this->getRows($where, '*', $limit, $offset, $orderBy);
+                $returnData = $this->getRows($where, $cols, $limit, $offset, $orderBy);
             }
         }
 
@@ -163,7 +163,11 @@ class BaseModel extends \Ice_DB_Query {
                 $where = [];
                 foreach ($assoc as $k => $v) {
                     if (isset($this->mapping[$k])) {
-                        $where[] = [$k, $v];
+                        if(is_array($v)){
+                            $where[] = [':in', $k, $v];
+                        }else{
+                            $where[] = [$k, $v];
+                        }
                     }
                 }
 
