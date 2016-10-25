@@ -55,7 +55,7 @@ class Query {
         }
         $dsn     = 'mysqli://' . $this->dbResource . '/' . $cluster;
         $handler = \F_Ice::$ins->workApp->proxy_resource->get($dsn);
-        if (!$handler) {
+        if (!$handler || ($handler instanceof \Ice\Util\DStub)) {
             \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'sql' => substr($sql, 0, 5000),
                 'dsn' => $dsn,
