@@ -19,7 +19,7 @@ class Curl extends Abs {
     }
 
     public function post($path, $datas = array(), $opts = array(), &$respInfo = array()) {
-        $postFields = is_array($datas) ? $datas : (string)$datas;
+        $postFields = is_array($datas) ? http_build_query($datas, NULL, '&') : (string)$datas;
 
         $url = $this->getFullUrl($path);
 
