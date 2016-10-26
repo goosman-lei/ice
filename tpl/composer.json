@@ -3,6 +3,7 @@
     "description": "",
     "version": "0.0.1-dev",
     "type": "library",
+    "minimum-stability": "dev",
     "require": {
         "Ice/Framework": ">=0.0.1-dev"
     },
