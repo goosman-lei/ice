@@ -159,7 +159,7 @@ class Logger {
         }
 
         if (isset($this->config['split'])) {
-            $splitStr = date($this->config['split']['fmt'], \F_Ice::$ins->runner->request->requestTime);
+            $splitStr = date($this->config['split']['fmt']);
             switch ($this->config['split']['type']) {
                 case 'file':
                     $logFile .= $splitStr;
