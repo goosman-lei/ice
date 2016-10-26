@@ -159,7 +159,13 @@ class Logger {
         }
 
         if (isset($this->config['split'])) {
-            $splitStr = date($this->config['split']['fmt'], \F_Ice::$ins->runner->request->requestTime);
+            $splitStr = ''; 
+            //cli模式下需要实时切分日志, web模式下单次请求必须打到一个日志
+            if(strtolower(php_sapi_name()) === 'cli'){
+                $splitStr = date($this->config['split']['fmt']);
+            } else {
+                $splitStr = date($this->config['split']['fmt'], \F_Ice::$ins->runner->request->requestTime);
+            }
             switch ($this->config['split']['type']) {
                 case 'file':
                     $logFile .= $splitStr;
