@@ -5,6 +5,8 @@ class Query {
     const RS_ARRAY = 1;
     const RS_NUM   = 2;
 
+    const DEFAULT_QUERY_LIMIT = 10000;
+
     protected $tableName;
     protected $mapping = array();
     protected $dbResource;
@@ -55,7 +57,7 @@ class Query {
         }
         $dsn     = 'mysqli://' . $this->dbResource . '/' . $cluster;
         $handler = \F_Ice::$ins->workApp->proxy_resource->get($dsn);
-        if (!$handler) {
+        if (!$handler || ($handler instanceof \Ice\Util\DStub)) {
             \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'sql' => substr($sql, 0, 5000),
                 'dsn' => $dsn,
@@ -522,7 +524,7 @@ class Query {
      * @param int $limit 条数
      * @param int $offset 偏移
      * @access protected
-     * @return void
+     * @return string
      */
     protected function buildLimit($limit, $offset = 0) {
         $limitClause = '';
@@ -531,6 +533,8 @@ class Query {
             if ($offset > 0) {
                 $limitClause .= ' OFFSET ' . intval($offset);
             }
+        } else {
+            $limitClause = sprintf(' LIMIT %d', self::DEFAULT_QUERY_LIMIT);
         }
         return $limitClause;
     }

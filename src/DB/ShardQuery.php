@@ -57,7 +57,7 @@ class ShardQuery extends \Ice_DB_Query {
             if(!empty($datas)){
                 $resultArr = array_merge($resultArr, $datas);
             }
-            if($this->shardKey == $range['ragne_end_index']){
+            if($this->shardKey == $range['range_end_index']){
                 break;
             }
             $hasNextTable = $this->getNextTable($reverse, $range['max_table_index']);

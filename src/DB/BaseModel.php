@@ -121,8 +121,8 @@ class BaseModel extends \Ice_DB_Query {
     public function getListByAssoc($data, $limit = FALSE, $offset = 0, $orderBy = FALSE, $cols = '*') {
         $returnData = [];
 
+        $where = [];
         if ($data && is_array($data)) {
-            $where = [];
             foreach ($data as $k => $v) {
                 if (isset($this->mapping[$k])) {
                     //数组自动处理为in
@@ -133,10 +133,8 @@ class BaseModel extends \Ice_DB_Query {
                     }
                 }
             }
-            if ($where) {
-                $returnData = $this->getRows($where, $cols, $limit, $offset, $orderBy);
-            }
         }
+        $returnData = $this->getRows($where, $cols, $limit, $offset, $orderBy);
 
         return $returnData;
     }
