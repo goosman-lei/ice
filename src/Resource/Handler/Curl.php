@@ -35,9 +35,15 @@ class Curl extends Abs {
         }
 
         $respBody = curl_exec($this->conn);
+        $errorCode = curl_errno($this->conn);
+        if ($respBody === FALSE && $errorCode !== 0) {
+            $this->logCurlInfo(errorCode, curl_error($this->conn));
+            return FALSE;
+        }
         $respInfo = curl_getinfo($this->conn);
 
         if ($respInfo['http_code'] != '200') {
+            $this->logCurlInfo(errorCode, NULL, $respInfo);
             return FALSE;
         }
 
@@ -61,13 +67,27 @@ class Curl extends Abs {
         }
 
         $respBody = curl_exec($this->conn);
+        $errorCode = curl_errno($this->conn);
+        if ($respBody === FALSE && $errorCode !== 0) {
+            $this->logCurlInfo(errorCode, curl_error($this->conn));
+            return FALSE;
+        }
         $respInfo = curl_getinfo($this->conn);
 
         if ($respInfo['http_code'] != '200') {
+            $this->logCurlInfo(errorCode, NULL, $respInfo);
             return FALSE;
         }
 
         return strval($respBody);
+    }
+
+    protected function logCurlInfo($errorCode, $errorMsg = NULL, $respInfo = array()) {
+        \F_Ice::$ins->workApp->logger_curl->info(array(
+            'errorCode' => $errorCode,
+            'errorMsg'  => $errorMsg,
+            'respInfo'  => $respInfo,
+        ));
     }
 
     public function curlGetJson($path, $datas = array(), $opts = array(), &$respInfo = array(), $params = array()) {
