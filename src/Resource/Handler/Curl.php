@@ -37,13 +37,18 @@ class Curl extends Abs {
         $respBody = curl_exec($this->conn);
         $errorCode = curl_errno($this->conn);
         if ($respBody === FALSE && $errorCode !== 0) {
-            $this->logCurlInfo(errorCode, curl_error($this->conn));
+            \F_Ice::$ins->workApp->logger_comm->warn(array(
+                'errorCode' => $errorCode,
+                'errorMsg'  => $errorMsg,
+            ), \F_ECode::CURL_POST_EXEC_ERROR);
             return FALSE;
         }
         $respInfo = curl_getinfo($this->conn);
 
         if ($respInfo['http_code'] != '200') {
-            $this->logCurlInfo(errorCode, NULL, $respInfo);
+            \F_Ice::$ins->workApp->logger_comm->warn(array(
+                'respInfo'  => $respInfo,
+            ), \F_ECode::CURL_POST_HTTP_ERROR);
             return FALSE;
         }
 
@@ -69,25 +74,22 @@ class Curl extends Abs {
         $respBody = curl_exec($this->conn);
         $errorCode = curl_errno($this->conn);
         if ($respBody === FALSE && $errorCode !== 0) {
-            $this->logCurlInfo(errorCode, curl_error($this->conn));
+            \F_Ice::$ins->workApp->logger_comm->warn(array(
+                'errorCode' => $errorCode,
+                'errorMsg'  => $errorMsg,
+            ), \F_ECode::CURL_GET_EXEC_ERROR);
             return FALSE;
         }
         $respInfo = curl_getinfo($this->conn);
 
         if ($respInfo['http_code'] != '200') {
-            $this->logCurlInfo(errorCode, NULL, $respInfo);
+            \F_Ice::$ins->workApp->logger_comm->warn(array(
+                'respInfo'  => $respInfo,
+            ), \F_ECode::CURL_GET_HTTP_ERROR);
             return FALSE;
         }
 
         return strval($respBody);
-    }
-
-    protected function logCurlInfo($errorCode, $errorMsg = NULL, $respInfo = array()) {
-        \F_Ice::$ins->workApp->logger_curl->info(array(
-            'errorCode' => $errorCode,
-            'errorMsg'  => $errorMsg,
-            'respInfo'  => $respInfo,
-        ));
     }
 
     public function curlGetJson($path, $datas = array(), $opts = array(), &$respInfo = array(), $params = array()) {
