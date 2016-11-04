@@ -58,4 +58,10 @@ class Code {
     const REDIS_CONN_ERROR       = 100800;
     const REDIS_FOBIDDEN_COMMAND = 100801;
     const REDIS_COMMAND_ERROR    = 100802;
+
+    //Curl相关错误
+    const CURL_GET_EXEC_ERROR    = 100900;
+    const CURL_GET_HTTP_ERROR    = 100901;
+    const CURL_POST_EXEC_ERROR   = 100902;
+    const CURL_POST_HTTP_ERROR   = 100903;
 }
