@@ -39,7 +39,7 @@ class Curl extends Abs {
         if ($respBody === FALSE && $errorCode !== 0) {
             \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'errorCode' => $errorCode,
-                'errorMsg'  => $errorMsg,
+                'errorMsg'  => curl_error($this->conn),
             ), \F_ECode::CURL_POST_EXEC_ERROR);
             return FALSE;
         }
@@ -76,7 +76,7 @@ class Curl extends Abs {
         if ($respBody === FALSE && $errorCode !== 0) {
             \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'errorCode' => $errorCode,
-                'errorMsg'  => $errorMsg,
+                'errorMsg'  => curl_error($this->conn),
             ), \F_ECode::CURL_GET_EXEC_ERROR);
             return FALSE;
         }
