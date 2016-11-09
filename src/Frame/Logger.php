@@ -181,7 +181,7 @@ class Logger {
             }
         }
 
-        if ($level == 'warn' || $level == 'fatal') {
+        if ($level == self::LEVEL_WARN || $level == self::LEVEL_FATAL) {
             $logFile .= '.wf';
         }
 
