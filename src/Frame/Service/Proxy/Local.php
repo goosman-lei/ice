@@ -44,6 +44,7 @@ class Local {
         $serviceClass = "\\{$serviceNamespace}\\Service\\" . $class;
         if (!class_exists($serviceClass) || !method_exists($serviceClass, $action)) {
             \F_Ice::$ins->mainApp->logger_ws->warn($logData, \F_ECode::WS_PROXY_UNKONW_SERVICE);
+            \F_Ice::$ins->switchWorkApp($oldWorkApp);
             return array(
                 'code' => \F_ECode::WS_PROXY_UNKONW_SERVICE,
                 'data' => null,
