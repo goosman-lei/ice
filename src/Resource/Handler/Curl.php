@@ -40,6 +40,7 @@ class Curl extends Abs {
             \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'errorCode' => $errorCode,
                 'errorMsg'  => curl_error($this->conn),
+                'url'       => $url,
             ), \F_ECode::CURL_POST_EXEC_ERROR);
             return FALSE;
         }
@@ -48,6 +49,7 @@ class Curl extends Abs {
         if ($respInfo['http_code'] != '200') {
             \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'respInfo'  => $respInfo,
+                'url'       => $url,
             ), \F_ECode::CURL_POST_HTTP_ERROR);
             return FALSE;
         }
@@ -77,6 +79,7 @@ class Curl extends Abs {
             \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'errorCode' => $errorCode,
                 'errorMsg'  => curl_error($this->conn),
+                'url'       => $url,
             ), \F_ECode::CURL_GET_EXEC_ERROR);
             return FALSE;
         }
@@ -85,6 +88,7 @@ class Curl extends Abs {
         if ($respInfo['http_code'] != '200') {
             \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'respInfo'  => $respInfo,
+                'url'       => $url,
             ), \F_ECode::CURL_GET_HTTP_ERROR);
             return FALSE;
         }
