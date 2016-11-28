@@ -12,7 +12,7 @@ abstract class UnitTest extends \PHPUnit_Framework_TestCase {
             $runner = new \Ice\Frame\Runner\Web($projectRootPath . '/src/conf/app.php');
             $runner->run('ut');
         }
-   }
+    }
 
     protected function callAction($class, $action) {
         return \F_Ice::$ins->runner->callAction($class, $action);
