@@ -24,6 +24,7 @@ class Code {
     const WS_PROXY_MESSAGE_REPEAT  = 100224;
 
     const WS_ERROR_RESPONSE        = 100230;
+    const WS_EXCEPTION_RESPONSE    = 100231;
     // 资源管理器相关错误
     const R_ERROR_URI          = 100300;
     const R_ERROR_GET_NODE     = 100301;
