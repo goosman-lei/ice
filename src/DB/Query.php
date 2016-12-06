@@ -5,6 +5,8 @@ class Query {
     const RS_ARRAY = 1;
     const RS_NUM   = 2;
 
+    const DEFAULT_QUERY_LIMIT = 10000;
+
     protected $tableName;
     protected $mapping = array();
     protected $dbResource;
@@ -55,7 +57,7 @@ class Query {
         }
         $dsn     = 'mysqli://' . $this->dbResource . '/' . $cluster;
         $handler = \F_Ice::$ins->workApp->proxy_resource->get($dsn);
-        if (!$handler) {
+        if (!$handler || ($handler instanceof \Ice\Util\DStub)) {
             \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'sql' => substr($sql, 0, 5000),
                 'dsn' => $dsn,
@@ -287,7 +289,7 @@ class Query {
      * @return 成功 影响行数
      */
     public function replace($setValues) {
-        $valClause   = $this->buildSet($setValues);
+        $valClause   = $this->buildValues($setValues);
         if (!$valClause) {
             return FALSE;
         }
@@ -522,7 +524,7 @@ class Query {
      * @param int $limit 条数
      * @param int $offset 偏移
      * @access protected
-     * @return void
+     * @return string
      */
     protected function buildLimit($limit, $offset = 0) {
         $limitClause = '';
@@ -531,6 +533,8 @@ class Query {
             if ($offset > 0) {
                 $limitClause .= ' OFFSET ' . intval($offset);
             }
+        } else {
+            $limitClause = sprintf(' LIMIT %d', self::DEFAULT_QUERY_LIMIT);
         }
         return $limitClause;
     }
@@ -649,7 +653,7 @@ class Query {
         $setExprArr = array();
         foreach ($vals as $val) {
             @list($fieldName, $fieldValue) = $val;
-            if ($fieldName[0] === ':literal') {
+            if ($fieldName === ':literal') {
                 $setExprArr[] = $fieldValue;
             } else {
                 $setExprArr[] = $this->escapeFieldName($fieldName) . ' = ' . $this->escapeFieldValue($fieldName, $fieldValue);
@@ -783,7 +787,7 @@ class Query {
             }
 
             if (!$op) {
-                \F_Ice::$ins->mainApp->logger_common->warn(array(
+                \F_Ice::$ins->mainApp->logger_comm->warn(array(
                     'error' => 'have no op',
                     'cond'  => $cond,
                 ), \F_ECode::QUERY_BUILD_EXPR_ERROR, 2);
@@ -888,7 +892,7 @@ class Query {
                     $exprStr = $this->escapeFieldName($cond[0]) . ' NOT IN (' . implode(',', $cond[1]) . ')';
                     break;
                 default:
-                    \F_Ice::$ins->mainApp->logger_common->warn(array(
+                    \F_Ice::$ins->mainApp->logger_comm->warn(array(
                         'error' => 'unknown op',
                         'op'    => $op,
                         'cond'  => $cond,
@@ -911,7 +915,7 @@ class Query {
 
     public function escapeFieldValue($fieldName, $fieldValue, $usedForLike = FALSE, $addBoundary = TRUE) {
         if (!isset($this->mapping[$fieldName])) {
-            \F_Ice::$ins->mainApp->logger_common->warn(array(
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'error'         => 'no mapping field',
                 'field_name'    => $fieldName,
                 'field_value'   => $fieldValue,
@@ -930,7 +934,7 @@ class Query {
             case 'I': // 标识符字符串
                 return $this->escapeId($fieldValue, $addBoundary);
             default:
-                \F_Ice::$ins->mainApp->logger_common->warn(array(
+                \F_Ice::$ins->mainApp->logger_comm->warn(array(
                     'error'         => 'unknown field type',
                     'field_name'    => $fieldName,
                     'field_value'   => $fieldValue,

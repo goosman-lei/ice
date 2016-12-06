@@ -12,10 +12,6 @@ abstract class UnitTest extends \PHPUnit_Framework_TestCase {
             $runner = new \Ice\Frame\Runner\Web($projectRootPath . '/src/conf/app.php');
             $runner->run('ut');
         }
-
-        if (\F_Ice::$ins->runner->name != 'web') {
-            throw new \Exception('In one UnitTest process, don\'t allow multi runner');
-        }
     }
 
     protected function callAction($class, $action) {
