@@ -43,6 +43,7 @@ function output_doc_html(){
         foreach($docs as $item){
             $namePath = explode('\\',$item['name']);
             //去掉最后一个
+            $tmpName = $namePath;
             array_pop($namePath);
             if(isset($item['tags']) && !empty($item['tags'])){
                 foreach($item['tags'] as &$tag){
@@ -57,7 +58,7 @@ function output_doc_html(){
             }
             $path = HTML_PATH."/".implode("/",$namePath);
             mkdir_path($path);
-            $file_name = $path."/".implode("-", $namePath).".html";
+            $file_name = $path."/".implode("-", $tmpName).".html";
             $re = render_main_layout($item,$file_name);
             if($re){
                 echo "文档生成成功";
