@@ -29,8 +29,8 @@ class Smarty extends Abs {
     public function assign($datas) {
         return $this->smarty->assign($datas);
     }
-    public function display($tplPath, $cache_id = null, $compile_id = null, $parent = null, $display = false) {
+    public function display($tplPath) {
         $tplPath = isset($this->adapterConfig['ext_name']) ? $tplPath . $this->adapterConfig['ext_name'] : $tplPath;
-        return $this->smarty->fetch($tplPath, $cache_id, $compile_id, $parent, $display);
+        return $this->smarty->fetch($tplPath, NULL, NULL, NULL, FALSE);
     }
 }
