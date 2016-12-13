@@ -89,9 +89,6 @@ class Daemon {
             ));
         }
 
-        $class  = ucfirst(strtolower($class));
-        $action = ucfirst(strtolower($action));
-
         $this->request->class   = $class;
         $this->request->action  = $action;
         $this->response->class  = $class;
