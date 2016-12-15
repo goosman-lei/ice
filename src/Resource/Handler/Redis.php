@@ -23,6 +23,7 @@ class Redis extends Abs {
                 'host'    => $this->nodeConfig['host'],
                 'port'    => $this->nodeConfig['port'],
                 'command' => $method,
+                'exception' => var_export($e),
             ), \F_ECode::REDIS_COMMAND_ERROR);
             $resp = FALSE;
         }
