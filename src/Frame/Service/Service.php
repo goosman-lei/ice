@@ -4,6 +4,15 @@ class Service {
     // context
     protected $ice;
 
+    protected static $iceProxy = NULL;
+
+    public function getIceProxy($libName, $serviceName) {
+        if (!isset(self::$iceProxy[$libName][$serviceName])) {
+            self::$iceProxy[$libName][$serviceName] = $this->ice->workApp->proxy_service->get($libName, $serviceName);;
+        }
+        return self::$iceProxy[$libName][$serviceName];
+    }
+
     public function succ($data = null) {
         return array(
             'code' => 0,
