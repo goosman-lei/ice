@@ -4,7 +4,7 @@ class Service {
     // context
     protected $ice;
 
-    public static $iceProxy = NULL;
+    protected static $iceProxy = NULL;
 
     public function getIceProxy($libName, $serviceName) {
         if (!isset(self::$iceProxy[$libName][$serviceName])) {
