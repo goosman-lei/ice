@@ -19,7 +19,7 @@
             "Ice\\Util\\": "src/Util",
             "Ice\\Message\\": "src/Message"
         },
-        "files": ["class_alias.php"]
+        "files": ["class_alias.php", "src/Util/Helper.php"]
     },
     "repositories": [
         {

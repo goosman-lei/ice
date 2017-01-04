@@ -534,4 +534,24 @@ class DArray {
         }
         return $res;
     }
+
+    /**
+     * first 
+     * 返回数组中第一个通过判断返回为真的元素
+     * @param array $array 
+     * @param callable $callback 
+     * @param mixed $default 
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function first($array, callable $callback, $default = null)
+    {
+        foreach ($array as $key => $value) {
+            if (call_user_func($callback, $key, $value)) {
+                return $value;
+            }
+        }
+        return value($default);
+    }
 }
