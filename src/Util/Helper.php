@@ -15,6 +15,6 @@ if (! function_exists('value')) {
 if (! function_exists('array_where')) {
     function array_where($array, callable $callback)
     {
-        return Ice\Util\DArray::where($array, $callback);
+        return \U_Array::where($array, $callback);
     }
 }
