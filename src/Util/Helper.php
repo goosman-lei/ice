@@ -12,9 +12,9 @@ if (! function_exists('value')) {
     }
 }
 
-if (! function_exists('array_first')) {
-    function array_first($array, callable $callback, $default = null)
+if (! function_exists('array_where')) {
+    function array_where($array, callable $callback)
     {
-        return DArray::first($array, $callback, $default);
+        return Ice\Util\DArray::where($array, $callback);
     }
 }
