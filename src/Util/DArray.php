@@ -534,4 +534,27 @@ class DArray {
         }
         return $res;
     }
+
+    /**
+     * where 
+     * 用闭包函数过滤数组
+     * @param mixed $array 
+     * @param callable $callback 
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function where($array, callable $callback)
+    {
+        $filtered = [];
+
+        foreach ($array as $key => $value) {
+            if (call_user_func($callback, $key, $value)) {
+                $filtered[$key] = $value;
+            }
+        }
+
+        return $filtered;
+
+    }
 }
