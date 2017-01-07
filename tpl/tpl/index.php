@@ -54,6 +54,7 @@
                     var text =  node.text;
                     var path =  text.split(".");
                     var urlArr =  path[0].split("-");
+                    urlArr.pop();
                     window.location.href  =  urlArr.join("/")+"/"+text;
                 }
             }
