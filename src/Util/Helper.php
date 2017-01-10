@@ -68,6 +68,19 @@ if (! function_exists('array_pluck')) {
     }
 }
 
+if (! function_exists('array_sort')) {
+    function array_sort($array, $key, $type = 'string', $reverse = FALSE)
+    {
+        return \U_Array::sortWithValue($array, $key, $type, $reverse);
+    }
+}
+
+if (! function_exists('array_get')) {
+    function array_get($array, $key, $default = null)
+    {
+        return \U_Array::get($array, $key, $default);
+    }
+}
 
 if (! function_exists('array_where')) {
     function array_where($array, callable $callback)
