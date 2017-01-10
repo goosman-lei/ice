@@ -3,6 +3,33 @@ namespace Ice\Util;
 class DArray {
 
     /**
+     * Determine whether the given value is array accessible.
+     *
+     * @param  mixed  $value
+     * @return bool
+     */
+    public static function accessible($value)
+    {
+        return is_array($value) || $value instanceof ArrayAccess;
+    }
+
+    /**
+     * Determine if the given key exists in the provided array.
+     *
+     * @param  \ArrayAccess|array  $array
+     * @param  string|int  $key
+     * @return bool
+     */
+    public static function exists($array, $key)
+    {
+        if (is_array($array)) {
+            return array_key_exists($key, $array);
+        }
+
+        return $array->offsetExists($key);
+    }
+
+    /**
      * fromCommaExp
      * 从逗号表达式转换数组
      * @param string $commaExp
@@ -556,5 +583,62 @@ class DArray {
 
         return $filtered;
 
+    }
+
+    /**
+     * Pluck an array of values from an array.
+     *
+     * @param  \ArrayAccess|array  $array
+     * @param  string|array  $value
+     * @param  string|array|null  $key
+     * @return array
+     */
+    public static function pluck($array, $value, $key = null)
+    {
+        $results = [];
+
+        $value = is_string($value) ? array($value) : $value;
+
+        list($value, $key) = static::explodePluckParameters($value, $key);
+
+        foreach ($array as $item) {
+            $itemValue = array();
+
+            if (empty($value)) {
+                $itemValue = $item;
+            } else {
+                foreach ($value as $itemKey2 => $itemValue2) {
+                    $itemValue[$itemKey2] = data_get($item, $itemValue2);
+                }
+            }
+            
+
+            // If the key is "null", we will just append the value to the array and keep
+            // looping. Otherwise we will key the array using the value of the key we
+            // received from the developer. Then we'll return the final array form.
+            if (is_null($key)) {
+                $results[] = $itemValue;
+            } else {
+                $itemKey = data_get($item, $key);
+                if (!array_key_exists($itemKey, $results)) {
+                    $results[$itemKey] = $itemValue;
+                }
+            }
+        }
+
+        return $results;
+    }
+
+    protected static function explodePluckParameters($value, $key)
+    {
+        $returnValue = array();
+        foreach ($value as $item) {
+            $temp = is_string($item) ? explode('.', $item) : $item;
+            $returnValue[is_array($temp) ? array_last($temp) : $temp] = $temp;
+        }
+
+        $key = is_null($key) || is_array($key) ? $key : explode('.', $key);
+
+        return [$returnValue, $key];
     }
 }
