@@ -12,6 +12,63 @@ if (! function_exists('value')) {
     }
 }
 
+if (! function_exists('data_get')) {
+    /**
+     * Get an item from an array or object using "dot" notation.
+     *
+     * @param  mixed   $target
+     * @param  string|array  $key
+     * @param  mixed   $default
+     * @return mixed
+     */
+    function data_get($target, $key, $default = null)
+    {
+        if (is_null($key)) {
+            return $target;
+        }
+
+        $key = is_array($key) ? $key : explode('.', $key);
+
+        while (($segment = array_shift($key)) !== null) {
+            if ($segment === '*') {
+                if (! \U_Array::accessible($target)) {
+                    return value($default);
+                }
+
+                $result = \U_Array::pluck($target, $key);
+
+                return in_array('*', $key) ? \U_Array::collapse($result) : $result;
+            }
+
+            if (\U_Array::accessible($target)) {
+                if (! \U_Array::exists($target, $segment)) {
+                    return value($default);
+                }
+
+                $target = $target[$segment];
+            } elseif (is_object($target)) {
+                if (! isset($target->{$segment})) {
+                    return value($default);
+                }
+
+                $target = $target->{$segment};
+            } else {
+                return value($default);
+            }
+        }
+
+        return $target;
+    }
+}
+
+if (! function_exists('array_pluck')) {
+    function array_pluck($array, $value, $key = null)
+    {
+        return \U_Array::pluck($array, $value, $key);
+    }
+}
+
+
 if (! function_exists('array_where')) {
     function array_where($array, callable $callback)
     {
