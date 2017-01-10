@@ -69,9 +69,9 @@ if (! function_exists('array_pluck')) {
 }
 
 if (! function_exists('array_sort')) {
-    function array_sort($array, $key, $type = 'string', $reverse = FALSE)
+    function array_sort(&$array, $key, $type = 'string', $reverse = FALSE)
     {
-        return \U_Array::sortWithValue($array, $key, $type, $reverse);
+        \U_Array::sortWithValue($array, $key, $type, $reverse);
     }
 }
 
@@ -109,6 +109,43 @@ if (! function_exists('array_unshift_index')) {
         $arr1 = array_slice($arr, 0, $index);
         $arr2 = array_slice($arr, $index);
         $arr = array_merge($arr1, array($item), $arr2);
+    }
+}
+
+
+if (! function_exists('str_is')) {
+    /**
+     * Determine if a given string matches a given pattern.
+     *
+     * @param  string  $pattern
+     * @param  string  $value
+     * @return bool
+     */
+    function str_is($pattern, $value)
+    {
+        return \U_String::is($pattern, $value);
+    }
+}
+
+if (! function_exists('str_random')) {
+    function str_random($length)
+    {
+        return \U_String::randStr($length);
+    }
+}
+
+if (! function_exists('str_limit')) {
+    /**
+     * Limit the number of characters in a string.
+     *
+     * @param  string  $value
+     * @param  int     $limit
+     * @param  string  $end
+     * @return string
+     */
+    function str_limit($string, $maxLen, $suffix = '...', $charset = 'utf-8')
+    {
+        return \U_String::omitTail($string, $maxLen, $suffix, $charset);
     }
 }
 
