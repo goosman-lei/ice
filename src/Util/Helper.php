@@ -1,17 +1,5 @@
 <?php
-if (! function_exists('value')) {
-    /**
-     * Return the default value of the given value.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    function value($value)
-    {
-        return $value instanceof Closure ? $value() : $value;
-    }
-}
-
+//数组类
 if (! function_exists('data_get')) {
     /**
      * Get an item from an array or object using "dot" notation.
@@ -61,6 +49,7 @@ if (! function_exists('data_get')) {
     }
 }
 
+
 if (! function_exists('array_pluck')) {
     function array_pluck($array, $value, $key = null)
     {
@@ -68,11 +57,33 @@ if (! function_exists('array_pluck')) {
     }
 }
 
-
 if (! function_exists('array_where')) {
     function array_where($array, callable $callback)
     {
         return \U_Array::where($array, $callback);
+    }
+}
+
+if (! function_exists('array_unshift_index')) {
+    function array_unshift_index(&$arr, $index, $item)
+    {
+        $arr1 = array_slice($arr, 0, $index);
+        $arr2 = array_slice($arr, $index);
+        $arr = array_merge($arr1, array($item), $arr2);
+    }
+}
+
+if (! function_exists('array_get')) {
+    function array_get($array, $key, $default = null)
+    {
+        return \U_Array::get($array, $key, $default);
+    }
+}
+
+if (! function_exists('array_sort')) {
+    function array_sort(&$array, $key, $type = 'string', $reverse = FALSE)
+    {
+        \U_Array::sortWithValue($array, $key, $type, $reverse);
     }
 }
 
@@ -90,15 +101,51 @@ if (! function_exists('array_last')) {
     }
 }
 
-if (! function_exists('array_unshift_index')) {
-    function array_unshift_index(&$arr, $index, $item)
+
+//字符串类
+if (! function_exists('str_is')) {
+    /**
+     * Determine if a given string matches a given pattern.
+     *
+     * @param  string  $pattern
+     * @param  string  $value
+     * @return bool
+     */
+    function str_is($pattern, $value)
     {
-        $arr1 = array_slice($arr, 0, $index);
-        $arr2 = array_slice($arr, $index);
-        $arr = array_merge($arr1, array($item), $arr2);
+        return \U_String::is($pattern, $value);
     }
 }
 
+
+if (! function_exists('str_limit')) {
+    /**
+     * Limit the number of characters in a string.
+     *
+     * @param  string  $value
+     * @param  int     $limit
+     * @param  string  $end
+     * @return string
+     */
+    function str_limit($string, $maxLen, $suffix = '...', $charset = 'utf-8')
+    {
+        return \U_String::omitTail($string, $maxLen, $suffix, $charset);
+    }
+}
+
+
+if (! function_exists('str_random')) {
+    function str_random($length)
+    {
+        return \U_String::randStr($length);
+    }
+}
+
+//时间
+
+
+
+//常用
 
 if (! function_exists('info')) {
     function info($userLog)
@@ -120,3 +167,35 @@ if (! function_exists('fatal')) {
         \F_Ice::$ins->mainApp->logger_comm->fatal($userLog, $errno);
     }
 }
+
+
+if (! function_exists('value')) {
+    /**
+     * Return the default value of the given value.
+     *
+     * @param  mixed  $value
+     * @return mixed
+     */
+    function value($value)
+    {
+        return $value instanceof Closure ? $value() : $value;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

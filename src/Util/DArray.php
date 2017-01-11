@@ -290,8 +290,8 @@ class DArray {
      * @return void
      */
     protected static function __cmpString($a, $b) {
-        $realA = self::$__reverse ? @$b[self::$__valueKey] : @$a[self::$__valueKey];
-        $realB = self::$__reverse ? @$a[self::$__valueKey] : @$b[self::$__valueKey];
+        $realA = self::$__reverse ? array_get($b, self::$__valueKey) : array_get($a, self::$__valueKey);
+        $realB = self::$__reverse ? array_get($a, self::$__valueKey) : array_get($b, self::$__valueKey);
         return strcasecmp($realA, $realB);
     }
 
@@ -305,8 +305,8 @@ class DArray {
      * @return void
      */
     protected static function __cmpNumeric($a, $b) {
-        $realA = self::$__reverse ? @$b[self::$__valueKey] : @$a[self::$__valueKey];
-        $realB = self::$__reverse ? @$a[self::$__valueKey] : @$b[self::$__valueKey];
+        $realA = self::$__reverse ? array_get($b, self::$__valueKey) : array_get($a, self::$__valueKey);
+        $realB = self::$__reverse ? array_get($a, self::$__valueKey) : array_get($b, self::$__valueKey);
         return $realA - $realB;
     }
 
@@ -320,8 +320,8 @@ class DArray {
      * @return void
      */
     protected static function __cmpTime($a, $b) {
-        $realA = self::$__reverse ? @$b[self::$__valueKey] : @$a[self::$__valueKey];
-        $realB = self::$__reverse ? @$a[self::$__valueKey] : @$b[self::$__valueKey];
+        $realA = self::$__reverse ? array_get($b, self::$__valueKey) : array_get($a, self::$__valueKey);
+        $realB = self::$__reverse ? array_get($a, self::$__valueKey) : array_get($b, self::$__valueKey);
         return strtotime($realA) - strtotime($realB);
     }
 
@@ -585,6 +585,28 @@ class DArray {
 
     }
 
+    public static function get($array, $key, $default = null)
+    {
+        if (is_null($key)) {
+            return $array;
+        }
+
+        if (isset($array[$key])) {
+            return $array[$key];
+        }
+
+        foreach (explode('.', $key) as $segment) {
+            if ((! is_array($array) || ! array_key_exists($segment, $array)) &&
+                    (! $array instanceof ArrayAccess || ! $array->offsetExists($segment))) {
+                return value($default);
+            }
+
+            $array = $array[$segment];
+        }
+
+        return $array;
+    }
+
     /**
      * Pluck an array of values from an array.
      *
@@ -633,8 +655,8 @@ class DArray {
     {
         $returnValue = array();
         foreach ($value as $item) {
-            $temp = is_string($item) ? explode('.', $item) : $item;
-            $returnValue[is_array($temp) ? array_last($temp) : $temp] = $temp;
+            $returnKey = is_string($item) ? $item : implode('.', $item);
+            $returnValue[$returnKey] = is_string($item) ? explode('.', $item) : $item;
         }
 
         $key = is_null($key) || is_array($key) ? $key : explode('.', $key);
