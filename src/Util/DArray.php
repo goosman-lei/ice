@@ -655,8 +655,8 @@ class DArray {
     {
         $returnValue = array();
         foreach ($value as $item) {
-            $temp = is_string($item) ? explode('.', $item) : $item;
-            $returnValue[is_array($temp) ? array_last($temp) : $temp] = $temp;
+            $returnKey = is_string($item) ? $item : implode('.', $item);
+            $returnValue[$returnKey] = is_string($item) ? explode('.', $item) : $item;
         }
 
         $key = is_null($key) || is_array($key) ? $key : explode('.', $key);
