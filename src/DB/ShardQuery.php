@@ -74,6 +74,13 @@ class ShardQuery extends \Ice_DB_Query {
         return $resultArr;
     }
 
+    /*
+     * 在已设置了分表key的情况下,通过该方法调用父类的getRows方法
+     */
+    public function getShardedRows($where = array(), $cols = '*', $limit = FALSE, $offset = 0, $orderBy = FALSE, $join = FALSE, $groupBy = FALSE, $having = FALSE, $tableOptions = FALSE, $selectOptions = FALSE){
+        return parent::getRows($where, $cols, $limit, $offset, $orderBy, $join, $groupBy, $having, $tableOptions, $selectOptions);
+    }
+
     public function update($setValues, $where = array(), $orderBy = FALSE, $limit = FALSE) {
          foreach ($where as $idx => $cond) {
             if (isset($cond[0]) && $cond[0] != ':shard') {
