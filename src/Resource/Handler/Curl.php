@@ -35,9 +35,22 @@ class Curl extends Abs {
         }
 
         $respBody = curl_exec($this->conn);
+        $errorCode = curl_errno($this->conn);
+        if ($respBody === FALSE && $errorCode !== 0) {
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
+                'errorCode' => $errorCode,
+                'errorMsg'  => curl_error($this->conn),
+                'url'       => $url,
+            ), \F_ECode::CURL_POST_EXEC_ERROR);
+            return FALSE;
+        }
         $respInfo = curl_getinfo($this->conn);
 
         if ($respInfo['http_code'] != '200') {
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
+                'respInfo'  => $respInfo,
+                'url'       => $url,
+            ), \F_ECode::CURL_POST_HTTP_ERROR);
             return FALSE;
         }
 
@@ -61,9 +74,22 @@ class Curl extends Abs {
         }
 
         $respBody = curl_exec($this->conn);
+        $errorCode = curl_errno($this->conn);
+        if ($respBody === FALSE && $errorCode !== 0) {
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
+                'errorCode' => $errorCode,
+                'errorMsg'  => curl_error($this->conn),
+                'url'       => $url,
+            ), \F_ECode::CURL_GET_EXEC_ERROR);
+            return FALSE;
+        }
         $respInfo = curl_getinfo($this->conn);
 
         if ($respInfo['http_code'] != '200') {
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
+                'respInfo'  => $respInfo,
+                'url'       => $url,
+            ), \F_ECode::CURL_GET_HTTP_ERROR);
             return FALSE;
         }
 

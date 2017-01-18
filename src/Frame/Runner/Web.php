@@ -23,7 +23,7 @@ class Web {
     public function __construct($confPath) {
         $this->rootPath = realpath(dirname($confPath) . '/..');
         $this->mainAppConf = \F_Config::getConfig($confPath);
-        $this->mainAppConf['runner'] = $this->mainAppConf['runner']['web'];
+        $this->mainAppConf['runner'] = $this->mainAppConf['runner'][$this->name];
     }
 
     public function run($mode = 'normal') {
@@ -181,9 +181,14 @@ class Web {
         $this->feature = new \Ice\Frame\Feature($this->clientEnv);
     }
 
+    public function getAppActionPath(){
+        $defaultAction = "\\{$this->mainAppConf['namespace']}\\Action"; 
+        return $defaultAction;
+    }
+
     protected function dispatch() {
         try {
-            $className = "\\{$this->mainAppConf['namespace']}\\Action\\{$this->request->class}\\{$this->request->action}";
+            $className = $this->getAppActionPath() . "\\{$this->request->class}\\{$this->request->action}";
 
             if (!class_exists($className) || !method_exists($className, 'execute')) {
                 \F_Ice::$ins->mainApp->logger_comm->fatal(array(
@@ -215,7 +220,8 @@ class Web {
     }
 
     public function callAction($class, $action) {
-        $className = "\\{$this->mainAppConf['namespace']}\\Action\\{$class}\\{$action}";
+        $className = $this->getAppActionPath() . "\\{$class}\\{$action}";
+        
         $this->request->class  = $class;
         $this->request->action = $action;
 

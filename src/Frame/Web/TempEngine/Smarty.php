@@ -31,6 +31,6 @@ class Smarty extends Abs {
     }
     public function display($tplPath) {
         $tplPath = isset($this->adapterConfig['ext_name']) ? $tplPath . $this->adapterConfig['ext_name'] : $tplPath;
-        return $this->smarty->display($tplPath);
+        return $this->smarty->fetch($tplPath, NULL, NULL, NULL, FALSE);
     }
 }

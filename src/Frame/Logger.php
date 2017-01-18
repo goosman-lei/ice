@@ -159,7 +159,13 @@ class Logger {
         }
 
         if (isset($this->config['split'])) {
-            $splitStr = date($this->config['split']['fmt'], \F_Ice::$ins->runner->request->requestTime);
+            $splitStr = ''; 
+            //cli模式下需要实时切分日志, web模式下单次请求必须打到一个日志
+            if(strtolower(php_sapi_name()) === 'cli'){
+                $splitStr = date($this->config['split']['fmt']);
+            } else {
+                $splitStr = date($this->config['split']['fmt'], \F_Ice::$ins->runner->request->requestTime);
+            }
             switch ($this->config['split']['type']) {
                 case 'file':
                     $logFile .= $splitStr;
@@ -175,7 +181,7 @@ class Logger {
             }
         }
 
-        if ($level == 'warn' || $level == 'fatal') {
+        if ($level == self::LEVEL_WARN || $level == self::LEVEL_FATAL) {
             $logFile .= '.wf';
         }
 
@@ -210,7 +216,7 @@ class Logger {
                         $argStr = 'array(';
                         $argStr .= 'count=' . count($arg);
                         foreach ($arg as $k => $v) {
-                            $argStr .= ', ' . substr(json_encode($k, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 0, 32) . '=' . substr(json_encode($v, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 0, 32);
+                            $argStr .= ', ' . mb_substr(json_encode($k, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 0, 32, 'UTF-8') . '=' . mb_substr(json_encode($v, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 0, 32, 'UTF-8');
                         }
                         $argStr .= ')';
                     } else if (is_object($arg)) {

@@ -15,7 +15,6 @@ class Handler {
                     'errstr'     => $errstr,
                     'errfile'    => $errfile,
                     'errline'    => $errline,
-                    'errcontext' => $errcontext,
                 ), \F_ECode::PHP_ERROR);
                 \F_Ice::$ins->runner->response->error(\F_ECode::PHP_ERROR);
                 break;
@@ -28,7 +27,6 @@ class Handler {
                     'errstr'     => $errstr,
                     'errfile'    => $errfile,
                     'errline'    => $errline,
-                    'errcontext' => $errcontext,
                 ), \F_ECode::PHP_WARN);
                 break;
             case E_NOTICE:
