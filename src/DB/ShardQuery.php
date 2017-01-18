@@ -51,17 +51,14 @@ class ShardQuery extends \Ice_DB_Query {
         $reverse = isset($range['next_direction']) ? $range['next_direction'] : false;
         $this->setShardKey($range['range_start_index']);
         $tmpLimit = $limit;
+        $tmpOffset = $offset;
         $resultArr = array();
         do{
-            $datas = parent::getRows($where, $cols, $tmpLimit, $offset, $orderBy, $join, $groupBy, $having, $tableOptions, $selectOptions);
+            $datas = parent::getRows($where, $cols, $tmpLimit, $tmpOffset, $orderBy, $join, $groupBy, $having, $tableOptions, $selectOptions);
             if(!empty($datas)){
                 $resultArr = array_merge($resultArr, $datas);
             }
             if($this->shardKey == $range['range_end_index']){
-                break;
-            }
-            $hasNextTable = $this->getNextTable($reverse, $range['max_table_index']);
-            if(!$hasNextTable){
                 break;
             }
             if($limit){
@@ -70,15 +67,17 @@ class ShardQuery extends \Ice_DB_Query {
                     break;
                 }
             }
+            if($tmpOffset){
+                $curOffsetCount = parent::getRows($where, 'count(1) AS count', 1);
+                $curOffsetCount = $curOffsetCount[0]['count'];
+                $tmpOffset = ($tmpOffset - intval($curOffsetCount) <= 0) ? 0 : ($tmpOffset - intval($curOffsetCount));
+            }
+            $hasNextTable = $this->getNextTable($reverse, $range['max_table_index']);
+            if(!$hasNextTable){
+                break;
+            }
         }while(true);
         return $resultArr;
-    }
-
-    /*
-     * 在已设置了分表key的情况下,通过该方法调用父类的getRows方法
-     */
-    public function getShardedRows($where = array(), $cols = '*', $limit = FALSE, $offset = 0, $orderBy = FALSE, $join = FALSE, $groupBy = FALSE, $having = FALSE, $tableOptions = FALSE, $selectOptions = FALSE){
-        return parent::getRows($where, $cols, $limit, $offset, $orderBy, $join, $groupBy, $having, $tableOptions, $selectOptions);
     }
 
     public function update($setValues, $where = array(), $orderBy = FALSE, $limit = FALSE) {
