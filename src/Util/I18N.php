@@ -16,7 +16,7 @@ class I18N {
     protected $defaultLang = 'cn'; // 指定语言没有时的默认语言
     protected $validLang = array('cn', 'en'); // 合法语言
 
-    public function __construct($currLang, $defaultLang = 'cn', $validLang = array('cn', 'en')) {
+    public function __construct($currLang, $validLang = array('cn', 'en'), $defaultLang = 'cn') {
         $this->setLang($currLang, $validLang, $defaultLang);
     }
 
@@ -30,7 +30,7 @@ class I18N {
      * @access public
      * @return void
      */
-    public function setLang($currLang, $defaultLang = 'cn', $validLang = array('cn', 'en')) {
+    public function setLang($currLang, $validLang = array('cn', 'en'), $defaultLang = 'cn') {
         $this->currLang    = $currLang;
         $this->defaultLang = $defaultLang;
         $this->validLang   = $validLang;
