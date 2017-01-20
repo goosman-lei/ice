@@ -144,7 +144,6 @@ class ShardQuery extends \Ice_DB_Query {
             break;
         }
 
-        $setValues[$idx] = array($this->shardColumn, $shardValue);
         $shardKey = $this->getShardKey($shardValue);
         $this->setShardKey($shardKey);
 
