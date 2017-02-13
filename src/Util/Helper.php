@@ -182,20 +182,47 @@ if (! function_exists('value')) {
     }
 }
 
+if (! function_exists('success')) {
+    function success($data)
+    {
+        return array('data' => $data, 'code' => 0);
+    }
+}
+
+if (! function_exists('is_success')) {
+    function is_success($ret)
+    {
+        if (isset($ret['data']) && 0 === $ret['data']) {
+            return true;
+        }
+        return false;
+    }
+}
+
+if (! function_exists('error')) {
+    function error($code, $data = array())
+    {
+        return array('code' => $code, 'data' => $data);
+    }
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+if (! function_exists('filter_uint')) {
+    function filter_uint($var)
+    {
+        $options = array(
+            'options' => array(
+                'min_range' => 0,
+                'max_range' => 2147493647,
+            )
+        );
+        if (is_array($var)) {
+            foreach ($var as $key => $val) {
+                $var[$key] = filter_var($val, FILTER_VALIDATE_INT, $options);
+            }
+            return array_filter($var);
+        } else {
+            return filter_var($var, FILTER_VALIDATE_INT, $options);
+        }
+    }
+} 
