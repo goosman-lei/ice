@@ -183,7 +183,7 @@ if (! function_exists('value')) {
 }
 
 if (! function_exists('success')) {
-    function success($data)
+    function success($data = null)
     {
         return array('data' => $data, 'code' => 0);
     }
@@ -192,7 +192,7 @@ if (! function_exists('success')) {
 if (! function_exists('is_success')) {
     function is_success($ret)
     {
-        if (isset($ret['data']) && 0 === $ret['data']) {
+        if (isset($ret['code']) && 0 === $ret['code']) {
             return true;
         }
         return false;
@@ -200,7 +200,7 @@ if (! function_exists('is_success')) {
 }
 
 if (! function_exists('error')) {
-    function error($code, $data = array())
+    function error($code, $data = null)
     {
         return array('code' => $code, 'data' => $data);
     }
