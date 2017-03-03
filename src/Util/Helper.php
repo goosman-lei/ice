@@ -206,6 +206,14 @@ if (! function_exists('error')) {
     }
 }
 
+if (! function_exists('service')) {
+    function service($serviceName, $class = null)
+    {
+
+        return \F_Ice::$ins->workApp->proxy_service->get($serviceName, $class);
+    }
+}
+
 
 if (! function_exists('filter_uint')) {
     function filter_uint($var)
