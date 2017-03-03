@@ -246,7 +246,6 @@ class DString {
         // pattern such as "library/*", making any string check convenient.
         $pattern = str_replace('\*', '.*', $pattern);
 
-        var_dump('#^'.$pattern.'\z#', $value);
         return (bool) preg_match('#^'.$pattern.'\z#', $value);
     }
 }
