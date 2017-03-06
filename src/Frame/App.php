@@ -81,12 +81,10 @@ class App {
     protected function getProxyResourceWithCache(){
         $key = 'proxy_resource_' . $this->runType;
         $yac = new \Yac();
-        $cache = $yac->get($key);
-        if($cache){
-            $proxyResource = $cache;
-        }else{
+        $proxyResource = $yac->get($key);
+        if (empty($proxyResource)) {
             $proxyResource = \Ice\Resource\Proxy::buildForApp($this);
-            if($proxyResource){
+            if ($proxyResource) {
                 $yac->set($key, $proxyResource, 300);
             }
         }
