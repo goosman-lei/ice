@@ -52,7 +52,7 @@ class App {
                 $loggerName = "logger_$loggerName";
                 $this->$loggerName = new \F_Logger($logConfig);
             }
-        } 
+        }
 
         $this->proxy_resource = $this->getProxyResourceWithCache();
         $this->proxy_service  = \Ice\Frame\Service\Proxy::buildForApp($this);
