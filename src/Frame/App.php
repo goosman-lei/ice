@@ -53,20 +53,8 @@ class App {
                 $this->$loggerName = new \F_Logger($logConfig);
             }
         } 
-        
-        $key = 'proxy_resource_' . $this->runType;
-        $yac = new \Yac();
-        $cache = $yac->get($key);
-        if($cache){
-            $proxyResource = $cache;
-        }else{
-            $proxyResource = \Ice\Resource\Proxy::buildForApp($this);
-            if($proxyResource){
-                $yac->set($key, $proxyResource, 300);
-            }
-        }
 
-        $this->proxy_resource = $proxyResource;
+        $this->proxy_resource = $this->getProxyResourceWithCache();
         $this->proxy_service  = \Ice\Frame\Service\Proxy::buildForApp($this);
         $this->proxy_filter   = \Ice\Filter\Proxy::buildForApp($this);
 
@@ -88,5 +76,20 @@ class App {
             $this->$name = new \U_Stub();
             return $this->$name;
         }
+    }
+    
+    protected function getProxyResourceWithCache(){
+        $key = 'proxy_resource_' . $this->runType;
+        $yac = new \Yac();
+        $cache = $yac->get($key);
+        if($cache){
+            $proxyResource = $cache;
+        }else{
+            $proxyResource = \Ice\Resource\Proxy::buildForApp($this);
+            if($proxyResource){
+                $yac->set($key, $proxyResource, 300);
+            }
+        }
+        return $proxyResource;
     }
 }
