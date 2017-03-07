@@ -54,7 +54,7 @@ class App {
             }
         }
 
-        $this->proxy_resource = $this->getProxyResourceWithCache();
+        $this->proxy_resource = \Ice\Resource\Proxy::buildForApp($this);
         $this->proxy_service  = \Ice\Frame\Service\Proxy::buildForApp($this);
         $this->proxy_filter   = \Ice\Filter\Proxy::buildForApp($this);
 
@@ -76,18 +76,5 @@ class App {
             $this->$name = new \U_Stub();
             return $this->$name;
         }
-    }
-    
-    protected function getProxyResourceWithCache(){
-        $key = 'proxy_resource_' . $this->runType;
-        $yac = new \Yac();
-        $proxyResource = $yac->get($key);
-        if (empty($proxyResource)) {
-            $proxyResource = \Ice\Resource\Proxy::buildForApp($this);
-            if ($proxyResource) {
-                $yac->set($key, $proxyResource, 300);
-            }
-        }
-        return $proxyResource;
     }
 }
