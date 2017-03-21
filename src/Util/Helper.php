@@ -53,6 +53,9 @@ if (! function_exists('data_get')) {
 if (! function_exists('array_pluck')) {
     function array_pluck($array, $value, $key = null)
     {
+        if ($value == '*') {
+            $value = false;
+        }
         return \U_Array::pluck($array, $value, $key);
     }
 }
