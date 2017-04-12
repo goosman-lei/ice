@@ -8,7 +8,7 @@
         "smarty/smarty": "3.1.18",
         "phpunit/phpunit": "4.8",
         "lancerhe/phpunit-mock": "dev-master",
-        "windrainw/php-amqplib": ">=2.6.3-dev"
+        "windrainw/php-amqplib": "2.6.4"
     },
     "autoload": {
         "psr-4": {
