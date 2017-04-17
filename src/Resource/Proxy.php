@@ -174,6 +174,7 @@ class Proxy {
         $handler = new $handlerClass();
         $handler->setConn($conn);
         $handler->setNodeInfo($nodeInfo);
+        $handler->setProxy($this);
 
         if (!isset($this->_handlerArr[$uriSn])) {
             $this->_handlerArr[$uriSn] = $handler;
