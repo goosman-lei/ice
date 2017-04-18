@@ -16,7 +16,7 @@ class I18N {
     protected $defaultLang = 'cn'; // 指定语言没有时的默认语言
     protected $validLang = array('cn', 'en'); // 合法语言
 
-    public function __construct($currLang, $defaultLang = 'cn', $validLang = array('cn', 'en')) {
+    public function __construct($currLang, $validLang = array('cn', 'en'), $defaultLang = 'cn') {
         $this->setLang($currLang, $validLang, $defaultLang);
     }
 
@@ -30,7 +30,7 @@ class I18N {
      * @access public
      * @return void
      */
-    public function setLang($currLang, $defaultLang = 'cn', $validLang = array('cn', 'en')) {
+    public function setLang($currLang, $validLang = array('cn', 'en'), $defaultLang = 'cn') {
         $this->currLang    = $currLang;
         $this->defaultLang = $defaultLang;
         $this->validLang   = $validLang;
@@ -48,7 +48,20 @@ class I18N {
         if (!is_file($cfgFile)) {
             return FALSE;
         }
-        $cfgInfo = $this->loadCfg($cfgFile);
+
+        $allInfos = parse_ini_file($cfgFile, TRUE);
+        return $this->addConf($allInfos, $namespace);
+    }
+
+    /**
+     * addConf 
+     * @desc 从字符串读取多语言配置
+     * @param mixed $conf 
+     * @param string $namespace 
+     * @return void
+     */
+    public function addConf($conf, $namespace = '__default') {
+        $cfgInfo = $this->loadCfg($conf);
         if (isset($this->i18nMapping[$namespace])) {
             $this->i18nMapping[$namespace] = array_merge($this->i18nMapping[$namespace], $cfgInfo);
         } else {
@@ -128,8 +141,7 @@ class I18N {
         return $allInfos;
     }
 
-    protected function loadCfg($cfgFile) {
-        $allInfos = parse_ini_file($cfgFile, TRUE);
+    protected function loadCfg($allInfos) {
         if (!is_array($allInfos)) {
             $allInfos = array();
         }

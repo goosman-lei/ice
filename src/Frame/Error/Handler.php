@@ -6,6 +6,13 @@ class Handler {
     }
 
     public function __errorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+        //PHP7版本错误兼容处理
+        if (PHP_MAJOR_VERSION >= 7) {
+            //重载方法，参数传入不全时，忽略错误
+            if(strpos($errstr, 'Declaration of') === 0){
+                return TRUE;
+            }
+        }
         switch ($errno) {
             case E_ERROR:
             case E_USER_ERROR:
