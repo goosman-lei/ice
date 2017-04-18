@@ -26,6 +26,5 @@ class Abs {
 
     protected function reReconnect() {
         $this->conn = $this->proxy->getRealConn($this->nodeInfo['sn'], $this->nodeInfo, TRUE);
-        return !empty($this->conn);
     }
 }
