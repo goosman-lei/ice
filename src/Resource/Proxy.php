@@ -183,7 +183,7 @@ class Proxy {
         return $handler;
     }
 
-    protected function getRealConn($nodeSn, $nodeInfo, $forceNew = FALSE) {
+    public function getRealConn($nodeSn, $nodeInfo, $forceNew = FALSE) {
         $connectorClass = $nodeInfo['class'];
         $nodeConfig     = $nodeInfo['config'];
         $nodeOptions    = $nodeInfo['options'];
