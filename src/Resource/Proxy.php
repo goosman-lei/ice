@@ -174,6 +174,7 @@ class Proxy {
         $handler = new $handlerClass();
         $handler->setConn($conn);
         $handler->setNodeInfo($nodeInfo);
+        $handler->setProxy($this);
 
         if (!isset($this->_handlerArr[$uriSn])) {
             $this->_handlerArr[$uriSn] = $handler;
@@ -182,7 +183,7 @@ class Proxy {
         return $handler;
     }
 
-    protected function getRealConn($nodeSn, $nodeInfo, $forceNew = FALSE) {
+    public function getRealConn($nodeSn, $nodeInfo, $forceNew = FALSE) {
         $connectorClass = $nodeInfo['class'];
         $nodeConfig     = $nodeInfo['config'];
         $nodeOptions    = $nodeInfo['options'];
