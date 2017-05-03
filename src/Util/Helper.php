@@ -59,6 +59,9 @@ if (! function_exists('array_pluck')) {
         if (!is_array($array) || !count($array)) {
             return array();
         }
+        if (false === $value && null === $key) {
+            return $array;
+        }
         return \U_Array::pluck($array, $value, $key);
     }
 }
