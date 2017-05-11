@@ -158,14 +158,14 @@ if (! function_exists('info')) {
 }
 
 if (! function_exists('warn')) {
-    function warn($userLog, $errno)
+    function warn($userLog, $errno = [])
     {
         \F_Ice::$ins->mainApp->logger_comm->warn($userLog, $errno);
     }
 }
 
 if (! function_exists('fatal')) {
-    function fatal($userLog, $errno)
+    function fatal($userLog, $errno = [])
     {
         \F_Ice::$ins->mainApp->logger_comm->fatal($userLog, $errno);
     }
