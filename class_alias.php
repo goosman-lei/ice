@@ -18,6 +18,7 @@ class_alias('\\Ice\\DB\\ShardQuery',            'Ice_DB_SQuery');
 class_alias('\\Ice\\DB\\BaseModel',             'Ice_DB_Model');
 
 class_alias('\\Ice\\Resource\\Helper\\Redis',   'Helper_Redis');
+class_alias('\\Ice\\Resource\\Helper\\Rabbitmq','Helper_Rabbitmq');
 
 class_alias('\\Ice\\Message\\Factory',          'MSG_Factory');
 class_alias('\\Ice\\Message\\Abs',              'MSG_Abs');
