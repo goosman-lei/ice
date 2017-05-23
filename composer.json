@@ -8,7 +8,7 @@
         "smarty/smarty": "3.1.18",
         "phpunit/phpunit": "4.8",
         "lancerhe/phpunit-mock": "dev-master",
-        "php-amqplib/php-amqplib": "2.6.2"
+        "windrainw/php-amqplib": "dev-master"
     },
     "autoload": {
         "psr-4": {
@@ -28,6 +28,10 @@
         {
             "type": "vcs",
             "url": "git@github.com:lancerhe/phpunit-mock.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:windrainw/php-amqplib.git"
         },
         {
             "type": "composer",

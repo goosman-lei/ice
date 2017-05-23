@@ -53,6 +53,15 @@ if (! function_exists('data_get')) {
 if (! function_exists('array_pluck')) {
     function array_pluck($array, $value, $key = null)
     {
+        if ($value == '*') {
+            $value = false;
+        }
+        if (!is_array($array) || !count($array)) {
+            return array();
+        }
+        if (false === $value && null === $key) {
+            return $array;
+        }
         return \U_Array::pluck($array, $value, $key);
     }
 }
@@ -155,14 +164,14 @@ if (! function_exists('info')) {
 }
 
 if (! function_exists('warn')) {
-    function warn($userLog, $errno)
+    function warn($userLog, $errno = [])
     {
         \F_Ice::$ins->mainApp->logger_comm->warn($userLog, $errno);
     }
 }
 
 if (! function_exists('fatal')) {
-    function fatal($userLog, $errno)
+    function fatal($userLog, $errno = [])
     {
         \F_Ice::$ins->mainApp->logger_comm->fatal($userLog, $errno);
     }
@@ -200,7 +209,7 @@ if (! function_exists('is_success')) {
 }
 
 if (! function_exists('error')) {
-    function error($code, $data = null)
+    function error($code = \F_ECode::UNKNOWN_URI, $data = null)
     {
         return array('code' => $code, 'data' => $data);
     }
