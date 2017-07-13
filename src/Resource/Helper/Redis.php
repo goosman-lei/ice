@@ -22,6 +22,10 @@ class Redis {
     public function __call($method, $parameters) {
         // 命令合法性检查
         $method = strtolower($method);
+
+        if($method == '_mget') {
+            $method = 'mget';
+        }
         
         //判断命令读写区分cluster
         $cluster = isset($this->clusterMapping[$method]) ? $this->clusterMapping[$method] : self::CLUSTER_MASTER;
@@ -42,6 +46,28 @@ class Redis {
         }
     }
 
+    /**
+     * 针对量特别大的mget操作的优化,暂定分为100一组
+     * @param $keys
+     * @return array
+     */
+    public function mget($keys) {
+        $keys = array_values($keys);
+        if (empty($keys)) {
+            return array();
+        }
+
+        $keysGroup = array_chunk($keys, 100);
+        $retsGroup = array();
+        foreach($keysGroup as $keyGroup) {
+            $ret = $this->_mget($keyGroup);
+            if (count($ret) != count($keyGroup)) {
+                $ret = array_fill(0, count($keyGroup), FALSE);
+            }
+            $retsGroup = array_merge($retsGroup, $ret);
+        }
+        return $retsGroup;
+    }
 
     /**
      * $clusterMapping
