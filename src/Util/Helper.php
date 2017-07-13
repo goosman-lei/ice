@@ -209,7 +209,7 @@ if (! function_exists('is_success')) {
 }
 
 if (! function_exists('error')) {
-    function error($code, $data = null)
+    function error($code = \F_ECode::UNKNOWN_URI, $data = null)
     {
         return array('code' => $code, 'data' => $data);
     }
