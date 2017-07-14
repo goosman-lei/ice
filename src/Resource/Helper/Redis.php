@@ -27,7 +27,12 @@ class Redis {
 
         try {
             $this->initHandler($cluster);
-            $resp = call_user_func_array(array($this->handlers[$cluster], $method), $parameters);
+            $mockMethod = 'mock' . ucfirst($method);
+            if (method_exists($this, $mockMethod)) {
+                $resp = call_user_func_array(array($this, $mockMethod), $parameters);
+            }else {
+                $resp = call_user_func_array(array($this->handlers[$cluster], $method), $parameters);
+            }
         } catch (\RedisException $e) {
             $resp = FALSE;
         }
