@@ -3,6 +3,7 @@ namespace Ice\Frame\Web\TempEngine;
 class Phtml extends Abs {
 
     protected $tplDatas = array();
+    protected $tplRealPath = '';
 
     public function clearAssign() {
         $this->tplDatas = array();
@@ -11,8 +12,6 @@ class Phtml extends Abs {
         $this->tplDatas = $datas;
     }
     public function display($tplPath) {
-        $content = '';
-        
         //模板目录
         $tplDir = \F_Ice::$ins->workApp->rootPath . DIRECTORY_SEPARATOR . 'tpl';
         if(isset($this->tempEngineConfig['template_dir'])){
@@ -26,13 +25,18 @@ class Phtml extends Abs {
         }
         
         //模板文件存在则渲染
-        $tplRealPath = realpath($tplDir . $tplPath . $extName);
-        if(file_exists($tplRealPath)){
+        $this->tplRealPath = realpath($tplDir . $tplPath . $extName);
+        return $this->renderTpl();
+    }
+    
+    private function renderTpl(){
+        if(file_exists($this->tplRealPath)){
             ob_start();
             extract($this->tplDatas);
-            @include($tplRealPath);
+            @include($this->tplRealPath);
             $content = ob_get_clean();
-            ob_flush();
+        }else{
+            $content = '';
         }
         return $content;
     }
