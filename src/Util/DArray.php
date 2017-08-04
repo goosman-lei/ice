@@ -623,7 +623,7 @@ class DArray {
 
         list($value, $key) = static::explodePluckParameters($value, $key);
 
-        if(is_array($array)){
+        if(is_array($array) && $array){
             foreach ($array as $item) {
                 $itemValue = array();
 
@@ -656,9 +656,12 @@ class DArray {
     protected static function explodePluckParameters($value, $key)
     {
         $returnValue = array();
-        foreach ($value as $item) {
-            $returnKey = is_string($item) ? $item : implode('.', $item);
-            $returnValue[$returnKey] = is_string($item) ? explode('.', $item) : $item;
+        
+        if(is_array($value) && $value){
+            foreach ($value as $item) {
+                $returnKey = is_string($item) ? $item : implode('.', $item);
+                $returnValue[$returnKey] = is_string($item) ? explode('.', $item) : $item;
+            }
         }
 
         $key = is_null($key) || is_array($key) ? $key : explode('.', $key);
