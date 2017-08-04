@@ -623,27 +623,29 @@ class DArray {
 
         list($value, $key) = static::explodePluckParameters($value, $key);
 
-        foreach ($array as $item) {
-            $itemValue = array();
+        if(is_array($array)){
+            foreach ($array as $item) {
+                $itemValue = array();
 
-            if (empty($value)) {
-                $itemValue = $item;
-            } else {
-                foreach ($value as $itemKey2 => $itemValue2) {
-                    $itemValue[$itemKey2] = data_get($item, $itemValue2);
+                if (empty($value)) {
+                    $itemValue = $item;
+                } else {
+                    foreach ($value as $itemKey2 => $itemValue2) {
+                        $itemValue[$itemKey2] = data_get($item, $itemValue2);
+                    }
                 }
-            }
-            
 
-            // If the key is "null", we will just append the value to the array and keep
-            // looping. Otherwise we will key the array using the value of the key we
-            // received from the developer. Then we'll return the final array form.
-            if (is_null($key)) {
-                $results[] = $itemValue;
-            } else {
-                $itemKey = data_get($item, $key);
-                if (!array_key_exists($itemKey, $results)) {
-                    $results[$itemKey] = $itemValue;
+
+                // If the key is "null", we will just append the value to the array and keep
+                // looping. Otherwise we will key the array using the value of the key we
+                // received from the developer. Then we'll return the final array form.
+                if (is_null($key)) {
+                    $results[] = $itemValue;
+                } else {
+                    $itemKey = data_get($item, $key);
+                    if (!array_key_exists($itemKey, $results)) {
+                        $results[$itemKey] = $itemValue;
+                    }
                 }
             }
         }
