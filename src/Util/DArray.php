@@ -3,6 +3,33 @@ namespace Ice\Util;
 class DArray {
 
     /**
+     * Determine whether the given value is array accessible.
+     *
+     * @param  mixed  $value
+     * @return bool
+     */
+    public static function accessible($value)
+    {
+        return is_array($value) || $value instanceof ArrayAccess;
+    }
+
+    /**
+     * Determine if the given key exists in the provided array.
+     *
+     * @param  \ArrayAccess|array  $array
+     * @param  string|int  $key
+     * @return bool
+     */
+    public static function exists($array, $key)
+    {
+        if (is_array($array)) {
+            return array_key_exists($key, $array);
+        }
+
+        return $array->offsetExists($key);
+    }
+
+    /**
      * fromCommaExp
      * 从逗号表达式转换数组
      * @param string $commaExp
@@ -263,8 +290,8 @@ class DArray {
      * @return void
      */
     protected static function __cmpString($a, $b) {
-        $realA = self::$__reverse ? @$b[self::$__valueKey] : @$a[self::$__valueKey];
-        $realB = self::$__reverse ? @$a[self::$__valueKey] : @$b[self::$__valueKey];
+        $realA = self::$__reverse ? array_get($b, self::$__valueKey) : array_get($a, self::$__valueKey);
+        $realB = self::$__reverse ? array_get($a, self::$__valueKey) : array_get($b, self::$__valueKey);
         return strcasecmp($realA, $realB);
     }
 
@@ -278,8 +305,8 @@ class DArray {
      * @return void
      */
     protected static function __cmpNumeric($a, $b) {
-        $realA = self::$__reverse ? @$b[self::$__valueKey] : @$a[self::$__valueKey];
-        $realB = self::$__reverse ? @$a[self::$__valueKey] : @$b[self::$__valueKey];
+        $realA = self::$__reverse ? array_get($b, self::$__valueKey) : array_get($a, self::$__valueKey);
+        $realB = self::$__reverse ? array_get($a, self::$__valueKey) : array_get($b, self::$__valueKey);
         return $realA - $realB;
     }
 
@@ -293,8 +320,8 @@ class DArray {
      * @return void
      */
     protected static function __cmpTime($a, $b) {
-        $realA = self::$__reverse ? @$b[self::$__valueKey] : @$a[self::$__valueKey];
-        $realB = self::$__reverse ? @$a[self::$__valueKey] : @$b[self::$__valueKey];
+        $realA = self::$__reverse ? array_get($b, self::$__valueKey) : array_get($a, self::$__valueKey);
+        $realB = self::$__reverse ? array_get($a, self::$__valueKey) : array_get($b, self::$__valueKey);
         return strtotime($realA) - strtotime($realB);
     }
 
@@ -533,5 +560,112 @@ class DArray {
             }
         }
         return $res;
+    }
+
+    /**
+     * where 
+     * 用闭包函数过滤数组
+     * @param mixed $array 
+     * @param callable $callback 
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function where($array, callable $callback)
+    {
+        $filtered = [];
+
+        foreach ($array as $key => $value) {
+            if (call_user_func($callback, $key, $value)) {
+                $filtered[$key] = $value;
+            }
+        }
+
+        return $filtered;
+
+    }
+
+    public static function get($array, $key, $default = null)
+    {
+        if (is_null($key)) {
+            return $array;
+        }
+
+        if (isset($array[$key])) {
+            return $array[$key];
+        }
+
+        foreach (explode('.', $key) as $segment) {
+            if ((! is_array($array) || ! array_key_exists($segment, $array)) &&
+                    (! $array instanceof ArrayAccess || ! $array->offsetExists($segment))) {
+                return value($default);
+            }
+
+            $array = $array[$segment];
+        }
+
+        return $array;
+    }
+
+    /**
+     * Pluck an array of values from an array.
+     *
+     * @param  \ArrayAccess|array  $array
+     * @param  string|array  $value
+     * @param  string|array|null  $key
+     * @return array
+     */
+    public static function pluck($array, $value, $key = null)
+    {
+        $results = [];
+
+        $value = is_string($value) ? array($value) : $value;
+
+        list($value, $key) = static::explodePluckParameters($value, $key);
+
+        if(is_array($array) && $array){
+            foreach ($array as $item) {
+                $itemValue = array();
+
+                if (empty($value)) {
+                    $itemValue = $item;
+                } else {
+                    foreach ($value as $itemKey2 => $itemValue2) {
+                        $itemValue[$itemKey2] = data_get($item, $itemValue2);
+                    }
+                }
+
+
+                // If the key is "null", we will just append the value to the array and keep
+                // looping. Otherwise we will key the array using the value of the key we
+                // received from the developer. Then we'll return the final array form.
+                if (is_null($key)) {
+                    $results[] = $itemValue;
+                } else {
+                    $itemKey = data_get($item, $key);
+                    if (!array_key_exists($itemKey, $results)) {
+                        $results[$itemKey] = $itemValue;
+                    }
+                }
+            }
+        }
+
+        return $results;
+    }
+
+    protected static function explodePluckParameters($value, $key)
+    {
+        $returnValue = array();
+        
+        if(is_array($value) && $value){
+            foreach ($value as $item) {
+                $returnKey = is_string($item) ? $item : implode('.', $item);
+                $returnValue[$returnKey] = is_string($item) ? explode('.', $item) : $item;
+            }
+        }
+
+        $key = is_null($key) || is_array($key) ? $key : explode('.', $key);
+
+        return [$returnValue, $key];
     }
 }

@@ -51,17 +51,14 @@ class ShardQuery extends \Ice_DB_Query {
         $reverse = isset($range['next_direction']) ? $range['next_direction'] : false;
         $this->setShardKey($range['range_start_index']);
         $tmpLimit = $limit;
+        $tmpOffset = $offset;
         $resultArr = array();
         do{
-            $datas = parent::getRows($where, $cols, $tmpLimit, $offset, $orderBy, $join, $groupBy, $having, $tableOptions, $selectOptions);
+            $datas = parent::getRows($where, $cols, $tmpLimit, $tmpOffset, $orderBy, $join, $groupBy, $having, $tableOptions, $selectOptions);
             if(!empty($datas)){
                 $resultArr = array_merge($resultArr, $datas);
             }
             if($this->shardKey == $range['range_end_index']){
-                break;
-            }
-            $hasNextTable = $this->getNextTable($reverse, $range['max_table_index']);
-            if(!$hasNextTable){
                 break;
             }
             if($limit){
@@ -70,7 +67,44 @@ class ShardQuery extends \Ice_DB_Query {
                     break;
                 }
             }
+            if($tmpOffset){
+                $curOffsetCount = parent::getRows($where, 'count(1) AS count', 1);
+                $curOffsetCount = $curOffsetCount[0]['count'];
+                $tmpOffset = ($tmpOffset - intval($curOffsetCount) <= 0) ? 0 : ($tmpOffset - intval($curOffsetCount));
+            }
+            $hasNextTable = $this->getNextTable($reverse, $range['max_table_index']);
+            if(!$hasNextTable){
+                break;
+            }
         }while(true);
+        return $resultArr;
+    }
+
+    /**
+     * 指定一定的分表索引进行查询,为了满足,表之间没有严格顺序的情况。
+     */
+    public function getRowsTableIndexs($indexArray, $where = array(), $cols = '*', $limit = FALSE, $offset = 0, $orderBy = FALSE, $join = FALSE, $groupBy = FALSE, $having = FALSE, $tableOptions = FALSE, $selectOptions = FALSE){
+        $tmpLimit = $limit;
+        $tmpOffset = $offset;
+        $resultArr = array();
+        foreach($indexArray as $index) {
+            $this->setShardKey($index);
+            $datas = parent::getRows($where, $cols, $tmpLimit, $tmpOffset, $orderBy, $join, $groupBy, $having, $tableOptions, $selectOptions);
+            if(!empty($datas)){
+                $resultArr = array_merge($resultArr, $datas);
+            }
+            if($limit){
+                $tmpLimit = $limit - count($resultArr);
+                if($tmpLimit <= 0){
+                    break;
+                }
+            }
+            if($tmpOffset){
+                $curOffsetCount = parent::getRows($where, 'count(1) AS count', 1);
+                $curOffsetCount = $curOffsetCount[0]['count'];
+                $tmpOffset = ($tmpOffset - intval($curOffsetCount) <= 0) ? 0 : ($tmpOffset - intval($curOffsetCount));
+            }
+        }
         return $resultArr;
     }
 
@@ -144,7 +178,6 @@ class ShardQuery extends \Ice_DB_Query {
             break;
         }
 
-        $setValues[$idx] = array($this->shardColumn, $shardValue);
         $shardKey = $this->getShardKey($shardValue);
         $this->setShardKey($shardKey);
 

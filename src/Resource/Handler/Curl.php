@@ -46,7 +46,7 @@ class Curl extends Abs {
         }
         $respInfo = curl_getinfo($this->conn);
 
-        if ($respInfo['http_code'] != '200') {
+        if (intval($respInfo['http_code'] / 100)  != 2) {
             \F_Ice::$ins->mainApp->logger_comm->warn(array(
                 'respInfo'  => $respInfo,
                 'url'       => $url,

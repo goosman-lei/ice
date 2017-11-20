@@ -172,10 +172,10 @@ class {$proxyClassName} extends {$baseFilterClassName} {
                     }
                     // 星号匹配: 所有子元素应用相同的过滤规则
                     if ($token->isValid(Token::STAR)) {
-                        $this->appendCode("foreach ({$dataLiteral} as \$k => \$v) {\n", $indent);
+                        $this->appendCode("foreach ({$dataLiteral} as \$k{$indent} => \$v{$indent}) {\n", $indent);
 
                         $GLOBALS['debug'] = TRUE;
-                        $this->recursiveCompile("{$dataLiteral}[\$k]", "{$expectDataLiteral}[\$k]", $indent + 1);
+                        $this->recursiveCompile("{$dataLiteral}[\$k{$indent}]", "{$expectDataLiteral}[\$k{$indent}]", $indent + 1);
 
                         $this->appendCode("}\n", $indent);
                     } else if ($token->isValid(Token::LITERAL_STRING | Token::LITERAL_NUMERIC)) {
