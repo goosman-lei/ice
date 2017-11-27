@@ -99,14 +99,15 @@ class Service {
 
             $this->response->output($code, $data);
         } catch (\Exception $e) {
-            \F_Ice::$ins->mainApp->logger_comm->fatal(array(
+            $error = array(
                 'exception' => get_class($e),
                 'message'   => $e->getMessage(),
                 'code'      => $e->getCode(),
                 'file'      => $e->getFile(),
                 'line'      => $e->getLine(),
-            ), \F_ECode::PHP_ERROR);
-            $this->response->error(\F_ECode::PHP_ERROR);
+            );
+            \F_Ice::$ins->mainApp->logger_comm->fatal($error, \F_ECode::PHP_ERROR);
+            $this->response->error(\F_ECode::PHP_ERROR, $error);
         }
     }
 }
