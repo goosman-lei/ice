@@ -574,7 +574,7 @@ class DArray {
     public static function where($array, callable $callback)
     {
         $filtered = [];
-        if (!count($array)) {
+        if (!is_array($array)) {
             return $filtered;
         }
 
