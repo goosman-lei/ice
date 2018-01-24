@@ -69,7 +69,7 @@ class BaseModel extends \Ice_DB_Query {
      * 根据一个关联数组条件获取单条数据（将关联数组拼为 k1=v1 AND k2=v2 格式条件）
      * @param array $data 条件
      */
-    public function getInfoByAssoc($data, $cols = '*') {
+    public function getInfoByAssoc($data, $cols = '*', $orderBy = false) {
         $returnData = false;
 
         if ($data && is_array($data)) {
@@ -80,7 +80,7 @@ class BaseModel extends \Ice_DB_Query {
                 }
             }
             if ($where) {
-                $returnData = $this->getRow($where, $cols);
+                $returnData = $this->getRow($where, $cols, $orderBy);
             }
         }
 
