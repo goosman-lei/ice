@@ -15,12 +15,13 @@ class Request extends \Ice\Frame\Abs\Request {
     public function __construct() {
         parent::__construct();
 
-        $this->_params  = array();
-        $this->_gets    = $_GET;
-        $this->_posts   = $_POST;
-        $this->_cookies = $_COOKIE;
-        $this->_files   = $_FILES;
-        $this->_body    = file_get_contents('php://input');
+        $this->_params   = array();
+        $this->_gets     = $_GET;
+        $this->_posts    = $_POST;
+        $this->_requests = $_REQUEST;
+        $this->_cookies  = $_COOKIE;
+        $this->_files    = $_FILES;
+        $this->_body     = file_get_contents('php://input');
 
         $this->requestTime = isset($_SERVER['REQUEST_TIME']) ? $_SERVER['REQUEST_TIME'] : \U_Time::now();
 
@@ -64,6 +65,10 @@ class Request extends \Ice\Frame\Abs\Request {
 
     public function getPost($name, $default = null) {
         return isset($this->_posts[$name]) ? $this->_posts[$name] : $default;
+    }
+
+    public function getRequest($name, $default = null) {
+        return isset($this->_requests[$name]) ? $this->_requests[$name] : $default;
     }
 
     public function getCookie($name, $default = null) {
