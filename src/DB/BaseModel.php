@@ -10,6 +10,7 @@ class BaseModel extends \Ice_DB_Query {
     protected $tableName = '';
     protected $dbResource = '';
     protected $mapping = [];
+    protected $convert = [];
 
     /**
      * 根据运行时赋值字段处理字段
@@ -255,6 +256,43 @@ class BaseModel extends \Ice_DB_Query {
      */
     public function decrFieldByPk($field, $pk, $step = 1) {
         return $this->incrFieldByPk($field, $pk, -$step);
+    }
+
+    /**
+     * convertDataOut 
+     * 根据convert转化输出数据
+     * @param mixed $data 
+     * @access public
+     * @return void
+     */
+    public function convertDataOut($data) {
+        foreach ($data as $key => $val) {
+            if (isset($this->convert[$key])) {
+                if ('json' == $this->convert[$key]) {
+                    $data[$key] = json_decode($data[$key], true);
+                }
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * convertDataIn 
+     * 根据convert转化输入数据
+     * @param mixed $data 
+     * @param mixed $data 
+     * @access public
+     * @return void
+     */
+    public function convertDataIn($data) {
+        foreach ($data as $key => $val) {
+            if (isset($this->convert[$key])) {
+                if ('json' == $this->convert[$key]) {
+                    $data[$key] = json_encode($data[$key]);
+                }
+            }
+        }
+        return $data;
     }
 
 }
