@@ -40,6 +40,7 @@ class Code {
     const MYSQL_SET_COLLATION_FAILED = 100402;
     const MYSQL_QUERY_SQL_TOO_LONG   = 100403;
     const MYSQL_QUERY_WRITE_NO_WHERE = 100404;
+    const MYSQL_FAILED_TO_OPERATE_DB = 100405;
 
     // Filter相关错误
     const FILTER_COMPILE_FAILED      = 100500;
