@@ -58,16 +58,16 @@ class Curl extends Abs {
     }
 
     public function get($path, $datas = array(), $opts = array(), &$respInfo = array()) {
-        $postFields = is_array($datas) ? $datas : (string)$datas;
+        $queryString = is_array($datas) ? http_build_query($datas) : (string)$datas;
 
         $url    = $this->getFullUrl($path);
+        if ($queryString) {
+            $url = $url . '?' . $queryString;
+        }
 
         curl_setopt($this->conn, CURLOPT_URL, $url);
 
         curl_setopt($this->conn, CURLOPT_HTTPGET, TRUE);
-        if ($postFields) {
-            curl_setopt($this->conn, CURLOPT_POSTFIELDS, $postFields);
-        }
 
         if (is_array($opts) && !empty($opts)) {
             curl_setopt_array($this->conn, $opts);
