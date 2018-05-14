@@ -109,4 +109,19 @@ class Rabbitmq extends Abs {
         return TRUE;
     }
 
+    public function __call($method, $argv) {
+        try {
+            echo $method . chr(10);
+            return call_user_func_array([$this->conn, $method], $argv);
+        } catch (\Exception $e) {
+            \F_Ice::$ins->mainApp->logger_comm->warn(array(
+                'exception'   => get_class($e),
+                'message'     => $e->getMessage(),
+                'code'        => $e->getCode(),
+                'sn'          => $this->nodeInfo['sn'],
+                'command'     => $method,
+            ), \F_ECode::RABBITMQ_COMMAND_ERROR);
+            return FALSE;
+        }
+    }
 }
