@@ -111,7 +111,6 @@ class Rabbitmq extends Abs {
 
     public function __call($method, $argv) {
         try {
-            echo $method . chr(10);
             return call_user_func_array([$this->conn, $method], $argv);
         } catch (\Exception $e) {
             \F_Ice::$ins->mainApp->logger_comm->warn(array(
