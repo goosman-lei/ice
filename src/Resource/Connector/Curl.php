@@ -32,7 +32,12 @@ class Curl extends Abs {
         );
 
         if (isset($options['setopt'])) {
-            $usedOptions = array_merge($defaultOptions, (array)$options['setopt']);
+            $usedOptions = $defaultOptions;
+            if (!empty($options['setopt'])) {
+                foreach ($options['setopt'] as $k => $v) {
+                    $usedOptions[$k] = $v;
+                }
+            }
         } else {
             $usedOptions = $defaultOptions;
         }

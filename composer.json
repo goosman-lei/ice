@@ -6,7 +6,7 @@
     "minimum-stability": "dev",
     "require": {
         "smarty/smarty": "3.1.18",
-        "phpunit/phpunit": "4.8",
+        "phpunit/phpunit": "^4.8.9",
         "lancerhe/phpunit-mock": "dev-master",
         "windrainw/php-amqplib": "dev-master"
     },
