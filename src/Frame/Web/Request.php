@@ -33,6 +33,9 @@ class Request extends \Ice\Frame\Abs\Request {
             $this->id = md5(sprintf("%s|%s|%s", gethostname(), posix_getpid(), microtime(TRUE), rand(0, 999999)));
             return $this->id;
         }
+        if ($name == 'requests') {
+            return $this->getAllRequest();
+        }
     }
 
     public function getParams() {
@@ -69,6 +72,10 @@ class Request extends \Ice\Frame\Abs\Request {
 
     public function getRequest($name, $default = null) {
         return isset($this->_requests[$name]) ? $this->_requests[$name] : $default;
+    }
+
+    public function getAllRequest() {
+        return $this->_requests;
     }
 
     public function getCookie($name, $default = null) {
