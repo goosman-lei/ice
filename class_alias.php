@@ -35,3 +35,4 @@ class_alias('\\Ice\\Util\\DMap',                'U_Map');
 class_alias('\\Ice\\Util\\DStub',               'U_Stub');
 class_alias('\\Ice\\Util\\DArray',              'U_Array');
 class_alias('\\Ice\\Util\\DNumber',             'U_Number');
+class_alias('\\Ice\\Util\\DLRU',                'U_LRU');

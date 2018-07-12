@@ -24,9 +24,24 @@ class Rabbitmq extends Abs {
             $nodeConfig['vhost'] = '/';
         }
 
-        $nodeOptions = array_merge_recursive($defaultOptions, $nodeOptions);
+        $options = $defaultOptions;
+        foreach ($options as $name => $option) {
+            if (isset($nodeOptions[$name])) {
+                if ($name == 'consumer') {
+                    $options['consumer'] = array_merge($options['consumer'], $nodeOptions['consumer']);
+                } else if ($name == 'msg_properties') {
+                    $options['msg_properties'] = array_merge($options['msg_properties'], $nodeOptions['msg_properties']);
+                } else {
+                    $options[$name] = $nodeOptions[$name];
+                }
+                unset($nodeOptions[$name]);
+            }
+        }
+        foreach ($nodeOptions as $name => $option) {
+            $options[$name] = $option;
+        }
 
-        return array($nodeConfig, $nodeOptions);
+        return array($nodeConfig, $options);
     }
 
     public static function getSn($nodeConfig, $nodeOptions) {
