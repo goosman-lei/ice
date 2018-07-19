@@ -4,6 +4,31 @@ class Common {
 
     protected $class;
 
+    public function __get($name) {
+        $class = $this->class;
+
+        $logData = array(
+            'proxy'  => 'common',
+            'class'  => $class,
+            'name' => $name,
+        );
+
+        $serviceNamespace = \F_Ice::$ins->workApp->config->get('app.common_namespace');
+        $serviceClass = "\\{$serviceNamespace}\\Service\\" . $class;
+        if (!class_exists($serviceClass)) {
+            \F_Ice::$ins->mainApp->logger_ws->warn($logData, \F_ECode::WS_PROXY_UNKONW_SERVICE);
+            return array(
+                'code' => \F_ECode::WS_PROXY_UNKONW_SERVICE,
+                'data' => null,
+            );
+        }
+
+        $serviceObj = new $serviceClass();
+        $serviceObj->setIce(\F_Ice::$ins);
+
+        return $serviceObj->$name;
+    }
+
     public function __construct($config, $class = null) {
         if (isset($class)) {
             $this->class = $class;
