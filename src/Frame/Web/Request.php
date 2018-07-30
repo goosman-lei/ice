@@ -109,6 +109,10 @@ class Request extends \Ice\Frame\Abs\Request {
             $requestUri = '/' . ltrim(strval(substr($requestUri, strlen("/$scriptFname"))), '/');
         }
 
+        // strip query_string and fragment. only remain path
+        $comps = parse_url($requestUri);
+        $requestUri = $comps['path'];
+
         // omit $baseUri
         $mainAppConf = \F_Ice::$ins->runner->mainAppConf;
         if (isset($mainAppConf['runner']['frame']['baseUri'])) {
