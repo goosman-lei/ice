@@ -248,4 +248,16 @@ class DString {
 
         return (bool) preg_match('#^'.$pattern.'\z#', $value);
     }
+
+    /**
+     * isValidIDCard 
+     * 检查是否有效身份证号
+     * @param mixed $idcard 
+     * @static
+     * @access public
+     * @return void
+     */
+    public static function isValidIDCard($idcard) {
+        return preg_match('/^\d{17}[xX\d]$/', $idcard) || preg_match('/^\d{15}$/i', $idcard);
+    }
 }
