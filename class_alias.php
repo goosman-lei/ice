@@ -31,6 +31,7 @@ class_alias('\\Ice\\Util\\Path',                'U_Path');
 class_alias('\\Ice\\Util\\Rusage',              'U_Rusage');
 
 class_alias('\\Ice\\Util\\DString',             'U_String');
+class_alias('\\Ice\\Util\\DMoney',             'U_Money');
 class_alias('\\Ice\\Util\\DMap',                'U_Map');
 class_alias('\\Ice\\Util\\DStub',               'U_Stub');
 class_alias('\\Ice\\Util\\DArray',              'U_Array');
