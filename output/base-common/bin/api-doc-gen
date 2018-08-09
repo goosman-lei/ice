@@ -1,0 +1,221 @@
+#!/usr/bin/env php
+<?php
+define('ROOT_PATH', __DIR__ . '/..');
+require_once ROOT_PATH . '/vendor/autoload.php';
+
+if(isset($argv[1]) && !empty($argv[1]) ){
+    define('HTML_PATH',$argv[1]);
+}else{
+     define('HTML_PATH','/home/nice/ice-doc/');
+}
+define('TPL_COMPILER_PATH','/var/run/doc-smarty-template-compile');
+output_doc_html();
+function get_smarty() {
+    static $smarty;
+    if (!isset($smarty)) {
+        $smarty = new \SmartyBC();
+        $smarty->setTemplateDir(ROOT_PATH."/tpl");
+        $smarty->setCompileDir(TPL_COMPILER_PATH);
+        $smarty->left_delimiter = '{%';
+        $smarty->right_delimiter = '%}';
+    }
+    return $smarty;
+}
+
+function render_main_layout($render_data,$target_file) {
+    $smarty = get_smarty();
+    $smarty->assign('render',$render_data);
+    if (!is_dir(dirname($target_file))) {
+        mkdir(dirname($target_file), 0777, TRUE);
+    }
+    return file_put_contents($target_file, $smarty->fetch('doc.tpl'));
+}
+
+function output_doc_html(){
+    $docs = parse_service();
+    //检测文件目录
+    mkdir_path(HTML_PATH);
+    //生成Index文件
+    if(!file_exists(HTML_PATH."/index.php")){
+      $r =  copy(ROOT_PATH."/tpl/index.php",HTML_PATH."/index.php");
+    }    
+    if(!empty($docs)){  
+        foreach($docs as $item){
+            $namePath = explode('\\',$item['name']);
+            //去掉最后一个
+            $tmpName = $namePath;
+            array_pop($namePath);
+            if(isset($item['tags']) && !empty($item['tags'])){
+                foreach($item['tags'] as &$tag){
+                    if($tag['tag']=='author'){
+                        $tmpArr = explode("<",$tag['desc']);
+                        $tmpArr = explode(">",$tmpArr[1]);
+                        $tag['mail'] = $tmpArr[0];
+                        $tag['desc'] = str_replace('<','&lt;',$tag['desc']);
+                        $tag['desc'] = str_replace('>','&gt;',$tag['desc']);
+                    }
+                }
+            }
+            $path = HTML_PATH."/".implode("/",$namePath);
+            mkdir_path($path);
+            $file_name = $path."/".implode("-", $tmpName).".html";
+            $re = render_main_layout($item,$file_name);
+            if($re){
+                echo "文档生成成功";
+            }else{
+                echo "生成失败，请查看权限是否OK";
+            }
+        }
+    }
+}
+function mkdir_path($path){
+    if(!is_dir($path)){
+        mkdir($path,0777,true);
+    }  
+}
+
+function parse_service() {
+    $docs  = array();
+    $dpath = ROOT_PATH. '/src/service';
+    $dp    = opendir($dpath);
+    $namespace = get_namespace();
+    while ($fname = readdir($dp)) {
+        if (substr($fname, -4) != '.php') {
+            continue;
+        }
+        $fnameBase = substr($fname, 0, -4);
+        $className = "\\$namespace\\Service\\$fnameBase";
+        $docs[] = parse_class($className);
+    }
+    return $docs;
+}
+
+function parse_class($className) {
+    $classIns = new \ReflectionClass($className);
+    $methods  = $classIns->getMethods(\ReflectionMethod::IS_PUBLIC);
+
+    $classDoc = parse_class_doc($classIns, $classIns->getDocComment());
+
+    $classDoc['methods'] = array();
+    foreach ($methods as $method) {
+        if ($method->getDeclaringClass()->getName() != $classIns->getName()) {
+            continue;
+        }
+        $classDoc['methods'][] = parse_method_doc($method, $method->getDocComment());
+    }
+    return $classDoc;
+}
+
+function parse_class_doc($class, $doc) {
+    $doc = preg_replace(';^\s*/\*\*\s*\n|\n\s*\*/\s*$;', '', trim($doc));
+    $doc = trim(preg_replace(';^\s*\* ;m', '', $doc));
+    $docEles = explode("\n", $doc);
+    $inDesc  = TRUE;
+
+    $tagPattern   = ';^\s*@(?P<tag>\w+)(?P<desc>.*)$;';
+
+    $desc = '';
+    $tags = array();
+
+    foreach ($docEles as $docEle) {
+        $isNewTag = preg_match($tagPattern, $docEle, $match);
+
+        if (!$isNewTag && $inDesc) {
+            $desc .= ($desc ? "\n" : "") . $docEle;
+        } else if (!$isNewTag && !$inDesc) {
+            $tags[count($tags) - 1]['desc'] .= "\n" . $docEle;
+        } else if ($isNewTag) {
+            $inDesc = FALSE;
+            $tag = array('tag' => (string)$match['tag']);
+            switch (strtolower($tag['tag'])) {
+                case 'author':
+                case 'copyright':
+                default:
+                    $tag['desc'] = $match['desc'];
+                    break;
+            }
+            array_push($tags, $tag);
+        }
+    }
+
+    foreach ($tags as $idx => $tag) {
+        if (!in_array($tag['tag'], array('author', 'copyright'))) {
+            unset($tags[$idx]);
+        }
+    }
+    $tags = array_values($tags);
+
+    return array(
+        'name' => $class->getName(),
+        'desc' => $desc,
+        'tags' => $tags,
+    );
+}
+
+function parse_method_doc($method, $doc) {
+    $doc = preg_replace(';^\s*/\*\*\s*\n|\n\s*\*/\s*$;', '', trim($doc));
+    $doc = trim(preg_replace(';^\s*\* ;m', '', $doc));
+    $docEles = explode("\n", $doc);
+    $inDesc  = TRUE;
+
+    $tagPattern   = ';^\s*@(?P<tag>\w+)(?P<desc>.*)$;';
+    $paramPattern = ';^\s*(?P<type>[-\w]+)\s+(?P<name>\$\w+)(?:\s+(?P<desc>.*))?$;';
+    $returnPattern = ';^\s*(?P<type>[-\w]+)(?:\s+(?P<desc>.*))?$;';
+    $errorPattern = ';^\s*(?P<errno>[-\w]+)(?:\s+(?P<desc>.*))?$;';
+
+    $desc = '';
+    $tags = array();
+
+    foreach ($docEles as $docEle) {
+        $isNewTag = preg_match($tagPattern, $docEle, $match);
+
+        if (!$isNewTag && $inDesc) {
+            $desc .= ($desc ? "\n" : "") . $docEle;
+        } else if (!$isNewTag && !$inDesc) {
+            $tags[count($tags) - 1]['desc'] .= "\n" . $docEle;
+        } else if ($isNewTag) {
+            $inDesc = FALSE;
+            $tag = array('tag' => (string)$match['tag']);
+            switch (strtolower($tag['tag'])) {
+                case 'error':
+                    preg_match($errorPattern, $match['desc'], $errorMatch);
+                    $tag['errno'] = isset($errorMatch['errno']) ? $errorMatch['errno'] : 'unknown';
+                    $tag['desc'] = isset($errorMatch['desc']) ? $errorMatch['desc'] : '';
+                    break;
+                case 'param':
+                    preg_match($paramPattern, $match['desc'], $paramMatch);
+                    $tag['type'] = isset($paramMatch['type']) ? $paramMatch['type'] : 'unknown';
+                    $tag['name'] = isset($paramMatch['name']) ? $paramMatch['name'] : '$unknown';
+                    $tag['desc'] = isset($paramMatch['desc']) ? $paramMatch['desc'] : '';
+                    break;
+                case 'return':
+                    preg_match($returnPattern, $match['desc'], $returnMatch);
+                    $tag['type'] = isset($returnMatch['type']) ? $returnMatch['type'] : 'unknown';
+                    $tag['desc'] = isset($returnMatch['desc']) ? $returnMatch['desc'] : '';
+                    break;
+                default:
+                    $tag['desc'] = $match['desc'];
+            }
+            array_push($tags, $tag);
+        }
+    }
+
+    foreach ($tags as $idx => $tag) {
+        if (!in_array($tag['tag'], array('error', 'param', 'return'))) {
+            unset($tags[$idx]);
+        }
+    }
+    $tags = array_values($tags);
+
+    return array(
+        'name' => $method->getName(),
+        'desc' => $desc,
+        'tags' => $tags,
+    );
+}
+
+function get_namespace() {
+    include ROOT_PATH . '/src/conf/app.php';
+    return $namespace;
+}
+

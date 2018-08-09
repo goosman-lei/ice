@@ -1,0 +1,12 @@
+#!/bin/bash
+SCRIPT_DIR=$( cd $( dirname ${BASH_SOURCE[0]} ) && pwd )
+
+# 使用filter操作，可以在开发测试时，只运行正在写的测试，节省了大量的时间
+# filter支持正则表达式模式，比如有个文件叫做abcTest.php, 方法叫做abcParamValid, 那么filter为abc时，将只运行该文件里面的所有测试例子，当为abcParamValid时，只运行改测试例
+# 当开发完成后再跑一次完整的单元测试即可
+if [ $# -eq 1 ]; then
+    filter=$1;
+    phpunit --process-isolation --coverage-html=/home/nice/phpunit/webroot/ --filter=$filter $SCRIPT_DIR/../test
+else
+    phpunit --process-isolation --coverage-html=/home/nice/phpunit/webroot/ $SCRIPT_DIR/../test
+fi
