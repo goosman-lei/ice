@@ -73,20 +73,32 @@ class Embeded {
     }
 
     protected function setupEnv() {
-        $this->serverEnv  = new \Ice\Frame\Embeded\ServerEnv();
-        $this->clientEnv  = new \Ice\Frame\Embeded\ClientEnv();
+        $serverEnvClass = isset($this->mainAppConf['runner']['frame']['server_env_class'])
+                        ? $this->mainAppConf['runner']['frame']['server_env_class']
+                        : '\\Ice\\Frame\\Embeded\\ServerEnv';
+        $clientEnvClass = isset($this->mainAppConf['runner']['frame']['client_env_class'])
+                        ? $this->mainAppConf['runner']['frame']['client_env_class']
+                        : '\\Ice\\Frame\\Embeded\\ClientEnv';
+        $this->serverEnv  = new $serverEnvClass();
+        $this->clientEnv  = new $clientEnvClass();
         $this->clientEnv->ip = $this->options['client_ip'];
     }
 
     protected function setupRequest() {
-        $this->request = new \Ice\Frame\Embeded\Request();
+        $requestClass = isset($this->mainAppConf['runner']['frame']['request_class'])
+                        ? $this->mainAppConf['runner']['frame']['request_class']
+                        : '\\Ice\\Frame\\Embeded\\Request';
+        $this->request = new $requestClass();
         $this->request->id     = $this->options['request_id'];
         $this->request->class  = $this->options['class'];
         $this->request->action = $this->options['action'];
     }
 
     protected function setupResponse() {
-        $this->response = new \Ice\Frame\Embeded\Response();
+        $responseClass = isset($this->mainAppConf['runner']['frame']['response_class'])
+                        ? $this->mainAppConf['runner']['frame']['response_class']
+                        : '\\Ice\\Frame\\Embeded\\Response';
+        $this->response = new $responseClass();
         $this->response->class  = $this->options['class'];
         $this->response->action = $this->options['action'];
     }
