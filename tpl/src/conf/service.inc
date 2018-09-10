@@ -45,6 +45,9 @@ $service_logger = array(
             'request.originalUri' => '',
             'request.class'       => '',
             'request.action'      => '',
+            'request.query'       => '',
+            'request.result'      => '',
+            'request.respTime'    => '',
             'request.id'          => '',
         ),
         'log_fmt_wf' => array(

@@ -97,6 +97,17 @@ class Service {
             $code = isset($result['code']) ? $result['code'] : \F_ECode::WS_ERROR_RESPONSE;
             $data = isset($result['data']) ? $result['data'] : null;
 
+            //记录请求API日志
+            if(class_exists(\F_Ice::$ins->mainApp->logger_api)){
+                \F_Ice::$ins->mainApp->logger_api->info(array(
+                    'class'  => $this->request->class,
+                    'action' => $this->request->action,
+                    'query'  => $_SERVER['QUERY_STRING'],
+                    'result' => $code,
+                    'respTime' => number_format(floatval(microtime(TRUE) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000, 2) . 'ms',
+                ), \F_ECode::UNKNOWN_URI);
+            }
+
             $this->response->output($code, $data);
         } catch (\Exception $e) {
             $error = array(
