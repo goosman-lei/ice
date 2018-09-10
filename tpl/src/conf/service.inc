@@ -36,7 +36,7 @@ $service_logger = array(
     ),
 
     //api请求日志
-   'api' => array(
+    'api' => array(
         'log_fmt' => array(
             'fmt_time'            => '', # 默认-Y-m-d H:i:s
             'client_env.ip'       => '',
@@ -45,9 +45,6 @@ $service_logger = array(
             'request.originalUri' => '',
             'request.class'       => '',
             'request.action'      => '',
-            'request.query'       => '',
-            'request.result'      => '',
-            'request.respTime'    => '',
             'request.id'          => '',
         ),
         'log_fmt_wf' => array(
