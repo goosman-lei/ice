@@ -212,7 +212,6 @@ class Web {
                 \F_Ice::$ins->workApp->logger_webapi->info(array(
                     'api'    => $this->request->class.'/'.$this->request->action,
                     'query'  => $this->serverEnv->QUERY_STRING,
-                    'result' => $code,
                     'respTime' => number_format(floatval(microtime(TRUE) -  $this->serverEnv->REQUEST_TIME_FLOAT) * 1000, 2) . 'ms',
                 ));
             }
