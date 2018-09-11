@@ -48,7 +48,9 @@ class App {
     public function _init() {
         $logConfigs = $this->config->get('app.runner.log');
         $applogConfigs = $this->config->get('app.runner.applog');
-        $logConfigs = array_merge($logConfigs, $applogConfigs);
+        if(isset($applogConfigs) && is_array($applogConfigs)){
+            $logConfigs = array_merge($logConfigs, $applogConfigs);
+        }
         if (isset($logConfigs) && is_array($logConfigs)) {
             foreach ($logConfigs as $loggerName => $logConfig) {
                 $loggerName = "logger_$loggerName";
