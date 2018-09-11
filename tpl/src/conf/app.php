@@ -18,14 +18,17 @@ $runner = array(
         'temp_engine' => $web_temp_engine,
         'log'         => $web_logger,
         'filter'      => $web_filter,
+        'applog'      => $app_log,
     ),
     'service' => array(
         'log'    => $service_logger,
         'filter' => $service_filter,
+        'applog' => $app_log,
     ),
     'daemon' => array(
         'log'    => $daemon_logger,
         'filter' => $daemon_filter,
+        'applog' => $app_log,
     ),
 );
 
