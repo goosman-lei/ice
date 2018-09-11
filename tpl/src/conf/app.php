@@ -10,6 +10,7 @@ $log_path  = $var_path . '/logs';
 @include(__DIR__ . '/web.inc');
 @include(__DIR__ . '/service.inc');
 @include(__DIR__ . '/daemon.inc');
+@include(__DIR__ . '/app.inc');
 
 $runner = array(
     'web' => array(
@@ -18,17 +19,17 @@ $runner = array(
         'temp_engine' => $web_temp_engine,
         'log'         => $web_logger,
         'filter'      => $web_filter,
-        'applog'      => $app_log,
+        'applog'      => $app_logger,
     ),
     'service' => array(
         'log'    => $service_logger,
         'filter' => $service_filter,
-        'applog' => $app_log,
+        'applog' => $app_logger,
     ),
     'daemon' => array(
         'log'    => $daemon_logger,
         'filter' => $daemon_filter,
-        'applog' => $app_log,
+        'applog' => $app_logger,
     ),
 );
 
