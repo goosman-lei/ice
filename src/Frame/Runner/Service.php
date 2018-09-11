@@ -98,12 +98,12 @@ class Service {
             $data = isset($result['data']) ? $result['data'] : null;
 
             //记录请求API日志
-            if(isset(\F_Ice::$ins->mainApp->logger_api)){
-                \F_Ice::$ins->mainApp->logger_api->info(array(
-                    'api'  => $this->request->class.'/'.$this->request->action,
-                    'query'  => $_SERVER['QUERY_STRING'],
+            if(isset(\F_Ice::$ins->workApp->logger_api)){
+                \F_Ice::$ins->workApp->logger_api->info(array(
+                    'api'    => $this->request->class.'/'.$this->request->action,
+                    'query'  => $this->serverEnv['QUERY_STRING'],
                     'result' => $code,
-                    'respTime' => number_format(floatval(microtime(TRUE) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000, 2) . 'ms',
+                    'respTime' => number_format(floatval(microtime(TRUE) -  $this->serverEnv['REQUEST_TIME_FLOAT']) * 1000, 2) . 'ms',
                 ), \F_ECode::UNKNOWN_URI);
             }
 
