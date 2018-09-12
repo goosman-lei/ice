@@ -206,6 +206,16 @@ class Web {
             $tplData = $this->callAction($this->request->class, $this->request->action);
 
             $this->response->addTplData($tplData);
+
+            //记录请求API日志
+            if(isset(\F_Ice::$ins->workApp->logger_webapi)){
+                \F_Ice::$ins->workApp->logger_webapi->info(array(
+                    'api'    => $this->request->class.'/'.$this->request->action,
+                    'query'  => $this->serverEnv->QUERY_STRING,
+                    'respTime' => number_format(floatval(microtime(TRUE) -  $this->serverEnv->REQUEST_TIME_FLOAT) * 1000, 2) . 'ms',
+                ));
+            }
+
             $this->response->output();
         } catch (\Exception $e) {
             $error = array(
