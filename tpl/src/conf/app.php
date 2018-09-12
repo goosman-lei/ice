@@ -10,7 +10,7 @@ $log_path  = $var_path . '/logs';
 @include(__DIR__ . '/web.inc');
 @include(__DIR__ . '/service.inc');
 @include(__DIR__ . '/daemon.inc');
-@include(__DIR__ . '/app.inc');
+@include(__DIR__ . '/logger.inc');
 
 $runner = array(
     'web' => array(
@@ -30,3 +30,4 @@ $runner = array(
     ),
 );
 
+$logger_config = $app_logger;
