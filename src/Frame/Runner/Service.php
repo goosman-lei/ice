@@ -101,7 +101,7 @@ class Service {
             if(isset(\F_Ice::$ins->workApp->logger_api)){
                 \F_Ice::$ins->workApp->logger_api->info(array(
                     'api'    => $this->request->class.'/'.$this->request->action,
-                    'query'  => $this->serverEnv->QUERY_STRING,
+                    'query'  => $this->request->params,
                     'result' => $code,
                     'respTime' => number_format(floatval(microtime(TRUE) -  $this->serverEnv->REQUEST_TIME_FLOAT) * 1000, 2) . 'ms',
                 ));
