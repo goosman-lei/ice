@@ -45,8 +45,20 @@ abstract class Sharding {
         return $this->name;
     }
 
+    public function setTableName($tableName) {
+        $this->tableName = $tableName;
+    }
+
+    public function getTableName() {
+        return $this->tableName;
+    }
+
     public function getIndex() {
         return $this->index;
+    }
+
+    public function pushArgs() {
+        $this->args[] = $args;
     }
 
     abstract public static function shardingName();
