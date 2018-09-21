@@ -55,7 +55,7 @@ class ShardQueryV2 extends \Ice_DB_Query {
     protected $shardingClass;
     protected $shardingObj;
 
-    public function getTableName() {
+    public function getTableName($where = array()) {
         return $this->shardingObj->getName();
     }
 
