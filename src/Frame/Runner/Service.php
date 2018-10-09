@@ -97,6 +97,16 @@ class Service {
             $code = isset($result['code']) ? $result['code'] : \F_ECode::WS_ERROR_RESPONSE;
             $data = isset($result['data']) ? $result['data'] : null;
 
+            //记录请求API日志
+            if(isset(\F_Ice::$ins->workApp->logger_api)){
+                \F_Ice::$ins->workApp->logger_api->info(array(
+                    'api'    => $this->request->class.'/'.$this->request->action,
+                    'query'  => $this->request->params,
+                    'result' => $code,
+                    'respTime' => number_format(floatval(microtime(TRUE) -  $this->serverEnv->REQUEST_TIME_FLOAT) * 1000, 2) . 'ms',
+                ));
+            }
+
             $this->response->output($code, $data);
         } catch (\Exception $e) {
             $error = array(
